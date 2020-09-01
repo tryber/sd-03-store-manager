@@ -1,4 +1,4 @@
-const { getProductByName } = require('../models/produtos');
+const { getProductById, getProductByName } = require('../models/produtos');
 
 /**
  *
@@ -23,4 +23,22 @@ async function validadeUpdateProduct(name, quantity) {
   return {};
 }
 
-module.exports = { validadeNewProduct, validadeUpdateProduct };
+async function validadeSale(sale) {
+  const isvalid = await sale.reduce(async (acc, { productId, quantity }) => {
+    if (!acc) return acc;
+
+    const product = await getProductById(productId);
+    if (!product) return false;
+
+    if (typeof quantity !== 'number' || quantity <= 0) return false;
+
+    return acc;
+  }, true);
+
+  if (isvalid) {
+    return {};
+  }
+  return { message: 'Wrong product ID or invalid quantity' };
+}
+
+module.exports = { validadeNewProduct, validadeUpdateProduct, validadeSale };
