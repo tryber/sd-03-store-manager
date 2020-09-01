@@ -3,7 +3,7 @@ const { ObjectID } = require('mongodb');
 
 async function add(name, quantity) {
   const productsColl = await connectTo('products');
-  return  productsColl.insertOne({ name, quantity });
+  return productsColl.insertOne({ name, quantity });
 }
 
 async function getAll() {
@@ -22,7 +22,7 @@ async function getById(id) {
 }
 
 async function updateById(id, { name, quantity }) {
-  console.log('params', id, name, quantity)
+  console.log('params', id, name, quantity);
   const productsColl = await connectTo('products');
   return productsColl.updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
 }

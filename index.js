@@ -15,14 +15,13 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/ping', (_req, res) => {
-    console.log('here')
-    res.send('pong!')
+  console.log('here');
+  res.send('pong!');
 });
 
 app.use('/products', productsRouter);
 
-app.all('*')
-  .get((_req, res) => res.json({ message: '<recurso> não encontrado' }));
+app.all('*').get((_req, res) => res.json({ message: '<recurso> não encontrado' }));
 
 app.use((err, _req, res, _next) => {
   console.error(err);

@@ -3,7 +3,7 @@ require('dotenv/config');
 
 const {
   MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager',
-  DB_NAME = 'StoreManager'
+  DB_NAME = 'StoreManager',
 } = process.env;
 
 async function connect() {
@@ -22,7 +22,7 @@ async function connect() {
 async function connectTo(coll) {
   try {
     const db = await connect();
-    return db.collection(coll);  
+    return db.collection(coll);
   } catch (err) {
     console.error('inside connectTo', err);
   }
