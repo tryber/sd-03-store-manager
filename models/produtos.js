@@ -34,6 +34,14 @@ async function listProducts() {
 }
 
 /**
+ * Update a product
+ * @param {String} id
+ * @param {{name:String,quantity:Number}} product
+ */
+async function updateProduct(id, { name, quantity }) {
+  return Product.findByIdAndUpdate(id, { name, quantity }, { new: true });
+}
+/**
  * Create a new product to the database
  */
 async function createProduct({ name, quantity }) {
@@ -41,4 +49,4 @@ async function createProduct({ name, quantity }) {
   return product.save();
 }
 
-module.exports = { createProduct, getProductByName, listProducts, getProductById };
+module.exports = { createProduct, getProductByName, listProducts, getProductById, updateProduct };
