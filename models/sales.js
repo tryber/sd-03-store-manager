@@ -35,6 +35,9 @@ async function updateSale(id, data) {
   return Sale.findByIdAndUpdate(id, mountSale(data), { new: true });
 }
 
+async function deleteSale(id) {
+  return Sale.findByIdAndRemove(id);
+}
 module.exports = {
-  createSale, listSales, getSaleById, updateSale,
+  createSale, listSales, getSaleById, updateSale, deleteSale,
 };

@@ -32,12 +32,16 @@ async function listSales(req, res) {
 async function getSale(req, res) {
   try {
     const sale = await Sales.getSaleById(req.params.id);
+    if (!sale) {
+      throw new Error();
+    }
+
     res.status(201).send(sale);
   } catch (error) {
-    res.status(422).send({
+    res.status(404).send({
       err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
+        code: 'not_found',
+        message: 'Sale not found',
       },
     });
   }
@@ -63,4 +67,18 @@ async function updateSale(req, res) {
   }
 }
 
-module.exports = { createSale, listSales, getSale, updateSale };
+async function deleteSale(req, res) {
+  try {
+    const sale = await Sales.deleteSale(req.params.id);
+    res.status(200).send(sale);
+  } catch (error) {
+    res.status(422).send({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+    });
+  }
+}
+
+module.exports = { createSale, listSales, getSale, updateSale, deleteSale };

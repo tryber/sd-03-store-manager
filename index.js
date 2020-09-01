@@ -29,5 +29,6 @@ app.get('/sales', SalesControler.listSales);
 
 app.get('/sales/:id', SalesControler.getSale);
 app.put('/sales/:id', SalesControler.updateSale);
+app.delete('/sales/:id', SalesControler.deleteSale);
 
 app.listen(3000, () => console.log('listen to port 3000'));
