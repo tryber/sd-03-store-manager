@@ -1,7 +1,7 @@
 const productsModel = require('../models/productsModel');
 
-const createProduct = async (name, quantity) => {
-  if (name.length < 5) {
+const validateData = (name, quantity) => {
+  if (name && name.length < 5) {
     return {
       err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
     };
@@ -18,6 +18,12 @@ const createProduct = async (name, quantity) => {
       err: { code: 'invalid_data', message: '"quantity" must be a number' },
     };
   }
+  return true;
+};
+
+const createProduct = async (name, quantity) => {
+  const isValid = validateData(name, quantity);
+  if (typeof isValid === 'object') return isValid;
 
   const existProduct = await productsModel.getProductByName(name);
 
@@ -34,7 +40,7 @@ const createProduct = async (name, quantity) => {
 const getAllProducts = async () => productsModel.getAllProducts();
 
 const getProductById = async (id) => {
-  if (id.length < 12) {
+  if (id.length < 24) {
     return { err: { code: 'invalid_data', message: 'Wrong id format' } };
   }
   const product = productsModel.getProductById(id);
@@ -47,36 +53,25 @@ const getProductById = async (id) => {
 };
 
 const updateProduct = async (id, name, quantity) => {
-  if (name.length < 5) {
-    return {
-      err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
-    };
-  }
-
-  if (quantity <= 0) {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
-    };
-  }
-
-  if (typeof quantity !== 'number') {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be a number' },
-    };
-  }
+  const isValid = validateData(name, quantity);
+  if (typeof isValid === 'object') return isValid;
 
   const updatedProduct = await productsModel.updateProduct(id, name, quantity);
   return updatedProduct;
 };
 
 const deleteProduct = async (id) => {
-  const product = productsModel.getProductById(id);
-  if (!product) {
+  if (id.length < 24) {
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  }
+  const { name, quantity } = productsModel.getProductById(id);
+  if (!name) {
     return {
       err: { code: 'invalid_data', message: 'Wrong id format' },
     };
   }
   await productsModel.deleteProduct(id);
+  return { _id: id, name, quantity };
 };
 
 module.exports = {
