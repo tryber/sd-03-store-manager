@@ -1,5 +1,6 @@
 const { productModel } = require('../models');
 const { validate } = require('@expresso/validator');
+const products = require('../models/products');
 
 const productsSchema = {
   type: 'object',
@@ -36,6 +37,10 @@ async function getById(id) {
   return productModel.getById(id);
 }
 
+async function updateById(id, { name, quantity }) {
+  return productModel.updateById(id,{ name, quantity });
+}
+
 
 module.exports = {
   createProduct,
@@ -43,4 +48,5 @@ module.exports = {
   getAll,
   getByName,
   getById,
+  updateById,
 };
