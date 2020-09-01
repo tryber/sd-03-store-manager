@@ -31,7 +31,10 @@ async function listSales() {
 async function getSaleById(id) {
   return Sale.findById(id);
 }
+async function updateSale(id, data) {
+  return Sale.findByIdAndUpdate(id, mountSale(data), { new: true });
+}
 
 module.exports = {
-  createSale, listSales, getSaleById,
+  createSale, listSales, getSaleById, updateSale,
 };

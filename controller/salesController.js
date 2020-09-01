@@ -43,4 +43,24 @@ async function getSale(req, res) {
   }
 }
 
-module.exports = { createSale, listSales, getSale };
+async function updateSale(req, res) {
+  try {
+    const { id } = req.params;
+    const sale = req.body;
+    const { message } = await Validation.validadeSale(sale);
+    if (message) {
+      throw new Error(message);
+    }
+    const Sale = await Sales.updateSale(id, sale);
+    res.status(200).send(Sale);
+  } catch (error) {
+    const err = {
+      err: {
+        code: 'invalid_data', message: error.message,
+      },
+    };
+    res.status(422).send(err);
+  }
+}
+
+module.exports = { createSale, listSales, getSale, updateSale };
