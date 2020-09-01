@@ -13,7 +13,7 @@ const getAllProducts = async () =>
   connect().then((db) => db.collection('products').find({}).toArray());
 
 const getProductById = async (searchId) =>
-  connect().then((db) => db.collection('products').findOne({ _id: ObjectId(searchId) }));
+  connect().then((db) => db.collection('products').findOne(ObjectId(searchId)));
 
 const updateProduct = async (id, name, quantity) =>
   connect()
