@@ -1,13 +1,18 @@
 const Sales = require('../models/sales');
 const Validation = require('../services/validations');
 
+async function validation(req) {
+  const data = req.body;
+  const { message } = await Validation.validadeSale(data);
+  if (message) {
+    throw new Error(message);
+  }
+  return data;
+}
+
 async function createSale(req, res) {
   try {
-    const data = req.body;
-    const { message } = await Validation.validadeSale(data);
-    if (message) {
-      throw new Error(message);
-    }
+    const data = await validation(req);
     const sale = await Sales.createSale(data);
     res.status(200).send(sale);
   } catch (error) {
