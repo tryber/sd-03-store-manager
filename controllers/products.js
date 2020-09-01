@@ -43,8 +43,8 @@ async function update(req, res, next) {
   const { name, quantity } = req.body;
   const { id } = req.params;
   if (res.product) return next(Boom.notAcceptable('"name" Already exists'));
-  await productService.updateById(id, { name, quantity });
-  res.status(204).end();
+  const updatedProduct = await productService.updateById(id, { name, quantity });
+  res.status(202).json(updatedProduct);
 }
 
 productsRouter

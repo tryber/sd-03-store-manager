@@ -22,9 +22,9 @@ async function getById(id) {
 }
 
 async function updateById(id, { name, quantity }) {
-  console.log('params', id, name, quantity);
   const productsColl = await connectTo('products');
-  return productsColl.updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
+  await productsColl.updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
+  return { _id: id, name, quantity };
 }
 
 module.exports = {
