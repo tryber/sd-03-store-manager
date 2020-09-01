@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { updater, updaterDelete } = require('../services/updater');
 
 const { Schema } = mongoose;
 
@@ -21,6 +22,7 @@ function mountSale(sale) {
 async function createSale(data) {
   const d = mountSale(data);
   const sale = await Sale.create(d);
+  await updater(data);
   return sale;
 }
 
@@ -36,8 +38,15 @@ async function updateSale(id, data) {
 }
 
 async function deleteSale(id) {
-  return Sale.findByIdAndRemove(id);
+  const product = await Sale.findByIdAndRemove(id);
+  console.log('product', product);
+  await updaterDelete(product.itensSold);
+  return product;
 }
-module.exports = {
-  createSale, listSales, getSaleById, updateSale, deleteSale,
+module.exports = { Sale,
+  createSale,
+  listSales,
+  getSaleById,
+  updateSale,
+  deleteSale,
 };

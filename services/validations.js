@@ -46,4 +46,15 @@ async function validadeSale(sale) {
   return { message: 'Wrong product ID or invalid quantity' };
 }
 
-module.exports = { validadeNewProduct, validadeUpdateProduct, validadeSale };
+async function validadeStock(sale) {
+  console.log('sale', sale);
+  const valid = await sale.reduce(async (acc, i) => {
+    if (!acc) return acc;
+    const product = await getProductById(i.productId);
+    const quantity = product ? product.quantity : -1;
+    return quantity > i.quantity;
+  }, true);
+  return valid;
+}
+
+module.exports = { validadeNewProduct, validadeUpdateProduct, validadeSale, validadeStock };

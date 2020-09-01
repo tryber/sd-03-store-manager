@@ -4,8 +4,13 @@ const Validation = require('../services/validations');
 async function validation(req) {
   const data = req.body;
   const { message } = await Validation.validadeSale(data);
+  const stock = await Validation.validadeStock(data);
+
   if (message) {
     throw new Error(message);
+  }
+  if (!stock) {
+    throw new Error('Such amount is not permitted to sell');
   }
   return data;
 }
@@ -16,12 +21,19 @@ async function createSale(req, res) {
     const sale = await Sales.createSale(data);
     res.status(200).send(sale);
   } catch (error) {
+    let status = 422;
+    let code = 'invalid_data';
+    if (error.message === 'Such amount is not permitted to sell') {
+      status = 404;
+      code = 'stock_problem';
+    }
+
     const err = {
       err: {
-        code: 'invalid_data', message: error.message,
+        code, message: error.message,
       },
     };
-    res.status(422).send(err);
+    res.status(status).send(err);
   }
 }
 
