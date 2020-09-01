@@ -1,21 +1,17 @@
 const productsModel = require('../models/productsModel');
-const validation = require('./validation');
+const { productSchema } = require('./validation');
 
 const errorResponses = {
   invalid_data: { message: 'Product already exists' },
-  invalid_name: { message: '\'name\' length must be at least 5 characters long' },
-  invalid_quantity: { message: '\'quantity\' must be larger than or equal 1' },
+  invalid_name: { message: "'name' length must be at least 5 characters long" },
+  invalid_quantity: { message: "'quantity' must be larger than or equal 1" },
 };
 
 const createProduct = async (name, quantity) => {
-  const productCheck = await validation.productSchema(name, quantity);
-  const {
-    error: {
-      details: {
-        context: { key },
-      },
-    },
-  } = productCheck;
+  const productCheck = await productSchema(name, quantity);
+  const { error } = productCheck;
+  const { details } = error;
+  const { context: { key } } = details[0];
 
   if (key && key === 'name') {
     return errorResponses.invalid_name;
