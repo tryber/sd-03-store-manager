@@ -49,4 +49,14 @@ async function createProduct({ name, quantity }) {
   return product.save();
 }
 
-module.exports = { createProduct, getProductByName, listProducts, getProductById, updateProduct };
+async function deleteProduct(id) {
+  return Product.findByIdAndDelete(id);
+}
+
+module.exports = {
+  createProduct,
+  deleteProduct,
+  getProductByName,
+  listProducts,
+  getProductById,
+  updateProduct };

@@ -20,4 +20,6 @@ app.get('/products/:id', controllers.getProduct);
 
 app.put('/products/:id', controllers.updateProduct);
 
+app.delete('/products/:id', controllers.deleteProduct);
+
 app.listen(3000, () => console.log('listen to port 3000'));

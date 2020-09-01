@@ -64,4 +64,18 @@ async function updateProduct(req, res) {
     res.status(422).send(err);
   }
 }
-module.exports = { productController, listProducts, getProduct, updateProduct };
+
+async function deleteProduct(req, res) {
+  try {
+    const product = await Products.deleteProduct(req.params.id);
+    res.status(200).send(product);
+  } catch (error) {
+    res.status(422).send({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    });
+  }
+}
+module.exports = { productController, deleteProduct, listProducts, getProduct, updateProduct };
