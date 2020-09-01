@@ -12,10 +12,6 @@ const saleSchema = new Schema({
 
 const Sale = mongoose.model('Sale', saleSchema);
 
-async function getSaleById(id) {
-  return Sale.findById(id);
-}
-
 function mountSale(sale) {
   return ({
     itensSold: sale,
@@ -28,6 +24,14 @@ async function createSale(data) {
   return sale;
 }
 
+async function listSales() {
+  return Sale.find();
+}
+
+async function getSaleById(id) {
+  return Sale.findById(id);
+}
+
 module.exports = {
-  createSale,
+  createSale, listSales, getSaleById,
 };
