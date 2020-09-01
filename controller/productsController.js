@@ -21,4 +21,27 @@ async function productController(req, res) {
   }
 }
 
-module.exports = { productController };
+async function listProducts(req, res) {
+  try {
+    const products = await Products.listProducts();
+    res.status(200).send({ products });
+  } catch (error) {
+    res.status(404).send([]);
+  }
+}
+
+async function getProduct(req, res) {
+  try {
+    const product = await Products.getProductById(req.params.id);
+    res.status(201).send(product);
+  } catch (error) {
+    res.status(422).send({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    });
+  }
+}
+
+module.exports = { productController, listProducts, getProduct };

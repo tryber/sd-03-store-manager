@@ -20,12 +20,25 @@ async function getProductByName(name) {
 }
 
 /**
+ * Get a product by id
+ * @param {number} id
+ */
+async function getProductById(id) {
+  return Product.findById(id);
+}
+/**
+ * List all products
+ */
+async function listProducts() {
+  return Product.find();
+}
+
+/**
  * Create a new product to the database
  */
 async function createProduct({ name, quantity }) {
-  console.log(name, quantity);
   const product = new Product({ name, quantity });
   return product.save();
 }
 
-module.exports = { createProduct, getProductByName };
+module.exports = { createProduct, getProductByName, listProducts, getProductById };

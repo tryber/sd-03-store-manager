@@ -14,4 +14,8 @@ app.get('/', (request, response) => {
 
 app.post('/products', controllers.productController);
 
+app.get('/products', controllers.listProducts);
+
+app.get('/products/:id', controllers.getProduct);
+
 app.listen(3000, () => console.log('listen to port 3000'));
