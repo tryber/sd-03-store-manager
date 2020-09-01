@@ -29,7 +29,7 @@ app.use((err, _req, res, _next) => {
   if (Boom.isBoom(err)) {
     return res.status(err.output.statusCode).json(err.output.payload);
   }
-  res.json({ status: 500, message: err.message });
+  res.json({ status: 500, message: err.message, data: err.stack });
 });
 
 const { PORT = 3000 } = process.env;

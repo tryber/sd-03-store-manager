@@ -10,7 +10,7 @@ const productsSchema = {
     },
     quantity: {
       type: 'integer',
-      'minimum': 0,
+      'minimum': 1,
     },
   },
   additionalProperties: false,
@@ -20,16 +20,27 @@ const productsSchema = {
 const validateProduct = validate(productsSchema);
 
 async function createProduct(name, quantity) {
-  const { insertedId } = productModel.add(name, quantity);
+  const { insertedId } = await productModel.add(name, quantity);
   return { _id: insertedId, name, quantity };
+}
+
+async function getAll() {
+  return productModel.getAll();
 }
 
 async function getByName(name) {
   return productModel.getByName(name);
 }
 
+async function getById(id) {
+  return productModel.getById(id);
+}
+
+
 module.exports = {
   createProduct,
   validateProduct,
+  getAll,
   getByName,
+  getById,
 };
