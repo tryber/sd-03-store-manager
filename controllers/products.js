@@ -16,7 +16,7 @@ async function verifyExistenceByBody(req, res, next) {
 
 async function verifyExistenceById(req, res, next) {
   res.productById = await productService.getById(req.params.id);
-  if (!res.productById) next(Boom.notFound(`Product doesn't exist`));
+  if (!res.productById) next(Boom.notFound('Product doesn\'t exist'));
 
   return next();
 }
