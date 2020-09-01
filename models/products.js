@@ -23,8 +23,12 @@ async function getById(id) {
 
 async function updateById(id, { name, quantity }) {
   const productsColl = await connectTo('products');
-  await productsColl.updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
-  return { _id: id, name, quantity };
+  return productsColl.updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
+}
+
+async function deleteById(id) {
+  const productsColl = await connectTo('products');
+  await productsColl.deleteOne({ _id: ObjectID(id) });
 }
 
 module.exports = {
@@ -33,4 +37,5 @@ module.exports = {
   getByName,
   getById,
   updateById,
+  deleteById,
 };

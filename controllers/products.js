@@ -47,6 +47,12 @@ async function update(req, res, next) {
   res.status(202).json(updatedProduct);
 }
 
+async function deleteById(req, res) {
+  const { id } = req.params;
+  const product = await productService.deleteById(id);
+  return res.status(200).json(product);
+}
+
 productsRouter
   .route('/')
   .get(rescue(async (_, res) => res.status(200).json(await productService.getAll())))
@@ -58,6 +64,7 @@ productsRouter
     rescue(verifyExistenceByBody),
     rescue(async (req, res) => res.status(200).json(await productService.getById(req.params.id))),
   )
-  .put(productService.validateProduct, verifyIdParam, rescue(verifyExistenceById), rescue(update));
+  .put(productService.validateProduct, verifyIdParam, rescue(verifyExistenceById), rescue(update))
+  .delete(verifyIdParam, rescue(deleteById));
 
 module.exports = productsRouter;

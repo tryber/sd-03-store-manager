@@ -37,7 +37,14 @@ async function getById(id) {
 }
 
 async function updateById(id, { name, quantity }) {
-  return productModel.updateById(id, { name, quantity });
+  productModel.updateById(id, { name, quantity });
+  return { _id: id, name, quantity };
+}
+
+async function deleteById(id) {
+  const product = await getById(id);
+  await productModel.deleteById(id);
+  return product;
 }
 
 module.exports = {
@@ -47,4 +54,5 @@ module.exports = {
   getByName,
   getById,
   updateById,
+  deleteById,
 };
