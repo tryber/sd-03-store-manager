@@ -1,8 +1,8 @@
 const { MongoClient } = require('mongodb');
 
-const CONNECT_URL = 'mongodb://mongodb:27017/StoreManager';
+const { CONNECT_URL = 'mongodb://mongodb:27017/StoreManager' } = process.env;
 
-const APP_DB = process.env.DB_NAME || 'StoreManager';
+const { DB_NAME = 'StoreManager' } = process.env;
 
 module.exports = async () => {
   try {
@@ -11,7 +11,7 @@ module.exports = async () => {
       useUnifiedTopology: true,
     });
     console.log(connection);
-    return connection.db(APP_DB);
+    return connection.db(DB_NAME);
   } catch (error) {
     throw new Error('connection refused');
   }
