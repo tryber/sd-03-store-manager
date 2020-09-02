@@ -46,9 +46,9 @@ const createProduct = async (name, quantity) => {
 const updateProduct = async (id, name, quantity) => {
   try {
     const bodyValidation = await productRegistryValidation(name, quantity);
-    const newProduct = !bodyValidation && (await updateProductById(id, name, quantity));
+    const updatedProduct = !bodyValidation && (await updateProductById(id, name, quantity));
 
-    return bodyValidation || { ...newProduct };
+    return bodyValidation || { ...updatedProduct };
   } catch (error) {
     throw new Error(error.message);
   }

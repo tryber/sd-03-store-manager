@@ -1,5 +1,10 @@
 const { Router } = require('express');
-const { createProduct, listProducts, listProductById } = require('../services/productsServices');
+const {
+  createProduct,
+  updateProduct,
+  listProducts,
+  listProductById,
+} = require('../services/productsServices');
 const { generateError } = require('./utils');
 
 const products = Router();
@@ -43,6 +48,19 @@ products
       return next(err);
     }
   })
-  .put();
+  .put(async (req, res, next) => {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+    try {
+      const product = await updateProduct(id, name, quantity);
+
+      if (product.message) throw new Error(product.message);
+
+      return res.status(200).json(product);
+    } catch (error) {
+      const err = generateError(422, error);
+      return next(err);
+    }
+  });
 
 module.exports = products;
