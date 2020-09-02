@@ -6,29 +6,32 @@ const errorResponses = {
   invalid_name: { message: '\'name\' length must be at least 5 characters long' },
   invalid_quantity: { message: '\'quantity\' must be larger than or equal 1' },
 };
+const productRegistryValidation = async (name, quantity) => {
+  const validation = productSchema(name, quantity);
+  const key = validation && validation.details[0].context.key;
+  if (key && key === 'name') {
+    return errorResponses.invalid_name;
+  }
+
+  if (key && key === 'quantity') {
+    return errorResponses.invalid_quantity;
+  }
+
+  const nameCheck = await productsModel.getProductByName(name);
+
+  if (nameCheck) {
+    return errorResponses.invalid_data;
+  }
+
+  return false;
+};
 
 const createProduct = async (name, quantity) => {
   try {
-    const validation = productSchema(name, quantity);
-    const key = validation && validation.details[0].context.key;
+    const bodyValidation = await productRegistryValidation(name, quantity);
+    const newProduct = !bodyValidation && await productsModel.createProducts(name, quantity);
 
-    if (key && key === 'name') {
-      return errorResponses.invalid_name;
-    }
-
-    if (key && key === 'quantity') {
-      return errorResponses.invalid_quantity;
-    }
-
-    const nameCheck = await productsModel.getProductByName(name);
-
-    if (nameCheck) {
-      return errorResponses.invalid_data;
-    }
-
-    const newProduct = await productsModel.createProducts(name, quantity);
-
-    return { ...newProduct };
+    return bodyValidation || { ...newProduct };
   } catch (error) {
     throw new Error(error.message);
   }
