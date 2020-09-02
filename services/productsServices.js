@@ -1,6 +1,7 @@
 const {
   createProducts,
   updateProductById,
+  deleteProductById,
   getAllProducts,
   getProductById,
 } = require('../models/productsModel');
@@ -28,6 +29,15 @@ const updateProduct = async (id, name, quantity) => {
   }
 };
 
+const deleteProduct = async (id) => {
+  try {
+    const product = await deleteProductById(id);
+    return product;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const listProducts = async () => {
   try {
     const products = await getAllProducts();
@@ -49,6 +59,7 @@ const listProductById = async (id) => {
 module.exports = {
   createProduct,
   updateProduct,
+  deleteProduct,
   listProducts,
   listProductById,
 };
