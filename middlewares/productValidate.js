@@ -31,7 +31,7 @@ const idValidationRules = [
   param('id', errMessage('invalid_data', WRONG_ID)).isMongoId(),
 ];
 
-const addProductValidationRules = [
+const addSaleValidationRules = [
   body().isArray(),
   body('*.productId', errMessage('invalid_data', INVALID_ID_OR_QUANTITY)).isMongoId(),
   body('*.quantity', errMessage('invalid_data', INVALID_ID_OR_QUANTITY)).isNumeric(),
@@ -41,5 +41,5 @@ const addProductValidationRules = [
 module.exports = {
   productValidate: productValidate(productValidationRules),
   idValidate: productValidate(idValidationRules),
-  addProductValidate: productValidate(addProductValidationRules),
+  saleValidate: productValidate(addSaleValidationRules),
 };

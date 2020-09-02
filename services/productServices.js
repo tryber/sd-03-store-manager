@@ -14,12 +14,6 @@ const handleCreateProduct = async (name, quantity) => {
   return productModel.createProduct(name, quantity);
 };
 
-const handleGetProductById = async (id) => {
-  const product = await productModel.getProductById(id);
-  if (!product) return { error: true, message: errMessage('invalid_data', WRONG_ID) };
-  return product;
-};
-
 const handleUpdateProduct = async (id, productData) => {
   const updatedProduct = await productModel.updateProductById(id, productData);
   if (!updatedProduct) return { error: true, message: errMessage('invalid_data', UNKNOW_PRODUCT) };
@@ -28,6 +22,12 @@ const handleUpdateProduct = async (id, productData) => {
 };
 
 const handleGetAllProducts = async () => productModel.getAllProducts();
+
+const handleGetProductById = async (id) => {
+  const product = await productModel.getProductById(id);
+  if (!product) return { error: true, message: errMessage('invalid_data', WRONG_ID) };
+  return product;
+};
 
 const handleDeleteProduct = async (id) => {
   const product = productModel.getProductById(id);
