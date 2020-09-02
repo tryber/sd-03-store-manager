@@ -16,27 +16,23 @@ async function func(res, cb, req, status, status2) {
 }
 
 async function func2(req, res, cb, cb2) {
-  let id;
-  if (req.params) {
-    id = req.params.id;
-  }
-  const { name, quantity } = req.body;
-  const { message } = await cb(name, quantity);
-  if (message) {
-    throw new Error(message);
-  }
-  if (id) {
-    const product = await cb2(id, { name, quantity });
-    res.status(200).send(product);
-  } else {
-    const product = await cb2({ name, quantity });
-    res.status(201).send(product);
-  }
-}
-
-async function productController(req, res) {
   try {
-    await func2(req, res, Validation.validadeNewProduct, Products.createProduct);
+    let id;
+    if (req.params) {
+      id = req.params.id;
+    }
+    const { name, quantity } = req.body;
+    const { message } = await cb(name, quantity);
+    if (message) {
+      throw new Error(message);
+    }
+    if (id) {
+      const product = await cb2(id, { name, quantity });
+      res.status(200).send(product);
+    } else {
+      const product = await cb2({ name, quantity });
+      res.status(201).send(product);
+    }
   } catch (error) {
     const err = {
       err: {
@@ -45,6 +41,10 @@ async function productController(req, res) {
     };
     res.status(422).send(err);
   }
+}
+
+async function productController(req, res) {
+  await func2(req, res, Validation.validadeNewProduct, Products.createProduct);
 }
 
 async function listProducts(req, res) {
@@ -61,16 +61,7 @@ async function getProduct(req, res) {
 }
 
 async function updateProduct(req, res) {
-  try {
-    await func2(req, res, Validation.validadeUpdateProduct, Products.updateProduct);
-  } catch (error) {
-    const err = {
-      err: {
-        code: 'invalid_data', message: error.message,
-      },
-    };
-    res.status(422).send(err);
-  }
+  await func2(req, res, Validation.validadeUpdateProduct, Products.updateProduct);
 }
 
 async function deleteProduct(req, res) {
