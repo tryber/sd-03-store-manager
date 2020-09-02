@@ -1,4 +1,4 @@
-const connection = require('./connection');
+const { connection, connectAndFindAll } = require('./connection');
 
 const createSales = async (products) => {
   try {
@@ -17,8 +17,7 @@ const createSales = async (products) => {
 
 const getAllSales = async () => {
   try {
-    const connect = await connection('sales');
-    const searchAllSales = await connect.find().toArray();
+    const searchAllSales = await connectAndFindAll('sales');
     return searchAllSales;
   } catch (error) {
     throw new Error('sales search failed');

@@ -17,7 +17,7 @@ const connect = async () => {
   }
 };
 
-module.exports = async (collect = '') => {
+const connection = async (collect = '') => {
   try {
     const db = await connect();
     const dbCollection = db.collection(collect);
@@ -26,3 +26,15 @@ module.exports = async (collect = '') => {
     throw new Error('connection refused');
   }
 };
+
+const connectAndFindAll = async (collect = '') => {
+  try {
+    const dbconnect = await connection(collect);
+    const searchAll = await dbconnect.find().toArray();
+    return searchAll;
+  } catch (error) {
+    throw new Error(`${collect} search failed`);
+  }
+};
+
+module.exports = { connection, connectAndFindAll };

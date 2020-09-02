@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const connection = require('./connection');
+const { connection, connectAndFindAll } = require('./connection');
 
 const createProducts = async (name, quantity) => {
   try {
@@ -17,8 +17,10 @@ const createProducts = async (name, quantity) => {
 const updateProductById = async (id, name, quantity) => {
   try {
     const connect = await connection('products');
-    const updateQuery = await connect
-      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } });
+    const updateQuery = await connect.findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } },
+    );
     const { _id } = updateQuery.value;
 
     return { _id, name, quantity };
@@ -41,8 +43,7 @@ const deleteProductById = async (id) => {
 
 const getAllProducts = async () => {
   try {
-    const connect = await connection('products');
-    const searchAll = await connect.find().toArray();
+    const searchAll = await connectAndFindAll('products');
     return searchAll;
   } catch (error) {
     throw new Error('products search failed');
