@@ -3,14 +3,13 @@ const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
 const { productService } = require('../services');
 
+const productsRouter = Router();
+
 const SHOULD_NOT_EXISTS = 'should not exists';
 const SHOULD_EXISTS = 'should exists';
 
-
-const productsRouter = Router();
 /**
- * 
- * @param {string} shouldExists define se o produto devia ou não existe e pode gerar um boom error apartir disso
+ * @param {string} shouldExists define se o produto devia ou não existe e pode gerar error
  */
 function verifyExistenceByName(shouldExists = SHOULD_EXISTS) {
   return rescue(async (req, res, next) => {
