@@ -1,9 +1,14 @@
 const { generateError } = require('../controllers/utils');
 
+const data = async (body, callback, obj = {}) => {
+  const exec = body ? await callback(obj) : await callback();
+  return exec;
+};
+
 module.exports = (callback, body = true) => async (req, res, next) => {
   try {
-    const data = body ? await callback(req.body) : await callback();
-    const errorMessage = data[0].message || data.message;
+    const appData = await data(body, callback, req.body);
+    const errorMessage = appData[0].message || appData.message;
 
     if (errorMessage) throw new Error(errorMessage);
 
