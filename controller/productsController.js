@@ -57,7 +57,7 @@ async function listProducts(req, res) {
 }
 
 async function getProduct(req, res) {
-  await func(res, Products.getProductById, req.params.id, 201, 422);
+  await func(res, Products.getProductById, req.params.id, 200, 422);
 }
 
 async function updateProduct(req, res) {
