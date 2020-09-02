@@ -9,8 +9,9 @@ sales
   .post(async (req, res, next) => {
     try {
       const sale = await createSale(req.body);
+      const errorMessage = sale[0].message;
 
-      if (sale[0].message) throw new Error(sale[0].message);
+      if (errorMessage) throw new Error(errorMessage);
 
       return res.status(200).json(sale);
     } catch (error) {
