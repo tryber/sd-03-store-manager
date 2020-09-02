@@ -3,6 +3,7 @@ const productModel = require('../models/productModel');
 const {
   PRODUCT_ALREADY_EXISTS,
   WRONG_ID,
+  UNKNOW_PRODUCT,
   errMessage,
 } = require('./errorsServices');
 
@@ -19,10 +20,26 @@ const handleGetProductById = async (id) => {
   return product;
 };
 
+const handleUpdateProduct = async (id, productData) => {
+  const updatedProduct = await productModel.updateProductById(id, productData);
+  if (!updatedProduct) return { error: true, message: errMessage('invalid_data', UNKNOW_PRODUCT) };
+
+  return updatedProduct;
+};
+
 const handleGetAllProducts = async () => productModel.getAllProducts();
+
+const handleDeleteProduct = async (id) => {
+  const product = productModel.getProductById(id);
+  if (!product) return { error: true, message: errMessage('invalid_data', UNKNOW_PRODUCT) };
+  await productModel.deleteProductById(id);
+  return product;
+};
 
 module.exports = {
   handleCreateProduct,
   handleGetProductById,
   handleGetAllProducts,
+  handleUpdateProduct,
+  handleDeleteProduct,
 };

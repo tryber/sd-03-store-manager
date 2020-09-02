@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const productController = require('./controllers/productController');
+const salesController = require('./controllers/salesController');
 
 const app = express();
 
@@ -12,9 +13,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/products', productController);
-// app.get('/products', controllers.productController.registerProduct);
-
-// app.use((err, _req, res, _next) =>
-//   res.status(500).json({ message: err.message, stack: err.stack }));
+app.use('/sales', salesController);
 
 app.listen(3000, () => console.log('App listening on port 3000!'));

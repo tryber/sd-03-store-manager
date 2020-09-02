@@ -1,9 +1,10 @@
-const { body, check, validationResult } = require('express-validator');
+const { body, check, validationResult, param } = require('express-validator');
 const {
   INVALID_NAME_LENGTH,
   INVALID_NAME_TYPE,
   INVALID_QUANTITY,
   INVALID_QUANTITY_TYPE,
+  WRONG_ID,
   errMessage,
 } = require('../services/errorsServices');
 
@@ -25,6 +26,10 @@ const productValidationRules = [
   check('quantity', errMessage('invalid_data', INVALID_QUANTITY)).custom((value) => value > 0),
 ];
 
+const idValidationRules = [
+  param('id', errMessage('invalid_data', WRONG_ID)).isMongoId(),
+];
 module.exports = {
   productValidate: productValidate(productValidationRules),
+  idValidate: productValidate(idValidationRules),
 };
