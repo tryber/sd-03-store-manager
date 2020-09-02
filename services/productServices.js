@@ -47,16 +47,12 @@ const serviceUpdateProduct = async (id, { name, quantity }) => {
   return storeModel.updateProduct(id, { name, quantity });
 };
 
-const deleteProductOrSale = async (id, callback1, callback2, code, message) => {
-  const result = await callback1(id);
-  if (!result) return { err: { code, message } };
-  await callback2(id);
-  return result;
+const serviceDeleteProduct = async (id) => {
+  const product = await storeModel.getProductById(id);
+  if (!product) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  await storeModel.deleteProduct(id);
+  return product;
 };
-
-const serviceDeleteProduct = async (id) =>
-  deleteProductOrSale(id, storeModel.getProductById,
-    storeModel.deleteProduct, 'invalid_data', 'Wrong id format');
 
 module.exports = {
   serviceCreateProduct,
@@ -65,5 +61,4 @@ module.exports = {
   serviceUpdateProduct,
   serviceDeleteProduct,
   getById,
-  deleteProductOrSale,
 };

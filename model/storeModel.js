@@ -42,16 +42,19 @@ const getSaleById = async (id) => byId(id, 'sales');
 
 const deleteSale = (id) => deleteOne(id, 'sales');
 
-const updateProductAfterSale = (soldItems) => {
-  soldItems.forEach(({ productId, quantity }) => connection()
-    .then((db) => db.collection('products').updateOne({ _id: ObjectId(productId) }, { $inc: { quantity: -quantity } })));
+const update = (productId, quantity) => {
+  connection()
+    .then((db) => db.collection('products')
+      .updateOne({ _id: ObjectId(productId) }, { $inc: { quantity } }));
 };
 
-// const updateProductAfterDeletion = ({ itensSold }) => {
-//   itensSold.forEach(({ productId, quantity }) => connection()
-//     .then((db) => db.collection('products')
-// .updateOne({ _id: ObjectId(productId) }, { $inc: { quantity } })));
-// };
+const updateProductAfterSale = (soldItems) => {
+  soldItems.forEach(({ productId, quantity }) => update(productId, -quantity));
+};
+
+const updateProductAfterDeletion = ({ itensSold }) => {
+  itensSold.forEach(({ productId, quantity }) => update(productId, quantity));
+};
 
 const updateSale = (_id, itensSold) => connection()
   .then((db) => db.collection('sales').updateOne({ _id: ObjectId(_id) }, { $set: { itensSold } }))
@@ -70,5 +73,5 @@ module.exports = {
   updateSale,
   deleteSale,
   updateProductAfterSale,
-  // updateProductAfterDeletion,
+  updateProductAfterDeletion,
 };
