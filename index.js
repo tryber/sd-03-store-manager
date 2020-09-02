@@ -5,7 +5,7 @@ const ProductController = require('./controller/productsController');
 const SalesControler = require('./controller/salesController');
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/StoreManager', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+mongoose.connect('mongodb://mongodb:27017/StoreManager', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 app.use(bodyparser.json());
 // não remova esse endpoint, e para o avaliador funcionar
