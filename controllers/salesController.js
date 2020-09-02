@@ -1,64 +1,64 @@
-const boom = require('@hapi/boom');
-const { Router } = require('express');
-const rescue = require('express-rescue');
+// const boom = require('@hapi/boom');
+// const { Router } = require('express');
+// const rescue = require('express-rescue');
 
-const salesService = require('../services/salesService');
+// const salesService = require('../services/salesService');
 
-const sales = Router();
+// const sales = Router();
 
-sales.get('/', rescue(async (_, res) => {
-  const sale = await salesService.getAllSales();
+// sales.get('/', rescue(async (_, res) => {
+//   const sale = await salesService.getAllSales();
 
-  res.status(200).json(sale);
-}));
+//   res.status(200).json(sale);
+// }));
 
-sales.post('/', rescue(async (req, res, next) => {
-  const { itensSold: { productId, quantity } } = req.body;
+// sales.post('/', rescue(async (req, res, next) => {
+//   const { itensSold: { productId, quantity } } = req.body;
 
-  const sale = await salesService.createSale({ itensSold: { productId, quantity } });
+//   const sale = await salesService.createSale({ itensSold: { productId, quantity } });
 
-  if (sale.error) {
-    return next(boom.badData(sale.message));
-  }
+//   if (sale.error) {
+//     return next(boom.badData(sale.message));
+//   }
 
-  return res.status(201).json(sale);
-}));
+//   return res.status(201).json(sale);
+// }));
 
-sales.get('/:id', rescue(async (req, res, next) => {
-  const { id } = req.params;
+// sales.get('/:id', rescue(async (req, res, next) => {
+//   const { id } = req.params;
 
-  const sale = await salesService.getsaleById(id);
+//   const sale = await salesService.getsaleById(id);
 
-  if (sale.error) {
-    return next(boom.notFound(sale.message));
-  }
+//   if (sale.error) {
+//     return next(boom.notFound(sale.message));
+//   }
 
-  return res.status(200).json(sale);
-}));
+//   return res.status(200).json(sale);
+// }));
 
-sales.delete('/:id', rescue(async (req, res) => {
-  const { id } = req.params;
+// sales.delete('/:id', rescue(async (req, res) => {
+//   const { id } = req.params;
 
-  await salesService.deletesale(id);
+//   await salesService.deletesale(id);
 
-  return res.status(204).end();
-}));
+//   return res.status(204).end();
+// }));
 
-sales.put('/:id', rescue(async (req, res, next) => {
-  const { id } = req.params;
-  const { itensSold: { productId, quantity } } = req.body;
+// sales.put('/:id', rescue(async (req, res, next) => {
+//   const { id } = req.params;
+//   const { itensSold: { productId, quantity } } = req.body;
 
-  const newSale = await salesService.updatesale(id, { itensSold: { productId, quantity } });
+//   const newSale = await salesService.updatesale(id, { itensSold: { productId, quantity } });
 
-  if (newSale.error) {
-    const error = newSale.code === 'not_found'
-      ? boom.notFound(newSale.message)
-      : boom.badData(newSale.message);
+//   if (newSale.error) {
+//     const error = newSale.code === 'not_found'
+//       ? boom.notFound(newSale.message)
+//       : boom.badData(newSale.message);
 
-    return next(error);
-  }
+//     return next(error);
+//   }
 
-  return res.status(200).json(newSale);
-}));
+//   return res.status(200).json(newSale);
+// }));
 
-module.exports = sales;
+// module.exports = sales;
