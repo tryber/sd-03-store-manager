@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { connection, connectAndFindAll } = require('./connection');
+const { connection } = require('./connection');
 
 const createProducts = async (name, quantity) => {
   try {
@@ -43,7 +43,8 @@ const deleteProductById = async (id) => {
 
 const getAllProducts = async () => {
   try {
-    const searchAll = await connectAndFindAll('products');
+    const connect = await connection('products');
+    const searchAll = await connect.find().toArray();
     return searchAll;
   } catch (error) {
     throw new Error('products search failed');
