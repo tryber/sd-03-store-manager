@@ -44,14 +44,16 @@ const updateProductAfterSale = (soldItems) => {
     .then((db) => db.collection('products').updateOne({ _id: ObjectId(productId) }, { $inc: { quantity: -quantity } })));
 };
 
-const updateProductAfterDeletion = ({ itensSold }) => {
+const update = (a, b) => {
+  if (b) {
+    return connection()
+      .then((db) => db.collection('sales').updateOne({ _id: ObjectId(a) }, { $set: { itensSold: b } }))
+      .then(() => ({ _id: a, itensSold: b }));
+  }
+  const { itensSold } = a;
   itensSold.forEach(({ productId, quantity }) => connection()
     .then((db) => db.collection('products').updateOne({ _id: ObjectId(productId) }, { $inc: { quantity } })));
 };
-
-const updateSale = (_id, itensSold) => connection()
-  .then((db) => db.collection('sales').updateOne({ _id: ObjectId(_id) }, { $set: { itensSold } }))
-  .then(() => { console.log(_id); return { _id, itensSold }; });
 
 module.exports = {
   createProduct,
@@ -63,8 +65,7 @@ module.exports = {
   createSale,
   getAllSales,
   getSaleById,
-  updateSale,
+  update,
   deleteSale,
   updateProductAfterSale,
-  updateProductAfterDeletion,
 };
