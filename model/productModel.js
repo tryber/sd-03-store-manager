@@ -4,7 +4,7 @@ const getProductByName = async (name) =>
   mongoc.connect()
   .then((db) => db
     .collection('products')
-    .findOne({name})
+    .findOne({ name }),
   );
 
 const createProductInDB = async (name, quantity) =>
