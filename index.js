@@ -33,4 +33,4 @@ app.use((err, _req, res, _next) => {
 
 const { PORT = 3000 } = process.env;
 
-app.listen(PORT, () => console.log(`ouvindo na porta ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`ouvindo na porta ${PORT}`));
