@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/StoreManager', { useNewUrlParser: true, useUnifiedTopology: true });
-
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
