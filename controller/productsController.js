@@ -38,8 +38,6 @@ async function listProducts(req, res) {
 async function getProduct(req, res) {
   try {
     await func(res, Products.getProductById, req.params.id, 201);
-    // const product = await Products.getProductById(req.params.id);
-    // res.status(201).send(product);
   } catch (error) {
     res.status(422).send({
       err: {
@@ -74,8 +72,6 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
   try {
     await func(res, Products.deleteProduct, req.params.id, 200);
-    // const product = await Products.deleteProduct(req.params.id);
-    // res.status(200).send(product);
   } catch (error) {
     res.status(422).send({
       err: {
