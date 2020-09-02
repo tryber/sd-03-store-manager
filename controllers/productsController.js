@@ -12,7 +12,8 @@ const products = Router();
 products
   .route('/')
   .post(async (req, res, next) => {
-    const { name, quantity } = req.body;
+    const { body } = req;
+    const { name, quantity } = body;
     try {
       const product = await createProduct(name, quantity);
 
