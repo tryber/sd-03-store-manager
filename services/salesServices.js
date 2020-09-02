@@ -1,10 +1,17 @@
 const { createSales } = require('../models/salesModel');
-const { productRegistryValidation } = require('./validation');
+const { salesRegistryValidation } = require('./validation');
 
 const createSale = async (products = []) => {
   try {
-    const productsValidation = products.map(({ name, quantity }) =>
-      productRegistryValidation(name, quantity));
+    /* valida se alguma mensage de erro de validação é
+    retornada, caso sim inclui numa array de mensagens */
+    const productsValidation = products.reduce(
+      (acc, { productId, quantity }) =>
+        (salesRegistryValidation(productId, quantity)
+          ? [...acc, salesRegistryValidation(productId, quantity)]
+          : acc),
+      [],
+    );
     const newSale = !productsValidation.length && createSales(products);
 
     return productsValidation || { ...newSale };
