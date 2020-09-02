@@ -3,46 +3,58 @@ const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
 const { productService } = require('../services');
 
-const productsRouter = Router();
+const SHOULD_NOT_EXISTS = 'should not exists';
+const SHOULD_EXISTS = 'should exists';
 
+
+const productsRouter = Router();
 /**
- * Confere se existe o produto pelo nome, caso exista adiciona na propriedade produto de res
+ * 
+ * @param {string} shouldExists define se o produto devia ou não existe e pode gerar um boom error apartir disso
  */
-async function verifyExistenceByBody(req, res, next) {
-  const { name } = req.body;
-  res.product = name && (await productService.getByName(name));
-  return next();
+function verifyExistenceByName(shouldExists = SHOULD_EXISTS) {
+  return rescue(async (req, res, next) => {
+    const { name } = req.body;
+    const product = await productService.verifyExistenceByName(name, shouldExists);
+
+    if (product && product.error) next(Boom.badData(product.message));
+
+    res.productByName = product;
+    next();
+  });
 }
 
-async function verifyExistenceById(req, res, next) {
-  res.productById = await productService.getById(req.params.id);
-  if (!res.productById) next(Boom.notFound('Product doesn\'t exist'));
+function verifyExistenceById(shouldExists = SHOULD_EXISTS) {
+  return rescue(async (req, res, next) => {
+    const { id } = req.params;
+    const product = await productService.verifyExistenceById(id, shouldExists);
 
-  return next();
+    if (product.error) return next(Boom.notFound(product.message));
+
+    res.productById = product;
+    return next();
+  });
 }
 
 function verifyIdParam(req, _res, next) {
   const { id } = req.params;
 
   if (!id || id.length !== 24) {
-    console.log(id, id.length);
     return next(Boom.notAcceptable('Wrong Id format'));
   }
 
   return next();
 }
 
-async function addProduct(req, res, next) {
+async function addProduct(req, res) {
   const { name, quantity } = req.body;
-  if (res.product) return next(Boom.notAcceptable('Product already exists'));
   const createdProduct = await productService.createProduct(name, quantity);
   return res.status(201).json(createdProduct);
 }
 
-async function update(req, res, next) {
+async function update(req, res) {
   const { name, quantity } = req.body;
   const { id } = req.params;
-  if (res.product) return next(Boom.notAcceptable('"name" Already exists'));
   const updatedProduct = await productService.updateById(id, { name, quantity });
   res.status(202).json(updatedProduct);
 }
@@ -56,15 +68,23 @@ async function deleteById(req, res) {
 productsRouter
   .route('/')
   .get(rescue(async (_, res) => res.status(200).json(await productService.getAll())))
-  .post(productService.validateProduct, rescue(verifyExistenceByBody), rescue(addProduct));
+  .post(
+    productService.validateProduct,
+    verifyExistenceByName(SHOULD_NOT_EXISTS),
+    rescue(addProduct),
+  );
 
 productsRouter
   .route('/:id')
   .get(
-    rescue(verifyExistenceByBody),
+    verifyIdParam,
     rescue(async (req, res) => res.status(200).json(await productService.getById(req.params.id))),
   )
-  .put(productService.validateProduct, verifyIdParam, rescue(verifyExistenceById), rescue(update))
-  .delete(verifyIdParam, rescue(deleteById));
+  .put(
+    productService.validateProduct,
+    verifyIdParam,
+    verifyExistenceById(SHOULD_EXISTS),
+    rescue(update),
+  ).delete(verifyIdParam, rescue(deleteById));
 
 module.exports = productsRouter;

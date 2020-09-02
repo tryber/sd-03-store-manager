@@ -1,5 +1,6 @@
 const { productModel } = require('../models');
 const { validate } = require('@expresso/validator');
+const Boom = require('@hapi/boom');
 
 const productsSchema = {
   type: 'object',
@@ -18,6 +19,31 @@ const productsSchema = {
 };
 
 const validateProduct = validate(productsSchema);
+
+/**
+ * Confere se existe o produto pelo nome, caso exista adiciona na propriedade produto de res
+ */
+async function verifyExistenceByName(name, shouldExists) {
+  const product = await productModel.getByName(name);
+  if (!product && shouldExists === 'should exists') {
+    return { error: true, message: 'Product doesn\'t exists' };
+  }
+  if (product && shouldExists === 'should not exists') {
+    return { error: true, message: 'Product already exists' };
+  }
+  return product;
+}
+
+async function verifyExistenceById(id, shouldExists) {
+  const product = await productModel.getById(id);
+  if (!product && shouldExists === 'should exists') {
+    return { error: true, message: 'Product doesn\'t exists' };
+  }
+  if (product && shouldExists === 'should not exists') {
+    return { error: true, message: 'Product already exists' };
+  }
+  return product;
+}
 
 async function createProduct(name, quantity) {
   const { insertedId } = await productModel.add(name, quantity);
@@ -48,6 +74,8 @@ async function deleteById(id) {
 }
 
 module.exports = {
+  verifyExistenceByName,
+  verifyExistenceById,
   createProduct,
   validateProduct,
   getAll,
