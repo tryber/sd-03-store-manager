@@ -21,7 +21,9 @@ const getAllProducts = rescue(async (_req, res) => {
 
 const middleWare = async ({ id }, callback, res, okStatus, notOkStatus, message) => {
   const re = /^[0-9A-F]+$/;
-  if ((id.match(re)) || id.length !== 24) return res.status(notOkStatus).json({ err: { code: 'invalid_data', message } });
+  if ((id.match(re)) || id.length !== 24) {
+    return res.status(notOkStatus).json({ err: { code: 'invalid_data', message } });
+  }
   const product = await callback(id);
   // console.log(callback, product)
   if (product.err) {
