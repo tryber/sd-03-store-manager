@@ -20,11 +20,11 @@ const updateProductById = async (id, name, quantity) => {
     const db = await connection();
     const updateQuery = await db
       .collection('products')
-      .findOneAndUpdate({ _id: ObjectId(id) }, { name, quantity });
-    const response = updateQuery.upsertedId
-      ? { _id: updateQuery.upsertedId, name, quantity }
+      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } });
+    const response = updateQuery.value['_id']
+      ? { _id: updateQuery.value['_id'], name, quantity }
       : new Error('register error');
-
+    console.log(updateQuery);
     return response;
   } catch (error) {
     throw new Error(error.message || 'product update failed');

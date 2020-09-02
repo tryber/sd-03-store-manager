@@ -2,35 +2,9 @@ const {
   createProducts,
   updateProductById,
   getAllProducts,
-  getProductByName,
   getProductById,
 } = require('../models/productsModel');
-const { productSchema } = require('./validation');
-
-const errorResponses = {
-  invalid_data: { message: 'Product already exists' },
-  invalid_name: { message: '\'name\' length must be at least 5 characters long' },
-  invalid_quantity: { message: '\'quantity\' must be larger than or equal 1' },
-};
-const productRegistryValidation = async (name, quantity) => {
-  const validation = productSchema(name, quantity);
-  const key = validation && validation.details[0].context.key;
-  if (key && key === 'name') {
-    return errorResponses.invalid_name;
-  }
-
-  if (key && key === 'quantity') {
-    return errorResponses.invalid_quantity;
-  }
-
-  const nameCheck = await getProductByName(name);
-
-  if (nameCheck) {
-    return errorResponses.invalid_data;
-  }
-
-  return false;
-};
+const { productRegistryValidation, productUpdateValidation } = require('./validation');
 
 const createProduct = async (name, quantity) => {
   try {
@@ -45,7 +19,7 @@ const createProduct = async (name, quantity) => {
 
 const updateProduct = async (id, name, quantity) => {
   try {
-    const bodyValidation = await productRegistryValidation(name, quantity);
+    const bodyValidation = await productUpdateValidation(name, quantity);
     const updatedProduct = !bodyValidation && (await updateProductById(id, name, quantity));
 
     return bodyValidation || { ...updatedProduct };
