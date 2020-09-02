@@ -1,5 +1,4 @@
-const productsModel = require('../models/productsModel');
-const salesModel = require('../models/salesModel');
+const { productsModel, salesModel } = require('../models');
 
 const createSale = (products) => {
   const isDataValid = products.every(

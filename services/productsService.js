@@ -1,4 +1,4 @@
-const productsModel = require('../models/productsModel');
+const { productsModel } = require('../models');
 
 const validateData = (name, quantity) => {
   if (name && name.length < 5) {
