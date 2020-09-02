@@ -12,9 +12,8 @@ const products = Router();
 products
   .route('/')
   .post(async (req, res, next) => {
-    const { body } = req;
-    const { name, quantity } = body;
     try {
+      const { name, quantity } = req.body;
       const product = await createProduct(name, quantity);
 
       if (product.message) throw new Error(product.message);
