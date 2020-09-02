@@ -3,7 +3,7 @@ const { generateError } = require('../controllers/utils');
 module.exports = (callback) => async (req, res, next) => {
   try {
     const data = await callback(req.body);
-    const errorMessage = data.message || data[0].message;
+    const errorMessage = data[0].message || data.message;
 
     if (errorMessage) throw new Error(errorMessage);
 
