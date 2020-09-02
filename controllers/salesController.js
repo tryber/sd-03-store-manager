@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const rescue = require('express-rescue');
+// const rescue = require('express-rescue');
 
 const sales = Router();
 
@@ -7,9 +7,9 @@ const sales = Router();
 //   .post('/', rescue(async (req, res) => {
 //     const products = req.body;
 //     console.log(products);
-//   }))
-//   .get('/', rescue(async (_req, res) => {
-
 //   }));
+// .get('/', rescue(async (_req, res) => {
+
+// }));
 
 module.exports = sales;

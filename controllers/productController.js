@@ -9,11 +9,7 @@ product
   .post('/', productValidate, rescue(async (req, res) => {
     const { name, quantity } = req.body;
     const response = await productServices.handleCreateProduct(name, quantity);
-
-    if (response.error) {
-      return res.status(422).json(response.message);
-    }
-    return res.status(201).json(response);
+    return response.error ? res.status(422).json(response.message) : res.status(201).json(response);
   }))
   .get('/', rescue(async (_req, res) => {
     const response = await productServices.handleGetAllProducts();
