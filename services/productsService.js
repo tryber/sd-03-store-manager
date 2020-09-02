@@ -22,6 +22,14 @@ const validateData = (name, quantity) => {
   return true;
 };
 
+const validateID = (id) => {
+  if (id.length < 24) {
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  }
+
+  return true;
+};
+
 const createProduct = async (name, quantity) => {
   const isValid = validateData(name, quantity);
 
@@ -43,9 +51,9 @@ const createProduct = async (name, quantity) => {
 const getAllProducts = async () => productsModel.getAllProducts();
 
 const getProductById = async (id) => {
-  if (id.length < 24) {
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
-  }
+  const isIdValid = validateID(id);
+
+  if (typeof isIdValid === 'object') return isIdValid;
 
   const product = productsModel.getProductById(id);
 
@@ -57,9 +65,9 @@ const getProductById = async (id) => {
 };
 
 const updateProduct = async (id, name, quantity) => {
-  const isValid = validateData(name, quantity);
+  const isDataValid = validateData(name, quantity);
 
-  if (typeof isValid === 'object') return isValid;
+  if (typeof isDataValid === 'object') return isDataValid;
 
   const updatedProduct = await productsModel.updateProduct(id, name, quantity);
 
@@ -67,9 +75,9 @@ const updateProduct = async (id, name, quantity) => {
 };
 
 const deleteProduct = async (id) => {
-  if (id.length < 24) {
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
-  }
+  const isIdValid = validateID(id);
+
+  if (typeof isIdValid === 'object') return isIdValid;
 
   const product = productsModel.getProductById(id);
 
