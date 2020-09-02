@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
 const createProducts = async (name, quantity) => {
@@ -35,4 +35,14 @@ const getProductByName = async (name) => {
   }
 };
 
-module.exports = { createProducts, getAllProducts, getProductByName };
+const getProductById = async (id) => {
+  try {
+    const db = await connection();
+    const searchQuery = await db.collection('products').findOne(ObjectId(id));
+    return searchQuery;
+  } catch (error) {
+    throw new Error('Wrong id format');
+  }
+};
+
+module.exports = { createProducts, getAllProducts, getProductByName, getProductById };

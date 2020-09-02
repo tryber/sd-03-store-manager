@@ -43,7 +43,17 @@ const listProducts = async () => {
   }
 };
 
+const listProductById = async (id) => {
+  try {
+    const product = await productsModel.getProductById(id);
+    return product;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 module.exports = {
   createProduct,
   listProducts,
+  listProductById,
 };

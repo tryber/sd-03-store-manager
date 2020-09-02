@@ -33,6 +33,19 @@ products.get('/', async (_req, res, next) => {
     return next(err);
   }
 });
-products.get('/:id');
+products.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const productById = await productsServices.listProductById(id);
+
+    return res.status(200).json(productById);
+  } catch (error) {
+    const err = {
+      status: 422,
+      payload: { err: { code: 'invalid_data', message: error.message } },
+    };
+    return next(err);
+  }
+});
 
 module.exports = products;
