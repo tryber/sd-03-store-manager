@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const productSchema = (name, quantity) => {
   const validationSchema = Joi.object().keys({
-    name: Joi.string().alphanum().min(6).required(),
+    name: Joi.string().alphanum().min(5).required(),
     quantity: Joi.number().integer().min(1).required(),
   });
 
