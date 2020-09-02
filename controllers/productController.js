@@ -18,9 +18,7 @@ product
   .get('/', rescue(async (_req, res) => {
     const response = await productServices.handleGetAllProducts();
     return res.status(200).json({ products: response });
-  }));
-
-product
+  }))
   .get('/:id', idValidate, rescue(async (req, res) => {
     const { id } = req.params;
     const productById = await productServices.handleGetProductById(id);
