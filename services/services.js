@@ -21,6 +21,18 @@ const validateSale = async (soldItems) => {
       err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
   }
+
+  const returnedPromise = soldItems.map(async ({ productId, quantity }) => {
+    const totalInStock = (await storeModel.getProductById(productId)).quantity;
+    return quantity > totalInStock;
+  });
+  const isTrue = await Promise.all(returnedPromise).then((data) => data);
+  if (isTrue.some((e) => e)) {
+    return {
+      err: { code: 'stock_problem', message: 'Such amount is not permitted to sell' },
+    };
+  }
+
   return true;
 };
 
@@ -40,6 +52,7 @@ const validateSalesUpdate = async (soldItems) => {
       err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
   }
+
   return true;
 };
 
@@ -53,7 +66,7 @@ const createProduct = async ({ name, quantity }) => {
 
 const getProductById = async (id) => {
   const product = await storeModel.getProductById(id);
-  if (!product) return { err: { code: 'invalid_data', message: 'wrong id format' } };
+  if (!product) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
   return product;
 };
 
@@ -65,7 +78,7 @@ const updateProduct = async (id, { name, quantity }) => {
 
 const deleteProduct = async (id) => {
   const product = await storeModel.getProductById(id);
-  if (!product) return { err: { code: 'invalid_data', message: 'wrong id format' } };
+  if (!product) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
   await storeModel.deleteProduct(id);
   return product;
 };
@@ -73,6 +86,7 @@ const deleteProduct = async (id) => {
 const createSale = async (soldItems) => {
   const sale = await validateSale(soldItems);
   if (sale.err) return sale;
+  storeModel.updateProductAfterSale(soldItems);
   return storeModel.createSale(soldItems);
 };
 
@@ -80,7 +94,7 @@ const getAllSales = async () => storeModel.getAllSales();
 
 const getSaleById = async (id) => {
   const sale = await storeModel.getSaleById(id);
-  if (!sale) return { err: { code: 'invalid_data', message: 'wrong id format' } };
+  if (!sale) return { err: { code: 'not_found', message: 'Sale not found' } };
   return sale;
 };
 
@@ -92,7 +106,8 @@ const updateSale = async (id, soldItens) => {
 
 const deleteSale = async (id) => {
   const sale = await storeModel.getSaleById(id);
-  if (!sale) return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
+  if (!sale) return { err: { code: 'not_found', message: 'Wrong sale ID format' } };
+  storeModel.updateProductAfterDeletion(sale);
   await storeModel.deleteSale(id);
   return sale;
 };

@@ -21,7 +21,7 @@ const getProductById = rescue(async (req, res) => {
     return res.status(422).json(product);
   }
 
-  return res.status(201).json(product);
+  return res.status(200).json(product);
 });
 
 const updateProduct = rescue(async (req, res) => {
@@ -45,7 +45,9 @@ const deleteProduct = rescue(async (req, res) => {
 const createSale = async (req, res) => {
   const sale = await services.createSale(req.body);
   if (sale.err) {
-    return res.status(422).json(sale);
+    return (sale.err.code === 'stock_problem')
+      ? res.status(404).json(sale)
+      : res.status(422).json(sale);
   }
   return res.status(200).json(sale);
 };
@@ -59,7 +61,7 @@ const getSaleById = rescue(async (req, res) => {
   const { id } = req.params;
   const sale = await services.getSaleById(id);
   if (sale.err) {
-    return res.status(422).json(sale);
+    return res.status(404).json(sale);
   }
 
   return res.status(201).json(sale);

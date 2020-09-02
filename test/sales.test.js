@@ -613,7 +613,7 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
       .expect('status', 200);
 
     await frisby.get(`${url}/sales/${resultSalesId}`)
-      .expect('status', 422)
+      .expect('status', 404)
       .expect((resultGet) => {
         const { body } = resultGet;
         const resultGetBody = JSON.parse(body);

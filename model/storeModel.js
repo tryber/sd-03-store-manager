@@ -13,9 +13,8 @@ const findByName = (name) =>
   connection()
     .then((db) => db.collection('products').findOne({ name }));
 
-const getProductById = (id) =>
-  connection()
-    .then((db) => db.collection('products').findOne(ObjectId(id)));
+const getProductById = (id) => connection()
+  .then((db) => db.collection('products').findOne(ObjectId(id)));
 
 const updateProduct = (id, { name, quantity }) => connection()
   .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
@@ -42,6 +41,16 @@ const updateSale = (_id, itensSold) => connection()
 const deleteSale = (id) => connection()
   .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
 
+const updateProductAfterSale = (soldItems) => {
+  soldItems.forEach(({ productId, quantity }) => connection()
+    .then((db) => db.collection('products').updateOne({ _id: ObjectId(productId) }, { $inc: { quantity: -quantity } })));
+};
+
+const updateProductAfterDeletion = ({ itensSold }) => {
+  itensSold.forEach(({ productId, quantity }) => connection()
+    .then((db) => db.collection('products').updateOne({ _id: ObjectId(productId) }, { $inc: { quantity } })));
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
@@ -54,4 +63,6 @@ module.exports = {
   getSaleById,
   updateSale,
   deleteSale,
+  updateProductAfterSale,
+  updateProductAfterDeletion,
 };

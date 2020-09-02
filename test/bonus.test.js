@@ -1,7 +1,7 @@
 const frisby = require('frisby');
 const { MongoClient } = require('mongodb');
 
-const mongoDbUrl = 'mongodb://localhost:27017';
+const mongoDbUrl = 'mongodb://root:root@localhost:27017/?authMechanism=DEFAULT';
 const url = 'http://localhost:3000';
 
 describe('9 - Atualize a quantidade de produtos', () => {
@@ -22,8 +22,8 @@ describe('9 - Atualize a quantidade de produtos', () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
     const products = [{ name: 'Martelo de Thor', quantity: 10 },
-      { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 }];
+    { name: 'Traje de encolhimento', quantity: 20 },
+    { name: 'Escudo do Capitão América', quantity: 30 }];
     await db.collection('products').insertMany(products);
   });
 
@@ -128,8 +128,8 @@ describe('10 - Valide a quantidade de produtos', () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
     const products = [{ name: 'Martelo de Thor', quantity: 10 },
-      { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 }];
+    { name: 'Traje de encolhimento', quantity: 20 },
+    { name: 'Escudo do Capitão América', quantity: 30 }];
     await db.collection('products').insertMany(products);
   });
 
