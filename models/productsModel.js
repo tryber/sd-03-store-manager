@@ -15,8 +15,17 @@ const createProducts = async (name, quantity) => {
   }
 };
 
+const getAllProducts = async () => {
+  try {
+    const db = await connection();
+    const searchAll = await db.collection('products').find().toArray();
+    return searchAll;
+  } catch (error) {
+    throw new Error('product search failed');
+  }
+};
+
 const getProductByName = async (name) => {
-  console.log(name);
   try {
     const db = await connection();
     const searchQuery = await db.collection('products').findOne({ name });
@@ -26,4 +35,4 @@ const getProductByName = async (name) => {
   }
 };
 
-module.exports = { createProducts, getProductByName };
+module.exports = { createProducts, getAllProducts, getProductByName };

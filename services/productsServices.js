@@ -8,28 +8,42 @@ const errorResponses = {
 };
 
 const createProduct = async (name, quantity) => {
-  const validation = productSchema(name, quantity);
-  const key = validation && validation.details[0].context.key;
+  try {
+    const validation = productSchema(name, quantity);
+    const key = validation && validation.details[0].context.key;
 
-  if (key && key === 'name') {
-    return errorResponses.invalid_name;
+    if (key && key === 'name') {
+      return errorResponses.invalid_name;
+    }
+
+    if (key && key === 'quantity') {
+      return errorResponses.invalid_quantity;
+    }
+
+    const nameCheck = await productsModel.getProductByName(name);
+
+    if (nameCheck) {
+      return errorResponses.invalid_data;
+    }
+
+    const newProduct = await productsModel.createProducts(name, quantity);
+
+    return { ...newProduct };
+  } catch (error) {
+    throw new Error(error.message);
   }
+};
 
-  if (key && key === 'quantity') {
-    return errorResponses.invalid_quantity;
+const listProducts = async () => {
+  try {
+    const products = await productsModel.getAllProducts();
+    return [...products];
+  } catch (error) {
+    throw new Error(error.message);
   }
-
-  const nameCheck = await productsModel.getProductByName(name);
-
-  if (nameCheck) {
-    return errorResponses.invalid_data;
-  }
-
-  const newProduct = await productsModel.createProducts(name, quantity);
-
-  return { ...newProduct };
 };
 
 module.exports = {
   createProduct,
+  listProducts,
 };
