@@ -31,9 +31,9 @@ const validateID = (id) => {
 };
 
 const createProduct = async (name, quantity) => {
-  const isValid = validateData(name, quantity);
+  const isDataValid = validateData(name, quantity);
 
-  if (typeof isValid === 'object') return isValid;
+  if (typeof isDataValid === 'object') return isDataValid;
 
   const existProduct = await productsModel.getProductByName(name);
 

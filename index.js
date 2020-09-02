@@ -20,4 +20,6 @@ app.put('/products/:id', productsController.updateProduct);
 
 app.delete('/products/:id', productsController.deleteProduct);
 
+app.post('/sales', salesController.createSale);
+
 app.listen(3000, () => console.log('Ouvindo na porta 3000'));
