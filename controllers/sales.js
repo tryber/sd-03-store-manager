@@ -6,10 +6,15 @@ const { verifyIdParam } = require('./middlewares');
 
 const salesRouter = express.Router();
 
-async function execute(funcStr, bodyParamStr) {
+/**
+ * Executa um servico de sales (salesServices) e 
+ * @param {*} funcStr 
+ * @param {*} bodyParamStr 
+ */
+async function execute(funcStr, bodyParamStr, status) {
   return async (req, res) => {
     const result = await salesServices[funcStr](req.body[bodyParamStr]);
-    return res.status(201).json(result);
+    return res.status(status).json(result);
   }
 }
 
@@ -40,11 +45,16 @@ async function getAllSales(_req, res) {
 //   res.status(200).json(sale);
 // }
 
-salesRouter.route('/')
-  .post(salesServices.validateSale, rescue(verifyExistenceOfProducts), rescue(execute('addSale', 'products')))
+salesRouter
+  .route('/')
+  .post(
+    salesServices.validateSale,
+    rescue(verifyExistenceOfProducts),
+    rescue(execute('addSale', 'products', 201)),
+  )
   .get(rescue(getAllSales));
 
 salesRouter.route('/:id')
-  .get(verifyIdParam, rescue(execute('getById', 'id')));
+  .get(verifyIdParam, rescue(execute('getById', 'id', 200)));
 
 module.exports = salesRouter;
