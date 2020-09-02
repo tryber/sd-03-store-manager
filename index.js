@@ -2,7 +2,7 @@ require('dotenv/config');
 const express = require('express');
 const bodyParser = require('body-parser');
 const Boom = require('@hapi/boom');
-const { productsRouter } = require('./controllers');
+const { productsRouter, sales } = require('./controllers');
 
 const app = express();
 
@@ -14,20 +14,14 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.get('/ping', (_req, res) => {
-  console.log('here');
-  res.send('pong!');
-});
-
 app.use('/products', productsRouter);
+app.use('/sales', sales);
 
 app.all(/.*/, (req, res) => res.json({ message: `${req.path} não encontrado` }));
 
 app.use((err, _req, res, _next) => {
-  console.error(err);
-  if (Boom.isBoom(err)) {
-    return res.status(err.output.statusCode).json(err.output.payload);
-  }
+  console.error('midleware de erro', err);
+  if (Boom.isBoom(err)) return res.status(err.output.statusCode).json(err.output.payload);
   res.json({ status: 500, message: err.message, data: err.stack });
 });
 

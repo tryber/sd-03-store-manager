@@ -2,6 +2,7 @@ const { Router } = require('express');
 const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
 const { productService } = require('../services');
+const { verifyIdParam } = require('./middlewares');
 
 const productsRouter = Router();
 
@@ -33,16 +34,6 @@ function verifyExistenceById(shouldExists = SHOULD_EXISTS) {
     res.productById = product;
     return next();
   });
-}
-
-function verifyIdParam(req, _res, next) {
-  const { id } = req.params;
-
-  if (!id || id.length !== 24) {
-    return next(Boom.notAcceptable('Wrong Id format'));
-  }
-
-  return next();
 }
 
 async function addProduct(req, res) {
