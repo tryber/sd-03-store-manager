@@ -1,10 +1,20 @@
 const storeModel = require('../model/storeModel');
 
-const validate = async (name, quantity) => {
-  if (name.length < 5) return { err: { code: 'invalid_data', message: '\"name\" length must be at least 5 characters long' } };
+const checkName = async (name) => {
+  if (name.length < 5) return { err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' } };
   if (await storeModel.findByName(name)) return { err: { code: 'invalid_data', message: 'Product already exists' } };
-  if (quantity < 1) return { err: { code: 'invalid_data', message: '\"quantity\" must be larger than or equal to 1' } };
-  if (typeof (quantity) !== 'number') return { err: { code: 'invalid_data', message: '\"quantity\" must be a number' } };
+  return false;
+};
+
+const checkQuantity = async (quantity) => {
+  if (quantity < 1) return { err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' } };
+  if (typeof (quantity) !== 'number') return { err: { code: 'invalid_data', message: '"quantity" must be a number' } };
+  return false;
+};
+
+const validate = async (name, quantity) => {
+  if ((await checkName(name)).err) return checkName(name);
+  if ((await checkQuantity(quantity)).err) return checkQuantity(quantity);
   return true;
 };
 
@@ -37,9 +47,9 @@ const validateSale = async (soldItems) => {
 };
 
 const validateUpdate = async (name, quantity) => {
-  if (name.length < 5) return { err: { code: 'invalid_data', message: '\"name\" length must be at least 5 characters long' } };
-  if (quantity < 1) return { err: { code: 'invalid_data', message: '\"quantity\" must be larger than or equal to 1' } };
-  if (typeof (quantity) !== 'number') return { err: { code: 'invalid_data', message: '\"quantity\" must be a number' } };
+  if (name.length < 5) return { err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' } };
+  if (quantity < 1) return { err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' } };
+  if (typeof (quantity) !== 'number') return { err: { code: 'invalid_data', message: '"quantity" must be a number' } };
   return true;
 };
 
@@ -56,55 +66,56 @@ const validateSalesUpdate = async (soldItems) => {
   return true;
 };
 
-const getAllProducts = () => storeModel.getAllProducts();
+const serviceGetAllProducts = () => storeModel.getAllProducts();
 
-const createProduct = async ({ name, quantity }) => {
+const serviceCreateProduct = async ({ name, quantity }) => {
   const product = await validate(name, quantity);
+  console.log(product);
   if (product.err) return product;
   return storeModel.createProduct(name, quantity);
 };
 
-const getProductById = async (id) => {
+const serviceGetProductById = async (id) => {
   const product = await storeModel.getProductById(id);
   if (!product) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
   return product;
 };
 
-const updateProduct = async (id, { name, quantity }) => {
+const serviceUpdateProduct = async (id, { name, quantity }) => {
   const product = await validateUpdate(name, quantity);
   if (product.err) return product;
   return storeModel.updateProduct(id, { name, quantity });
 };
 
-const deleteProduct = async (id) => {
+const serviceDeleteProduct = async (id) => {
   const product = await storeModel.getProductById(id);
   if (!product) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
   await storeModel.deleteProduct(id);
   return product;
 };
 
-const createSale = async (soldItems) => {
+const serviceCreateSale = async (soldItems) => {
   const sale = await validateSale(soldItems);
   if (sale.err) return sale;
   storeModel.updateProductAfterSale(soldItems);
   return storeModel.createSale(soldItems);
 };
 
-const getAllSales = async () => storeModel.getAllSales();
+const serviceGetAllSales = async () => storeModel.getAllSales();
 
-const getSaleById = async (id) => {
+const serviceGetSaleById = async (id) => {
   const sale = await storeModel.getSaleById(id);
   if (!sale) return { err: { code: 'not_found', message: 'Sale not found' } };
   return sale;
 };
 
-const updateSale = async (id, soldItens) => {
+const serviceUpdateSale = async (id, soldItens) => {
   const sale = await validateSalesUpdate(soldItens);
   if (sale.err) return sale;
   return storeModel.updateSale(id, soldItens);
 };
 
-const deleteSale = async (id) => {
+const serviceDeleteSale = async (id) => {
   const sale = await storeModel.getSaleById(id);
   if (!sale) return { err: { code: 'not_found', message: 'Wrong sale ID format' } };
   storeModel.updateProductAfterDeletion(sale);
@@ -113,14 +124,14 @@ const deleteSale = async (id) => {
 };
 
 module.exports = {
-  createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-  createSale,
-  getAllSales,
-  getSaleById,
-  updateSale,
-  deleteSale,
+  serviceCreateProduct,
+  serviceGetAllProducts,
+  serviceGetProductById,
+  serviceUpdateProduct,
+  serviceDeleteProduct,
+  serviceCreateSale,
+  serviceGetAllSales,
+  serviceGetSaleById,
+  serviceUpdateSale,
+  serviceDeleteSale,
 };

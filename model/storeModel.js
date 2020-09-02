@@ -1,8 +1,16 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
-const getAllProducts = () => connection()
-  .then((db) => db.collection('products').find({}).toArray());
+const byId = (id, database) => connection()
+  .then((db) => db.collection(database).findOne(ObjectId(id)));
+
+const getAll = (database) => connection()
+  .then((db) => db.collection(database).find({}).toArray());
+
+const deleteOne = (id, database) => connection()
+  .then((db) => db.collection(database).deleteOne({ _id: ObjectId(id) }));
+
+const getAllProducts = () => getAll('products');
 
 const createProduct = (name, quantity) =>
   connection()
@@ -13,33 +21,27 @@ const findByName = (name) =>
   connection()
     .then((db) => db.collection('products').findOne({ name }));
 
-const getProductById = (id) => connection()
-  .then((db) => db.collection('products').findOne(ObjectId(id)));
+const getProductById = (id) => byId(id, 'products');
 
 const updateProduct = (id, { name, quantity }) => connection()
   .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
   .then(() => ({ id, name, quantity }));
 
-const deleteProduct = (id) => connection()
-  .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+const deleteProduct = (id) => deleteOne(id, 'products');
 
 const createSale = (itensSold) => connection()
   .then((db) => db.collection('sales').insertOne({ itensSold }))
   .then(({ insertedId }) => ({ _id: insertedId, itensSold }));
 
-const getAllSales = () => connection()
-  .then((db) => db.collection('sales').find({}).toArray());
+const getAllSales = () => getAll('sales');
 
-const getSaleById = (id) =>
-  connection()
-    .then((db) => db.collection('sales').findOne(ObjectId(id)));
+const getSaleById = (id) => byId(id, 'sales');
 
 const updateSale = (_id, itensSold) => connection()
   .then((db) => db.collection('sales').updateOne({ _id: ObjectId(_id) }, { $set: { itensSold } }))
   .then(() => ({ _id, itensSold }));
 
-const deleteSale = (id) => connection()
-  .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+const deleteSale = (id) => deleteOne(id, 'sales');
 
 const updateProductAfterSale = (soldItems) => {
   soldItems.forEach(({ productId, quantity }) => connection()
