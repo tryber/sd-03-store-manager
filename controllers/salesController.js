@@ -48,17 +48,17 @@ sales.put('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
   const { itensSold: { productId, quantity } } = req.body;
 
-  const newsale = await salesService.updatesale(id, { itensSold: { productId, quantity } });
+  const newSale = await salesService.updatesale(id, { itensSold: { productId, quantity } });
 
-  if (newsale.error) {
-    const error = newsale.code === 'not_found'
-      ? boom.notFound(newsale.message)
-      : boom.badData(newsale.message);
+  if (newSale.error) {
+    const error = newSale.code === 'not_found'
+      ? boom.notFound(newSale.message)
+      : boom.badData(newSale.message);
 
     return next(error);
   }
 
-  return res.status(200).json(newsale);
+  return res.status(200).json(newSale);
 }));
 
 module.exports = sales;
