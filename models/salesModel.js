@@ -2,8 +2,8 @@ const connection = require('./connection');
 
 const createSales = async (products) => {
   try {
-    const db = await connection();
-    const salesRegister = await db.collection('sales').insertOne({ itensSold: [...products] });
+    const connect = await connection('sales');
+    const salesRegister = await connect.insertOne({ itensSold: [...products] });
     const { insertedId: _id } = salesRegister;
     const response = {
       _id,
@@ -17,8 +17,8 @@ const createSales = async (products) => {
 
 const getAllSales = async () => {
   try {
-    const db = await connection();
-    const searchAllSales = await db.collection('sales').find().toArray();
+    const connect = await connection('sales');
+    const searchAllSales = await connect.find().toArray();
     return searchAllSales;
   } catch (error) {
     throw new Error('sales search failed');
