@@ -1,6 +1,11 @@
 const Products = require('../models/produtos');
 const Validation = require('../services/validations');
 
+async function func(res, cb, req, status) {
+  const product = await cb(req);
+  res.status(status).send(product);
+}
+
 async function productController(req, res) {
   try {
     const { name, quantity } = req.body;
@@ -32,8 +37,9 @@ async function listProducts(req, res) {
 
 async function getProduct(req, res) {
   try {
-    const product = await Products.getProductById(req.params.id);
-    res.status(201).send(product);
+    await func(res, Products.getProductById, req.params.id, 201);
+    // const product = await Products.getProductById(req.params.id);
+    // res.status(201).send(product);
   } catch (error) {
     res.status(422).send({
       err: {
@@ -67,8 +73,9 @@ async function updateProduct(req, res) {
 
 async function deleteProduct(req, res) {
   try {
-    const product = await Products.deleteProduct(req.params.id);
-    res.status(200).send(product);
+    await func(res, Products.deleteProduct, req.params.id, 200);
+    // const product = await Products.deleteProduct(req.params.id);
+    // res.status(200).send(product);
   } catch (error) {
     res.status(422).send({
       err: {
