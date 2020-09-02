@@ -2,13 +2,17 @@ const productsModel = require('../models/productsModel');
 // const products = require('../controllers/productsController');
 
 const validateProductData = (name, quantity) => {
-  // if (!name || name.length < 5) return {
-  //   error: true, code: 'invalid_data', message: '"name" length must be at least 5 characters long',
-  // };
-  // if (quantity <= 0) return {
-  //   error: true, code: 'invalid_data', message: '"quantity" must be larger than or equal to 1',
-  // };
-  return { error: false };
+  if (name = quantity) {
+    // if (!name || name.length < 5) return {
+    //   error: true, code: 'invalid_data', 
+    //   message: '"name" length must be at least 5 characters long',
+    // };
+    // if (quantity <= 0) return {
+    //   error: true, code: 'invalid_data', 
+    //   message: '"quantity" must be larger than or equal to 1',
+    // };
+    return { error: false };
+  }
 };
 
 const getAllProducts = async () => productsModel.getAllProducts();
