@@ -10,43 +10,29 @@ product
     const { name, quantity } = req.body;
     const response = await productServices.handleCreateProduct(name, quantity);
     return response.error ? res.status(422).json(response.message) : res.status(201).json(response);
-  }));
-
-product
+  }))
   .get('/', rescue(async (_req, res) => {
     const response = await productServices.handleGetAllProducts();
     return res.status(200).json({ products: response });
-  }));
-
-product
+  }))
   .get('/:id', idValidate, rescue(async (req, res) => {
     const { id } = req.params;
     const productById = await productServices.handleGetProductById(id);
-    if (productById.error) {
-      return res.status(422).json(productById.message);
-    }
-    return res.status(200).json(productById);
-  }));
-
-product
+    return productById.error
+      ? res.status(422).json(productById.message) : res.status(200).json(productById);
+  }))
   .put('/:id', idValidate, productValidate, rescue(async (req, res) => {
     const productData = req.body;
     const { id } = req.params;
     const updatedProduct = await productServices.handleUpdateProduct(id, productData);
-    if (updatedProduct.error) {
-      return res.status(502).json(updatedProduct.message);
-    }
-    return res.status(200).json(updatedProduct);
-  }));
-
-product
+    return updatedProduct.error
+      ? res.status(502).json(updatedProduct.message) : res.status(200).json(updatedProduct);
+  }))
   .delete('/:id', idValidate, rescue(async (req, res) => {
     const { id } = req.params;
     const deletedProduct = await productServices.handleDeleteProduct(id);
-    if (deletedProduct.error) {
-      return res.status(422).json(deletedProduct.message);
-    }
-    return res.status(200).json(deletedProduct);
+    return deletedProduct.error
+      ? res.status(422).json(deletedProduct.message) : res.status(200).json(deletedProduct);
   }));
 
 module.exports = product;
