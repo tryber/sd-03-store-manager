@@ -5,7 +5,8 @@ const createProducts = async (name, quantity) => {
   try {
     const db = await connection();
     const register = await db.collection('products').insertOne({ name, quantity });
-    const response = { _id: register.insertedId, name, quantity };
+    const { insertedId: _id } = register;
+    const response = { _id, name, quantity };
 
     return response;
   } catch (error) {
