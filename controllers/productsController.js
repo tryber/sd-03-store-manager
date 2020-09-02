@@ -44,7 +44,7 @@ products.delete('/:id', rescue(async (req, res) => {
   return res.status(204).end();
 }));
 
-products.put('/:id', rescue(async (req, res) => {
+products.put('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
 
