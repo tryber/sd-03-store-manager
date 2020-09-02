@@ -30,14 +30,13 @@ const updateProduct = async (id, name, quantity) => {
 };
 
 const readOrDeleteById = async (id, operation = 'read') => {
-  const func = (callback) => callback(id);
-
-  const data = async () => {
-    if (operation === 'delete') return func(deleteProductById);
-    return func(getProductById);
-  };
-
   try {
+    const func = (callback) => callback(id);
+
+    const data = async () => {
+      if (operation === 'delete') return func(deleteProductById);
+      return func(getProductById);
+    };
     const dataReturn = await data();
     return dataReturn;
   } catch (error) {

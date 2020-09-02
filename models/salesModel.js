@@ -18,8 +18,8 @@ const createSales = async (products) => {
 const getAllSales = async () => {
   try {
     const db = await connection();
-    const searchAll = await db.collection('sales').find().toArray();
-    return searchAll;
+    const searchAllSales = await db.collection('sales').find().toArray();
+    return searchAllSales;
   } catch (error) {
     throw new Error('sales search failed');
   }

@@ -38,16 +38,24 @@ const saleSchema = (id, quantity) => {
 };
 
 const checkProductsByName = async (name, message = errorResponses.invalid_data) => {
-  const nameCheck = await getProductByName(name);
-  if (!nameCheck) return false;
+  try {
+    const nameCheck = await getProductByName(name);
+    if (!nameCheck) return false;
 
-  return message;
+    return message;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 const checkProductsById = async (id, message = errorResponses.invalid_sale_data) => {
-  const idCheck = await getProductById(id);
-  if (!idCheck) return message;
-  return false;
+  try {
+    const idCheck = await getProductById(id);
+    if (!idCheck) return message;
+    return false;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 const checkProductSchemaError = (
@@ -66,8 +74,8 @@ const checkProductSchemaError = (
   return false;
 };
 
-const checkSaleSchemaError = (key,
-  message = errorResponses.invalid_sale_data) => (key ? message : false);
+const checkSaleSchemaError = (key, message = errorResponses.invalid_sale_data) =>
+  (key ? message : false);
 
 const checkQuantityFieldType = (field, message = errorResponses.invalid_quantity_type) =>
   (typeof field !== 'number' ? message : false);
@@ -85,23 +93,31 @@ const productRegistryValidation = async (name, quantity) => {
 };
 
 const productUpdateValidation = async (name, quantity) => {
-  const updateValidation = productSchema(name, quantity);
-  const updateKey = updateValidation && updateValidation.details[0].context.key;
+  try {
+    const updateValidation = productSchema(name, quantity);
+    const updateKey = updateValidation && updateValidation.details[0].context.key;
 
-  const fieldQuantCheck = checkQuantityFieldType(quantity, errorResponses.invalid_quantity_type);
-  const errorKeyCheck = checkProductSchemaError(updateKey);
+    const fieldQuantCheck = checkQuantityFieldType(quantity, errorResponses.invalid_quantity_type);
+    const errorKeyCheck = checkProductSchemaError(updateKey);
 
-  return fieldQuantCheck || errorKeyCheck || false;
+    return fieldQuantCheck || errorKeyCheck || false;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 const salesRegistryValidation = async (id, quantity) => {
-  const salesValidation = saleSchema(id, quantity);
-  const key = salesValidation && salesValidation.details[0].context.key;
+  try {
+    const salesValidation = saleSchema(id, quantity);
+    const key = salesValidation && salesValidation.details[0].context.key;
 
-  const errorKeyCheck = checkSaleSchemaError(key);
-  const dataCheck = await checkProductsById(id);
+    const errorKeyCheck = checkSaleSchemaError(key);
+    const dataCheck = await checkProductsById(id);
 
-  return errorKeyCheck || dataCheck || false;
+    return errorKeyCheck || dataCheck || false;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 module.exports = {
