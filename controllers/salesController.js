@@ -5,10 +5,8 @@ const { generateError } = require('./utils');
 
 const sales = Router();
 
-sales
-  .route('/')
-  .post(dataMiddleware(createSale))
-  .get(async (_req, res, next) => {
+sales.post('/', dataMiddleware(createSale))
+  .get('/', async (_req, res, next) => {
     try {
       const saleslist = await listSales();
 
