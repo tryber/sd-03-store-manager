@@ -7,15 +7,17 @@ const { verifyIdParam } = require('./middlewares');
 const salesRouter = express.Router();
 
 /**
- * Executa um servico de sales (salesServices) e 
- * @param {*} funcStr 
- * @param {*} bodyParamStr 
+ * Executa um servico de sales (salesServices) e devolve o resultado como json com o status
+ * @param {string} func
+ * @param {array of string} bodyParams propriedades a se passar para o sales services
+ * @param {number} status
  */
-async function execute(funcStr, bodyParamStr, status) {
+async function execute(func, bodyParams, status = 200) {
   return async (req, res) => {
-    const result = await salesServices[funcStr](req.body[bodyParamStr]);
+    const params = bodyParams.map((param) => req.body[param]);
+    const result = await salesServices[func](...params);
     return res.status(status).json(result);
-  }
+  };
 }
 
 async function verifyExistenceOfProducts(req, _, next) {
@@ -45,16 +47,25 @@ async function getAllSales(_req, res) {
 //   res.status(200).json(sale);
 // }
 
+async function updateOneItem(req, res) {
+  const { id } = req.params;
+  const { productId, quantity } = req.body;
+  const result = await salesServices.updateItenById(id, productId, quantity);
+  res.status(200).json(result);
+}
+
 salesRouter
   .route('/')
   .post(
     salesServices.validateSale,
     rescue(verifyExistenceOfProducts),
-    rescue(execute('addSale', 'products', 201)),
+    rescue(execute('addSale', ['products'], 201)),
   )
   .get(rescue(getAllSales));
 
-salesRouter.route('/:id')
-  .get(verifyIdParam, rescue(execute('getById', 'id', 200)));
+salesRouter
+  .route('/:id')
+  .get(verifyIdParam, rescue(execute('getById', ['id'], 200)))
+  .put(verifyIdParam, salesServices.validateProduct, rescue(updateOneItem));
 
 module.exports = salesRouter;
