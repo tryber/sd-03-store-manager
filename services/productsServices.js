@@ -31,8 +31,8 @@ const updateProduct = async (id, name, quantity) => {
 
 const deleteProduct = async (id) => {
   try {
-    const product = await deleteProductById(id);
-    return product;
+    const deletedProduct = await deleteProductById(id);
+    return deletedProduct;
   } catch (error) {
     throw new Error(error.message);
   }
