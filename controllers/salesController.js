@@ -18,8 +18,9 @@ const getAllSales = rescue(async (_req, res) => {
 const getSaleById = rescue(async (req, res) => {
   const { id } = req.params;
   const sale = await salesService.getSaleById(id);
-  if (sale.err) {
-    return res.status(422).json(sale);
+
+  if (sale && sale.err) {
+    return res.status(404).json(sale);
   }
   return res.status(200).json(sale);
 });
@@ -34,9 +35,19 @@ const updateSale = rescue(async (req, res) => {
   return res.status(200).json(updatedSale);
 });
 
+const deleteSale = rescue(async (req, res) => {
+  const { id } = req.params;
+  const deletedSale = await salesService.deleteSale(id);
+  if (deletedSale && deletedSale.err) {
+    return res.status(422).json(deletedSale);
+  }
+  return res.status(200).end();
+});
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };

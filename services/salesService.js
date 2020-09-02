@@ -27,15 +27,15 @@ const createSale = (products) => {
 
 const getAllSales = async () => salesModel.getAllSales();
 
-const getSalesById = async (id) => {
+const getSaleById = async (id) => {
   const isIdValid = validateID(id);
 
   if (typeof isIdValid === 'object') return isIdValid;
 
-  const sale = salesModel.getSaleById(id);
+  const sale = await salesModel.getSaleById(id);
 
   if (!sale) {
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+    return { err: { code: 'not_found', message: 'Sale not found' } };
   }
 
   return sale;
@@ -53,9 +53,24 @@ const updateSale = async (id, products) => {
   return updatedSale;
 };
 
+const deleteSale = async (id) => {
+  const isIdValid = validateID(id, 'sale ID');
+
+  if (typeof isIdValid === 'object') return isIdValid;
+
+  const sale = salesModel.getSaleById(id);
+  if (!sale) {
+    return {
+      err: { code: 'invalid_data', message: 'Wrong sale ID format' },
+    };
+  }
+  await salesModel.deleteSale(id);
+};
+
 module.exports = {
   createSale,
   getAllSales,
-  getSalesById,
+  getSaleById,
   updateSale,
+  deleteSale,
 };

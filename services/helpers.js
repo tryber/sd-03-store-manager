@@ -19,18 +19,19 @@ const validateData = (name, quantity) => {
   return true;
 };
 
-const validateID = (id) => {
+const validateID = (id, msg = 'id') => {
   if (id.length < 24) {
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+    return { err: { code: 'invalid_data', message: `Wrong ${msg} format` } };
   }
 
   return true;
 };
 
-const validateSaleData = (products) => products.every(
-  ({ productId, quantity }) =>
-    quantity >= 1 && typeof quantity === 'number' && productId.length === 24,
-);
+const validateSaleData = (products) =>
+  products.every(
+    ({ productId, quantity }) =>
+      quantity >= 1 && typeof quantity === 'number' && productId.length === 24,
+  );
 
 module.exports = {
   validateData,

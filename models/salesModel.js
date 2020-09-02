@@ -21,9 +21,13 @@ const updateSale = async (id, products) =>
     )
     .then(() => ({ _id: id, itensSold: products }));
 
+const deleteSale = async (searchId) =>
+  connect().then((db) => db.collection('sales').deleteOne({ _id: ObjectId(searchId) }));
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };
