@@ -15,6 +15,11 @@ async function validation(req) {
   return data;
 }
 
+async function list(res, cb) {
+  const sales = await cb();
+  res.status(200).send({ sales });
+}
+
 async function createSale(req, res) {
   try {
     const data = await validation(req);
@@ -39,8 +44,9 @@ async function createSale(req, res) {
 
 async function listSales(req, res) {
   try {
-    const sales = await Sales.listSales();
-    res.status(200).send({ sales });
+    await list(res, Sales.listSales);
+    // const sales = await Sales.listSales();
+    // res.status(200).send({ sales });
   } catch (error) {
     res.status(404).send([]);
   }
