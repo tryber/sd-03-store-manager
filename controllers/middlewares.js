@@ -6,7 +6,7 @@ function verifyIdParam(req, _res, next) {
   const isValid = generic.verifyId(id);
 
   if (isValid.error) {
-    return next(Boom.notAcceptable(isValid.message));
+    return next(Boom.badData('Wrong id format'));
   }
 
   return next();

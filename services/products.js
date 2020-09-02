@@ -1,6 +1,6 @@
 const { productModel } = require('../models');
 const { validate } = require('@expresso/validator');
-const { generic } = require('./index');
+const generic = require('./generic');
 
 const productsSchema = {
   type: 'object',
@@ -10,7 +10,7 @@ const productsSchema = {
       minLength: 5,
     },
     quantity: {
-      type: 'integer',
+      type: 'number',
       minimum: 1,
     },
   },

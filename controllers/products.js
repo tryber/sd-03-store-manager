@@ -9,6 +9,13 @@ const productsRouter = Router();
 const SHOULD_NOT_EXISTS = 'should not exists';
 const SHOULD_EXISTS = 'should exists';
 
+function validateProduct(req, _res, next) {
+  const result = productService.validateProduct(req);
+
+  if (result.error) return next(Boom.badData('invalid_data'));
+  return next();
+}
+
 /**
  * @param {string} shouldExists define se o produto devia ou não existe e pode gerar error
  */
@@ -55,9 +62,15 @@ async function deleteById(req, res) {
   return res.status(200).json(product);
 }
 
+async function getById(req, res, next) {
+  const product = await productService.getById(req.params.id);
+  if (!product) return next(Boom.badRequest('invalid_data'));
+  return res.status(200).json(product);
+}
+
 productsRouter
   .route('/')
-  .get(rescue(async (_, res) => res.status(200).json(await productService.getAll())))
+  .get(rescue(async (_, res) => res.status(200).json({ products: await productService.getAll() })))
   .post(
     productService.validateProduct,
     verifyExistenceByName(SHOULD_NOT_EXISTS),
@@ -68,10 +81,9 @@ productsRouter
   .route('/:id')
   .get(
     verifyIdParam,
-    rescue(async (req, res) => res.status(200).json(await productService.getById(req.params.id))),
-  )
-  .put(
-    productService.validateProduct,
+    rescue(getById),
+  ).put(
+    validateProduct,
     verifyIdParam,
     verifyExistenceById(SHOULD_EXISTS),
     rescue(update),

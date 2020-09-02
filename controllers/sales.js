@@ -80,7 +80,7 @@ salesRouter
   .post(
     salesServices.validateSale,
     rescue(verifyExistenceOfProducts),
-    // execute('addSale', ['products'], 201),
+    execute('addSale', ['products'], 201),
   )
   .get(rescue(getAllSales));
 

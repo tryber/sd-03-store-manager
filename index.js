@@ -19,10 +19,20 @@ app.use('/sales', sales);
 
 app.all(/.*/, (req, res) => res.json({ message: `${req.path} não encontrado` }));
 
+function threatBoomErr({ payload }) {
+  const { message, error } = payload;
+  const code = error === 'Unprocessable Entity' ? 'invalid_data' : error;
+  return { err: { code, message } };
+}
+
 app.use((err, _req, res, _next) => {
   console.error('midleware de erro', err);
-  if (Boom.isBoom(err)) return res.status(err.output.statusCode).json(err.output.payload);
-  res.json({ status: 500, message: err.message, data: err.stack });
+  if (Boom.isBoom(err)) {
+    return res
+    .status(err.output.statusCode)
+    .json(threatBoomErr(err.output));
+  }
+  return res.json({ status: 500, message: err.message, data: err.stack });
 });
 
 const { PORT = 3000 } = process.env;
