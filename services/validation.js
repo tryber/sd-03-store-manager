@@ -31,7 +31,7 @@ const saleSchema = (id, quantity) => {
     quantity: Joi.number().integer().min(1).required(),
   });
 
-  const validation = validationSchema.validate({ id, quantity });
+  const validation = validationSchema.validate({ productId: id, quantity });
 
   const { error } = validation;
   return error || null;
@@ -110,9 +110,8 @@ const salesRegistryValidation = async (id, quantity) => {
   try {
     const salesValidation = saleSchema(id, quantity);
     const key = salesValidation && salesValidation.details[0].context.key;
-
     const errorKeyCheck = checkSaleSchemaError(key);
-    const dataCheck = await checkProductsById(id);
+    const dataCheck = await checkProductsById(id.toString());
 
     return errorKeyCheck || dataCheck || false;
   } catch (error) {

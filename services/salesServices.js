@@ -2,22 +2,21 @@ const { createSales, getAllSales } = require('../models/salesModel');
 const { salesRegistryValidation } = require('./validation');
 
 /* valida se alguma mensage de erro de validação é
-    retornada, caso sim inclui numa array de mensagens,
-    é necessário tratar os erros para garantir que aplicação
-    não quebre */
+    retornada, caso sim retorna um erro padronizado,senão
+    retorna um array vazio e o processo de cadastro continua */
 const productsValidation = async (products = []) =>
   products.reduce(async (acc, { productId, quantity }) => {
-    if (Promise.reject) throw new Error('Wrong product ID or invalid quantity');
-    return salesRegistryValidation(productId, quantity)
-      ? [...acc, salesRegistryValidation(productId, quantity)]
-      : acc;
+    if (await salesRegistryValidation(productId, quantity)) throw new Error('Wrong product ID or invalid quantity');
+    return acc;
   }, []);
 
 const createSale = async (products = []) => {
   try {
     const reqValidation = await productsValidation(products);
-    const newSale = !reqValidation.length && (await createSales(products));
-    return productsValidation || { ...newSale };
+    console.log(reqValidation);
+    const newSale = reqValidation.length === 0 && (await createSales(products));
+
+    return { ...newSale };
   } catch (error) {
     throw new Error(error.message);
   }
