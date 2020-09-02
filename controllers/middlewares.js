@@ -1,9 +1,9 @@
 const Boom = require('@hapi/boom');
-const { verifyId } = require('../services');
+const { generic } = require('../services');
 
 function verifyIdParam(req, _res, next) {
   const { id } = req.params;
-  const isValid = verifyId(id);
+  const isValid = generic.verifyId(id);
 
   if (isValid.error) {
     return next(Boom.notAcceptable(isValid.message));

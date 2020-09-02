@@ -1,5 +1,6 @@
 const { productModel } = require('../models');
 const { validate } = require('@expresso/validator');
+const { generic } = require('./index');
 
 const productsSchema = {
   type: 'object',
@@ -19,16 +20,6 @@ const productsSchema = {
 
 const validateProduct = validate(productsSchema);
 
-function handleExistence(product, shouldExists) {
-  if (!product && shouldExists === 'should exists') {
-    return { error: true, message: 'Product doesn\'t exists' };
-  }
-  if (product && shouldExists === 'should not exists') {
-    return { error: true, message: 'Product already exists' };
-  }
-  return product;
-}
-
 async function verifyAllExistencesById(ids) {
   const products = await productModel.getAllById(ids);
   if (products.length === ids.length) return { error: true, message: 'Not all products exists' };
@@ -41,12 +32,12 @@ async function verifyAllExistencesById(ids) {
  */
 async function verifyExistenceByName(name, shouldExists) {
   const product = await productModel.getByName(name);
-  return handleExistence(product, shouldExists);
+  return generic.handleExistence(product, shouldExists);
 }
 
 async function verifyExistenceById(id, shouldExists) {
   const product = await productModel.getById(id);
-  return handleExistence(product, shouldExists);
+  return generic.handleExistence(product, shouldExists);
 }
 
 async function createProduct(name, quantity) {
