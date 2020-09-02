@@ -13,9 +13,9 @@ sales.get('/', rescue(async (_, res) => {
 }));
 
 sales.post('/', rescue(async (req, res, next) => {
-  const { itensSold : { productId, quantity }} = req.body;
+  const { itensSold: { productId, quantity } } = req.body;
 
-  const sale = await salesService.createSale({ itensSold : { productId, quantity }});
+  const sale = await salesService.createSale({ itensSold: { productId, quantity } });
 
   if (sale.error) {
     return next(boom.badData(sale.message));
@@ -46,9 +46,9 @@ sales.delete('/:id', rescue(async (req, res) => {
 
 sales.put('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
-  const { itensSold : { productId, quantity }} = req.body;
+  const { itensSold: { productId, quantity } } = req.body;
 
-  const newsale = await salesService.updatesale(id, { itensSold : { productId, quantity }});
+  const newsale = await salesService.updatesale(id, { itensSold: { productId, quantity } });
 
   if (newsale.error) {
     const error = newsale.code === 'not_found'
