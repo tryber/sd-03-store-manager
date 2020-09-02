@@ -33,8 +33,8 @@ const serviceCreateProduct = async ({ name, quantity }) => {
   return storeModel.createProduct(name, quantity);
 };
 
-const getById = (callback, id, code, message) => {
-  const result = callback(id);
+const getById = async (callback, id, code, message) => {
+  const result = await callback(id);
   if (!result) return { err: { code, message } };
   return result;
 };
@@ -60,4 +60,5 @@ module.exports = {
   serviceGetProductById,
   serviceUpdateProduct,
   serviceDeleteProduct,
+  getById,
 };

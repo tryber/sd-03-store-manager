@@ -62,7 +62,6 @@ const serviceUpdateSale = async (id, soldItens) => {
 const serviceDeleteSale = async (id) => {
   const sale = await storeModel.getSaleById(id);
   if (!sale) return { err: { code: 'not_found', message: 'Wrong sale ID format' } };
-  // storeModel.updateProductAfterDeletion(sale);
   await storeModel.deleteSale(id);
   return sale;
 };

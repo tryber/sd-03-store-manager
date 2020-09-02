@@ -1,8 +1,11 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
-const byId = (id, database) => connection()
-  .then((db) => db.collection(database).findOne(ObjectId(id)));
+const byId = async (id, database) => {
+  const teste = await connection()
+    .then((db) => db.collection(database).findOne(ObjectId(id)));
+  return teste;
+};
 
 const getAll = (database) => connection()
   .then((db) => db.collection(database).find({}).toArray());
@@ -35,7 +38,7 @@ const createSale = (itensSold) => connection()
 
 const getAllSales = () => getAll('sales');
 
-const getSaleById = (id) => byId(id, 'sales');
+const getSaleById = async (id) => byId(id, 'sales');
 
 const deleteSale = (id) => deleteOne(id, 'sales');
 
@@ -52,7 +55,7 @@ const updateProductAfterSale = (soldItems) => {
 
 const updateSale = (_id, itensSold) => connection()
   .then((db) => db.collection('sales').updateOne({ _id: ObjectId(_id) }, { $set: { itensSold } }))
-  .then(() => { console.log(_id); return { _id, itensSold }; });
+  .then(() => ({ _id, itensSold }));
 
 module.exports = {
   createProduct,

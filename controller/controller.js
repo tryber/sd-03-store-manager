@@ -25,16 +25,15 @@ const middleWare = async ({ id }, callback, res, okStatus, notOkStatus, message)
     return res.status(notOkStatus).json({ err: { code: 'invalid_data', message } });
   }
   const product = await callback(id);
-  // console.log(callback, product)
-  if (product.err) {
+  if (!product || product.err) {
     return res.status(notOkStatus).json(product);
   }
 
   return res.status(okStatus).json(product);
 };
 
-const getProductById = rescue((req, res) => {
-  middleWare(req.params, productServices.serviceGetProductById, res, 200, 422, 'Wrong id format');
+const getProductById = rescue(async(req, res) => {
+  await middleWare(req.params, productServices.serviceGetProductById, res, 200, 422, 'Wrong id format');
 });
 
 const update = async ({ id }, callback, body, res, okstatus, notokstatus) => {
@@ -46,11 +45,11 @@ const update = async ({ id }, callback, body, res, okstatus, notokstatus) => {
 };
 
 const updateProduct = rescue(async (req, res) => {
-  update(req.params, productServices.serviceUpdateProduct, req.body, res, 200, 422);
+  await update(req.params, productServices.serviceUpdateProduct, req.body, res, 200, 422);
 });
 
 const deleteProduct = rescue(async (req, res) => {
-  middleWare(req.params, productServices.serviceDeleteProduct, res, 200, 422, 'Wrong id format');
+  await middleWare(req.params, productServices.serviceDeleteProduct, res, 200, 422, 'Wrong id format');
 });
 
 const createSale = async (req, res) => {
@@ -64,19 +63,19 @@ const createSale = async (req, res) => {
 };
 
 const getAllSales = rescue(async (_req, res) => {
-  getAll(salesServices.serviceGetAllSales, res, 200, 'sales');
+  await getAll(salesServices.serviceGetAllSales, res, 200, 'sales');
 });
 
 const getSaleById = rescue(async (req, res) => {
-  middleWare(req.params, salesServices.serviceGetSaleById, res, 201, 404);
+  await middleWare(req.params, salesServices.serviceGetSaleById, res, 201, 404);
 });
 
 const updateSale = rescue(async (req, res) => {
-  update(req.params, salesServices.serviceUpdateSale, req.body, res, 200, 422);
+  await update(req.params, salesServices.serviceUpdateSale, req.body, res, 200, 422);
 });
 
 const deleteSale = rescue(async (req, res) => {
-  middleWare(req.params, salesServices.serviceDeleteSale, res, 200, 422, 'Wrong sale ID format');
+  await middleWare(req.params, salesServices.serviceDeleteSale, res, 200, 422, 'Wrong sale ID format');
 });
 
 module.exports = {
