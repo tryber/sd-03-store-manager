@@ -1,12 +1,9 @@
 const productsModel = require('../models/productsModel');
 const salesModel = require('../models/salesModel');
+const { validateID, validateSaleData } = require('./helpers');
 
 const createSale = (products) => {
-  console.log(products);
-  const isDataValid = products.every(
-    ({ productId, quantity }) =>
-      quantity >= 1 && typeof quantity === 'number' && productId.length === 24,
-  );
+  const isDataValid = validateSaleData(products);
 
   if (isDataValid) {
     products.forEach(({ productId }) => {
@@ -28,23 +25,37 @@ const createSale = (products) => {
   return sale;
 };
 
-module.exports = {
-  createSale,
+const getAllSales = async () => salesModel.getAllSales();
+
+const getSalesById = async (id) => {
+  const isIdValid = validateID(id);
+
+  if (typeof isIdValid === 'object') return isIdValid;
+
+  const sale = salesModel.getSaleById(id);
+
+  if (!sale) {
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  }
+
+  return sale;
 };
 
-/* products.forEach(({ productId, quantity }) => {
-    if (quantity <= 0 || typeof quantity !== 'number' || productId.length < 24) {
-      console.log('if1');
-      return {
-        err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-      };
-    }
-    const product = productsModel.getProductById(productId);
-    if (!product) {
-      console.log('if2');
-      return {
-        err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-      };
-    }
-    return true;
-  }); */
+const updateSale = async (id, products) => {
+  const isDataValid = validateSaleData(products);
+  if (!isDataValid) {
+    return {
+      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
+    };
+  }
+
+  const updatedSale = await salesModel.updateSale(id, products);
+  return updatedSale;
+};
+
+module.exports = {
+  createSale,
+  getAllSales,
+  getSalesById,
+  updateSale,
+};

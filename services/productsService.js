@@ -1,33 +1,5 @@
 const productsModel = require('../models/productsModel');
-
-const validateData = (name, quantity) => {
-  if (name && name.length < 5) {
-    return {
-      err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
-    };
-  }
-
-  if (quantity <= 0) {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
-    };
-  }
-
-  if (typeof quantity !== 'number') {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be a number' },
-    };
-  }
-  return true;
-};
-
-const validateID = (id) => {
-  if (id.length < 24) {
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
-  }
-
-  return true;
-};
+const { validateData, validateID } = require('./helpers');
 
 const createProduct = async (name, quantity) => {
   const isValid = validateData(name, quantity);
