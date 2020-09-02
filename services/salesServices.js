@@ -24,7 +24,8 @@ const createSale = async (products = []) => {
 const listSales = async () => {
   try {
     const sales = await getAllSales();
-    return [...sales];
+    const salesInfo = [...sales];
+    return salesInfo;
   } catch (error) {
     throw new Error(error.message);
   }
