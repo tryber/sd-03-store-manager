@@ -9,6 +9,7 @@ const errorResponses = {
   invalid_quantity_type: { message: '"quantity" must be a number' },
 };
 
+// função de validação de requisição para os campos "name" e "quantity"
 const productSchema = (name, quantity) => {
   const validationSchema = Joi.object({
     name: Joi.string().min(5).required(),
@@ -18,15 +19,18 @@ const productSchema = (name, quantity) => {
   const validation = validationSchema.validate({ name, quantity });
 
   const { error } = validation;
-
+  // se não houver erro retorna null e posso trabalhar a partir disso
   return error || null;
 };
 
-const productRegistryValidation = async (name, quantity) => {
-  const validation = productSchema(name, quantity);
-  const key = validation && validation.details[0].context.key;
+const checkProductsByName = async (name) => {
+  const nameCheck = await getProductByName(name);
+  if (!nameCheck) return false;
 
-  if (typeof quantity !== 'number') return errorResponses.invalid_quantity_type;
+  return errorResponses.invalid_data;
+};
+
+const checkSchemaError = (key) => {
   if (key && key === 'name') {
     return errorResponses.invalid_name;
   }
@@ -35,29 +39,31 @@ const productRegistryValidation = async (name, quantity) => {
     return errorResponses.invalid_quantity;
   }
 
-  const nameCheck = await getProductByName(name);
-
-  if (nameCheck) {
-    return errorResponses.invalid_data;
-  }
-
   return false;
+};
+
+const checkQuantityFieldType = (field, message) => (typeof field !== 'number' ? message : false);
+
+const productRegistryValidation = async (name, quantity) => {
+  const validation = productSchema(name, quantity);
+  // Objeto de erro contem um array de objetos que contem a informação do campo inválido
+  const key = validation && validation.details[0].context.key;
+
+  const fieldQuantCheck = checkQuantityFieldType(quantity, errorResponses.invalid_quantity_type);
+  const errorKeyCheck = checkSchemaError(key);
+  const dataCheck = checkProductsByName(name);
+
+  return fieldQuantCheck || errorKeyCheck || dataCheck || false;
 };
 
 const productUpdateValidation = async (name, quantity) => {
   const updateValidation = productSchema(name, quantity);
   const updateKey = updateValidation && updateValidation.details[0].context.key;
 
-  if (typeof quantity !== 'number') return errorResponses.invalid_quantity_type;
-  if (updateKey && updateKey === 'name') {
-    return errorResponses.invalid_name;
-  }
+  const fieldQuantCheck = checkQuantityFieldType(quantity, errorResponses.invalid_quantity_type);
+  const errorKeyCheck = checkSchemaError(updateKey);
 
-  if (updateKey && updateKey === 'quantity') {
-    return errorResponses.invalid_quantity;
-  }
-
-  return false;
+  return fieldQuantCheck || errorKeyCheck || false;
 };
 
 module.exports = {
