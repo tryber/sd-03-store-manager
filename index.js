@@ -21,7 +21,7 @@ app.get('/ping', (_req, res) => {
 
 app.use('/products', productsRouter);
 
-app.all('*').get((_req, res) => res.json({ message: '<recurso> não encontrado' }));
+app.all(/.*/, (req, res) => res.json({ message: `${req.path} não encontrado` }));
 
 app.use((err, _req, res, _next) => {
   console.error(err);
