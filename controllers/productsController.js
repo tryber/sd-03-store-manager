@@ -7,9 +7,9 @@ const productsService = require('../services/productsService');
 const products = Router();
 
 products.get('/', rescue(async (_, res) => {
-  const products = await productsService.getAllProducts();
+  const product = await productsService.getAllProducts();
 
-  res.status(200).json(products);
+  res.status(200).json(product);
 }));
 
 products.post('/', rescue(async (req, res, next) => {
