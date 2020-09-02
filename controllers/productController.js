@@ -10,11 +10,15 @@ product
     const { name, quantity } = req.body;
     const response = await productServices.handleCreateProduct(name, quantity);
     return response.error ? res.status(422).json(response.message) : res.status(201).json(response);
-  }))
+  }));
+
+product
   .get('/', rescue(async (_req, res) => {
     const response = await productServices.handleGetAllProducts();
     return res.status(200).json({ products: response });
-  }))
+  }));
+
+product
   .get('/:id', idValidate, rescue(async (req, res) => {
     const { id } = req.params;
     const productById = await productServices.handleGetProductById(id);
@@ -22,7 +26,9 @@ product
       return res.status(422).json(productById.message);
     }
     return res.status(200).json(productById);
-  }))
+  }));
+
+product
   .put('/:id', idValidate, productValidate, rescue(async (req, res) => {
     const productData = req.body;
     const { id } = req.params;
@@ -31,7 +37,9 @@ product
       return res.status(502).json(updatedProduct.message);
     }
     return res.status(200).json(updatedProduct);
-  }))
+  }));
+
+product
   .delete('/:id', idValidate, rescue(async (req, res) => {
     const { id } = req.params;
     const deletedProduct = await productServices.handleDeleteProduct(id);
