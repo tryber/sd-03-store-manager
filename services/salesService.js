@@ -2,9 +2,9 @@ const salesModel = require('../models/salesModel');
 // const sales = require('../controllers/salesController');
 
 const validateSaleData = ({ itensSold: { productId, quantity } }) => {
-  if (!productId) return { error: true, code: 'invalid_data', message: 'Produto inválido' };
+  if (!productId) return { error: true, code: 'invalid_data', message: 'Product already exists' };
   if (quantity <= 0) return {
-    error: true, code: 'invalid_data', message: 'Quantidade deve ser maior que 0'
+    error: true, code: 'invalid_data', message: '"quantity" must be larger than or equal to 1'
   };
   return { error: false };
 };
