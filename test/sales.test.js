@@ -1,7 +1,7 @@
 const frisby = require('frisby');
 const { MongoClient } = require('mongodb');
 
-const mongoDbUrl = 'mongodb://localhost:27017';
+const mongoDbUrl = 'mongodb://root:root@localhost:27017/?authMechanism=DEFAULT';
 const url = 'http://localhost:3000';
 const invalidId = 99999;
 
@@ -613,7 +613,7 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
       .expect('status', 200);
 
     await frisby.get(`${url}/sales/${resultSalesId}`)
-      .expect('status', 404)
+      .expect('status', 422)
       .expect((resultGet) => {
         const { body } = resultGet;
         const resultGetBody = JSON.parse(body);
