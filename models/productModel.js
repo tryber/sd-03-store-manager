@@ -2,7 +2,7 @@ const connect = require('./connection');
 
 const findProductByName = async (name) =>
   connect()
-    .then((db) => db.collection('products').find({ name }))
+    .then((db) => db.collection('products').findOne({ name }))
     .catch((err) => {
       console.error(err);
       process.exit(1);
