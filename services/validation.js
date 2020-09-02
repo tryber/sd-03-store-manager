@@ -4,13 +4,14 @@ const { getProductByName } = require('../models/productsModel');
 
 const errorResponses = {
   invalid_data: { message: 'Product already exists' },
-  invalid_name: { message: '\'name\' length must be at least 5 characters long' },
-  invalid_quantity: { message: '\'quantity\' must be larger than or equal 1' },
+  invalid_name: { message: '"name" length must be at least 5 characters long' },
+  invalid_quantity: { message: '"quantity" must be larger than or equal to 1' },
+  invalid_quantity_type: { message: '"quantity" must be a number' },
 };
 
 const productSchema = (name, quantity) => {
-  const validationSchema = Joi.object().keys({
-    name: Joi.string().alphanum().min(5).required(),
+  const validationSchema = Joi.object({
+    name: Joi.string().min(5).required(),
     quantity: Joi.number().integer().min(1).required(),
   });
 
@@ -24,6 +25,8 @@ const productSchema = (name, quantity) => {
 const productRegistryValidation = async (name, quantity) => {
   const validation = productSchema(name, quantity);
   const key = validation && validation.details[0].context.key;
+
+  if (typeof quantity !== 'number') return errorResponses.invalid_quantity_type;
   if (key && key === 'name') {
     return errorResponses.invalid_name;
   }
@@ -44,6 +47,8 @@ const productRegistryValidation = async (name, quantity) => {
 const productUpdateValidation = async (name, quantity) => {
   const updateValidation = productSchema(name, quantity);
   const updateKey = updateValidation && updateValidation.details[0].context.key;
+
+  if (typeof quantity !== 'number') return errorResponses.invalid_quantity_type;
   if (updateKey && updateKey === 'name') {
     return errorResponses.invalid_name;
   }
