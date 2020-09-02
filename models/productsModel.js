@@ -17,7 +17,8 @@ const createProducts = async (name, quantity) => {
 const updateProductById = async (id, name, quantity) => {
   try {
     const connect = await connection('products');
-    const updateQuery = await connect.findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } });
+    const updateQuery = await connect
+      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } });
     const { _id } = updateQuery.value;
 
     return { _id, name, quantity };
