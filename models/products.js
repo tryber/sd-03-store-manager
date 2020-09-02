@@ -21,6 +21,11 @@ async function getById(id) {
   return productsColl.findOne(ObjectID(id));
 }
 
+async function getAllById(ids) {
+  const productsColl = connectTo('products');
+  return productsColl.find({ _id: { $in: ids.map((id) => ObjectID(id)) } }).toArray();
+}
+
 async function updateById(id, { name, quantity }) {
   const productsColl = await connectTo('products');
   return productsColl.updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
@@ -34,6 +39,7 @@ async function deleteById(id) {
 module.exports = {
   add,
   getAll,
+  getAllById,
   getByName,
   getById,
   updateById,

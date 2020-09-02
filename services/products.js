@@ -29,6 +29,12 @@ function handleExistence(product, shouldExists) {
   return product;
 }
 
+async function verifyAllExistencesById(ids) {
+  const products = await getAllById(ids);
+  if (products.length === ids.length) return { error: true, message: 'Not all products exists' };
+  return products;
+}
+
 /**
  * @param {string} name já validado nome do produto a ser procurado
  * @param {string} shouldExists 'should not exists' ou 'should exists' pode gerar erro
@@ -52,6 +58,10 @@ async function getAll() {
   return productModel.getAll();
 }
 
+async function getAllById(ids) {
+  return productsModel.getAllById(ids);
+}
+
 async function getByName(name) {
   return productModel.getByName(name);
 }
@@ -72,11 +82,13 @@ async function deleteById(id) {
 }
 
 module.exports = {
+  verifyAllExistencesById,
   verifyExistenceByName,
   verifyExistenceById,
   createProduct,
   validateProduct,
   getAll,
+  getAllById,
   getByName,
   getById,
   updateById,

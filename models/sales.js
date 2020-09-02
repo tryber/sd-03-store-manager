@@ -7,7 +7,6 @@ async function createSale(products) {
   return salesColl.insertOne({ itensSold: products });
 }
 
-
 async function getAll() {
   const salesColl = await connectTo('sales');
   return salesColl.find().toArray();

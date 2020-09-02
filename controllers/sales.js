@@ -4,16 +4,14 @@ const Boom = require('@hapi/boom');
 const { productService, salesServices } = require('../services');
 const { verifyIdParam } = require('./middlewares');
 
-const sales = express.Router();
+const salesRouter = express.Router();
 
 async function verifyExistenceOfProducts(req, _, next) {
   const { products } = req.body;
+  const ids = products.map(({ productId }) => productId);
+  const toSaleProducts = await productService.verifyAllExistencesById(ids);
 
-  for (let i = 0; i < products.length; i += 1) {
-    const { productId } = products[i];
-    const product = await productService.verifyExistenceById(productId, 'should exists');
-    if (product.error) return next(Boom.badRequest(product.message));
-  };
+  if (toSaleProducts.error) return next(Boom.badRequest(product.message));
 
   return next();
 }
@@ -24,7 +22,7 @@ async function addSale(req, res) {
   res.status(201).json(register);
 }
 
-async function getAllSales(req, res) {
+async function getAllSales(_req, res) {
   const sales = await salesServices.getAll();
   res.status(200).json(sales);
 }
@@ -35,11 +33,11 @@ async function getById(req, res) {
   res.status(200).json(sale);
 }
 
-sales.route('/')
-.post(salesServices.validateSale, rescue(verifyExistenceOfProducts), rescue(addSale))
-.get(rescue(getAllSales));
+salesRouter.route('/')
+  .post(salesServices.validateSale, rescue(verifyExistenceOfProducts), rescue(addSale))
+  .get(rescue(getAllSales));
 
-sales.route('/:id')
+salesRouter.route('/:id')
   .get(verifyIdParam, rescue(getById));
 
-module.exports = sales;
+module.exports = salesRouter;
