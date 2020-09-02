@@ -1,4 +1,9 @@
-const productsModel = require('../models/productsModel');
+const {
+  createProducts,
+  getAllProducts,
+  getProductByName,
+  getProductById,
+} = require('../models/productsModel');
 const { productSchema } = require('./validation');
 
 const errorResponses = {
@@ -17,7 +22,7 @@ const productRegistryValidation = async (name, quantity) => {
     return errorResponses.invalid_quantity;
   }
 
-  const nameCheck = await productsModel.getProductByName(name);
+  const nameCheck = await getProductByName(name);
 
   if (nameCheck) {
     return errorResponses.invalid_data;
@@ -29,7 +34,7 @@ const productRegistryValidation = async (name, quantity) => {
 const createProduct = async (name, quantity) => {
   try {
     const bodyValidation = await productRegistryValidation(name, quantity);
-    const newProduct = !bodyValidation && await productsModel.createProducts(name, quantity);
+    const newProduct = !bodyValidation && (await createProducts(name, quantity));
 
     return bodyValidation || { ...newProduct };
   } catch (error) {
@@ -39,7 +44,7 @@ const createProduct = async (name, quantity) => {
 
 const listProducts = async () => {
   try {
-    const products = await productsModel.getAllProducts();
+    const products = await getAllProducts();
     return [...products];
   } catch (error) {
     throw new Error(error.message);
@@ -48,7 +53,7 @@ const listProducts = async () => {
 
 const listProductById = async (id) => {
   try {
-    const product = await productsModel.getProductById(id);
+    const product = await getProductById(id);
     return product;
   } catch (error) {
     throw new Error(error.message);

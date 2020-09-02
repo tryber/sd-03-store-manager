@@ -1,12 +1,12 @@
 const { Router } = require('express');
-const productsServices = require('../services/productsServices');
+const {createProduct, listProducts, listProductById} = require('../services/productsServices');
 
 const products = Router();
 
 products.post('/', async (req, res, next) => {
   const { name, quantity } = req.body;
   try {
-    const product = await productsServices.createProduct(name, quantity);
+    const product = await createProduct(name, quantity);
 
     if (product.message) throw new Error(product.message);
 
@@ -22,7 +22,7 @@ products.post('/', async (req, res, next) => {
 
 products.get('/', async (_req, res, next) => {
   try {
-    const productslist = await productsServices.listProducts();
+    const productslist = await listProducts();
 
     return res.status(200).json({ products: productslist });
   } catch (error) {
@@ -36,7 +36,7 @@ products.get('/', async (_req, res, next) => {
 products.get('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
-    const productById = await productsServices.listProductById(id);
+    const productById = await listProductById(id);
 
     return res.status(200).json(productById);
   } catch (error) {
