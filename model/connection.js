@@ -1,6 +1,6 @@
 const mongoClient = require('mongodb').MongoClient;
 
-const MONGO_DB_URL = 'mongodb://root:root@localhost:27017/?authMechanism=DEFAULT';
+const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
 
 const connection = () => mongoClient
   .connect(MONGO_DB_URL, {

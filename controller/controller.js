@@ -32,7 +32,7 @@ const middleWare = async ({ id }, callback, res, okStatus, notOkStatus, message)
   return res.status(okStatus).json(product);
 };
 
-const getProductById = rescue(async(req, res) => {
+const getProductById = rescue(async (req, res) => {
   await middleWare(req.params, productServices.serviceGetProductById, res, 200, 422, 'Wrong id format');
 });
 
