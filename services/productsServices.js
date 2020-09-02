@@ -29,10 +29,17 @@ const updateProduct = async (id, name, quantity) => {
   }
 };
 
-const deleteProduct = async (id) => {
+const readOrDeleteById = async (id, operation = 'read') => {
+  const func = (callback) => callback(id);
+
+  const data = async () => {
+    if (operation === 'delete') return func(deleteProductById);
+    return func(getProductById);
+  };
+
   try {
-    const deletedProduct = await deleteProductById(id);
-    return deletedProduct;
+    const dataReturn = await data();
+    return dataReturn;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -47,19 +54,9 @@ const listProducts = async () => {
   }
 };
 
-const listProductById = async (id) => {
-  try {
-    const product = await getProductById(id);
-    return product;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
 module.exports = {
   createProduct,
   updateProduct,
-  deleteProduct,
+  readOrDeleteById,
   listProducts,
-  listProductById,
 };

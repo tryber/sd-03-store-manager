@@ -2,9 +2,8 @@ const { Router } = require('express');
 const {
   createProduct,
   updateProduct,
-  deleteProduct,
+  readOrDeleteById,
   listProducts,
-  listProductById,
 } = require('../services/productsServices');
 const { generateError } = require('./utils');
 
@@ -41,7 +40,7 @@ products
   .get(async (req, res, next) => {
     const { id } = req.params;
     try {
-      const productById = await listProductById(id);
+      const productById = await readOrDeleteById(id);
 
       return res.status(200).json(productById);
     } catch (error) {
@@ -66,7 +65,7 @@ products
   .delete(async (req, res, next) => {
     const { id } = req.params;
     try {
-      const deletedProduct = await deleteProduct(id);
+      const deletedProduct = await readOrDeleteById(id, 'delete');
 
       return res.status(200).json(deletedProduct);
     } catch (error) {
