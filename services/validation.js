@@ -10,7 +10,7 @@ const productSchema = (name, quantity) => {
 
   const { error } = validation;
 
-  return error;
+  return error || null;
 };
 
 module.exports = {

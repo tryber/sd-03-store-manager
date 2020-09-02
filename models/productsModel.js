@@ -16,6 +16,7 @@ const createProducts = async (name, quantity) => {
 };
 
 const getProductByName = async (name) => {
+  console.log(name);
   try {
     const db = await connection();
     const searchQuery = await db.collection('products').findOne({ name });
