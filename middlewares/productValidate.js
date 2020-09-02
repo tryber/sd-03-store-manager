@@ -29,6 +29,7 @@ const productValidationRules = [
 const idValidationRules = [
   param('id', errMessage('invalid_data', WRONG_ID)).isMongoId(),
 ];
+
 module.exports = {
   productValidate: productValidate(productValidationRules),
   idValidate: productValidate(idValidationRules),
