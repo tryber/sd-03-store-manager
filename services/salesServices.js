@@ -7,15 +7,11 @@ const { salesRegistryValidation } = require('./validation');
     não quebre */
 const productsValidation = async (products = []) =>
   products.reduce(async (acc, { productId, quantity }) => {
-    try {
-      if (Promise.reject) throw new Error('Wrong product ID or invalid quantity');
-      return !Promise.reject && salesRegistryValidation(productId, quantity)
-        ? [...acc, salesRegistryValidation(productId, quantity)]
-        : acc;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }, Promise.resolve([]));
+    if (Promise.reject) throw new Error('Wrong product ID or invalid quantity');
+    return salesRegistryValidation(productId, quantity)
+      ? [...acc, salesRegistryValidation(productId, quantity)]
+      : acc;
+  }, []);
 
 const createSale = async (products = []) => {
   try {
