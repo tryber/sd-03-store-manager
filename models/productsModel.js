@@ -11,7 +11,23 @@ const createProducts = async (name, quantity) => {
 
     return response;
   } catch (error) {
-    throw new Error('product register failed');
+    throw new Error(error.message || 'product register failed');
+  }
+};
+
+const updateProductById = async (id, name, quantity) => {
+  try {
+    const db = await connection();
+    const updateQuery = await db
+      .collection('products')
+      .findOneAndUpdate({ _id: ObjectId(id) }, { name, quantity });
+    const response = updateQuery.upsertedId
+      ? { _id: updateQuery.upsertedId, name, quantity }
+      : new Error('register error');
+
+    return response;
+  } catch (error) {
+    throw new Error(error.message || 'product update failed');
   }
 };
 
@@ -45,4 +61,10 @@ const getProductById = async (id) => {
   }
 };
 
-module.exports = { createProducts, getAllProducts, getProductByName, getProductById };
+module.exports = {
+  createProducts,
+  updateProductById,
+  getAllProducts,
+  getProductByName,
+  getProductById,
+};

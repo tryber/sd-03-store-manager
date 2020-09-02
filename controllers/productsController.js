@@ -30,16 +30,19 @@ products
     }
   });
 
-products.get('/:id', async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const productById = await listProductById(id);
+products
+  .route('/:id')
+  .get(async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const productById = await listProductById(id);
 
-    return res.status(200).json(productById);
-  } catch (error) {
-    const err = generateError(422, error);
-    return next(err);
-  }
-});
+      return res.status(200).json(productById);
+    } catch (error) {
+      const err = generateError(422, error);
+      return next(err);
+    }
+  })
+  .put();
 
 module.exports = products;
