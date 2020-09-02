@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId, ObjectID } = require('mongodb');
 const { connection } = require('./connection');
 
 const createProducts = async (name, quantity) => {
@@ -65,7 +65,7 @@ const getProductById = async (id) => {
   try {
     const connect = await connection('products');
     const searchQuery = await connect.findOne(ObjectId(id));
-    if (!searchQuery) throw new Error();
+    if (!searchQuery.name) throw new Error();
     return searchQuery;
   } catch (error) {
     throw new Error('Wrong id format');
