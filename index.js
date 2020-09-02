@@ -11,6 +11,10 @@ app.get('/', (request, response) => {
 
 app.use(bodyParser.json());
 
-app.post('/products', productsController.newProduct);
+app.post('/products', productsController.createProduct);
+
+app.get('/products', productsController.getAllProducts);
+
+app.get('/products/:id', productsController.getProductById);
 
 app.listen(3000, () => console.log('ouvindo na porta 3000'));

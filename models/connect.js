@@ -1,15 +1,14 @@
-const mongodb = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 
-const MONGODB_URL = 'mongodb://mongodb:27017';
+const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
 
-const connect = () => mongodb.connect(MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then((connection) => connection.db('StoreManager'))
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
-
-module.exports = { connect };
+module.exports = () =>
+  MongoClient.connect(MONGO_DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+    .then((connection) => connection.db('StoreManager'))
+    .catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
