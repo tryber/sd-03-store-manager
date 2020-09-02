@@ -1,4 +1,4 @@
-const { ObjectId, ObjectID } = require('mongodb');
+const { ObjectID } = require('mongodb');
 const { connection } = require('./connection');
 
 const createProducts = async (name, quantity) => {
@@ -18,7 +18,7 @@ const updateProductById = async (id, name, quantity) => {
   try {
     const connect = await connection('products');
     const updateQuery = await connect.findOneAndUpdate(
-      { _id: ObjectId(id) },
+      { _id: ObjectID(id) },
       { $set: { name, quantity } },
     );
     const { _id } = updateQuery.value;
@@ -32,7 +32,7 @@ const updateProductById = async (id, name, quantity) => {
 const deleteProductById = async (id) => {
   try {
     const connect = await connection('products');
-    const deleteQuery = await connect.findOneAndDelete({ _id: ObjectId(id) });
+    const deleteQuery = await connect.findOneAndDelete({ _id: ObjectID(id) });
     const { _id, name, quantity } = deleteQuery.value;
 
     return { _id, name, quantity };
@@ -64,7 +64,7 @@ const getProductByName = async (name) => {
 const getProductById = async (id) => {
   try {
     const connect = await connection('products');
-    const searchQuery = await connect.findOne(ObjectId(id));
+    const searchQuery = await connect.findOne(ObjectID(id));
     if (!searchQuery.name) throw new Error();
     return searchQuery;
   } catch (error) {
