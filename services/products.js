@@ -30,7 +30,6 @@ function handleExistence(product, shouldExists) {
 }
 
 /**
- * 
  * @param {string} name já validado nome do produto a ser procurado
  * @param {string} shouldExists 'should not exists' ou 'should exists' pode gerar erro
  */
