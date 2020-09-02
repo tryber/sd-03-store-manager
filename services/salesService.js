@@ -3,7 +3,9 @@
 
 // const validateSaleData = ({ itensSold: { productId, quantity } }) => {
 //   if (!productId) return { error: true, code: 'invalid_data', message: 'Produto inválido' };
-//   if (quantity <= 0) return { error: true, code: 'invalid_data', message: 'Idade deve ser maior que 0' };
+//   if (quantity <= 0) return {
+//     error: true, code: 'invalid_data', message: 'Quantidade deve ser maior que 0'
+//   };
 //   return { error: false };
 // };
 
