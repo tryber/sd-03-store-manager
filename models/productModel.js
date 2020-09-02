@@ -9,30 +9,27 @@ const findProductByName = async (name) =>
       process.exit(1);
     });
 
-const getProductById = async (id) => {
-  console.log('id', id, ObjectId(id));
-  return connect()
+const getProductById = async (id) =>
+  connect()
     .then((db) => db.collection('products').findOne(ObjectId(id)))
     .catch((err) => {
       console.error(err);
+      console.log('Error debug');
       process.exit(1);
     });
-};
 
-const getAllProducts = async () => {
-  console.log('get all');
-  return connect()
+const getAllProducts = async () =>
+  connect()
     .then((db) => db.collection('products').find({}).toArray())
     .catch((err) => {
       console.error(err);
       process.exit(1);
     });
-};
 
 const createProduct = async (name, quantity) =>
   connect()
     .then((db) => db.collection('products').insertOne({ name, quantity }))
-    .then(({ insertedId }) => ({ _id: insertedId, name, quantity }))
+    .then(({ insertedId }) => ({ _id: ObjectId(insertedId), name, quantity }))
     .catch((err) => {
       console.error(err);
       process.exit(1);

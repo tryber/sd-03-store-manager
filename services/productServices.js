@@ -1,4 +1,5 @@
 const productModel = require('../models/productModel');
+
 const {
   PRODUCT_ALREADY_EXISTS,
   WRONG_ID,

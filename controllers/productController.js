@@ -22,10 +22,7 @@ product.get('/', rescue(async (_req, res) => {
 
 product.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
-
   const productById = await productServices.handleGetProductById(id);
-  console.log('product', productById);
-
   if (productById.error) {
     return res.status(422).json(productById.message);
   }
