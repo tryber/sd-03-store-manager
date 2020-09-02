@@ -1,5 +1,5 @@
 const productsModel = require('../models/productsModel');
-const products = require('../controllers/productsController');
+// const products = require('../controllers/productsController');
 
 const validateProductData = (name, quantity) => {
   if (!name || name.length < 5) return { error: true, code: 'invalid_data', message: 'Nome inválido' };
