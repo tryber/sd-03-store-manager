@@ -1,5 +1,5 @@
 const storeModel = require('../model/storeModel');
-
+const { getById } = require('./productServices');
 const validateSale = async (soldItems) => {
   const quantityCheck = soldItems.some(({ quantity }) => quantity < 1);
   const stringCheck = soldItems.some(({ quantity }) => typeof (quantity) !== 'number');
@@ -41,12 +41,6 @@ const validateSalesUpdate = async (soldItems) => {
   return true;
 };
 
-const getById = (callback, id, code, message) => {
-  const result = callback(id);
-  if (!result) return { err: { code, message } };
-  return result;
-};
-
 const serviceCreateSale = async (soldItems) => {
   const sale = await validateSale(soldItems);
   if (sale.err) return sale;
@@ -66,7 +60,6 @@ const serviceUpdateSale = async (id, soldItens) => {
 
 const serviceDeleteSale = async (id) => {
   const sale = await storeModel.getSaleById(id);
-  console.log(id, sale)
   if (!sale) return { err: { code: 'not_found', message: 'Wrong sale ID format' } };
   storeModel.updateProductAfterDeletion(sale);
   await storeModel.deleteSale(id);

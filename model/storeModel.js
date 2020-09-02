@@ -37,10 +37,6 @@ const getAllSales = () => getAll('sales');
 
 const getSaleById = (id) => byId(id, 'sales');
 
-const updateSale = (_id, itensSold) => connection()
-  .then((db) => db.collection('sales').updateOne({ _id: ObjectId(_id) }, { $set: { itensSold } }))
-  .then(() => ({ _id, itensSold }));
-
 const deleteSale = (id) => deleteOne(id, 'sales');
 
 const updateProductAfterSale = (soldItems) => {
@@ -52,6 +48,10 @@ const updateProductAfterDeletion = ({ itensSold }) => {
   itensSold.forEach(({ productId, quantity }) => connection()
     .then((db) => db.collection('products').updateOne({ _id: ObjectId(productId) }, { $inc: { quantity } })));
 };
+
+const updateSale = (_id, itensSold) => connection()
+  .then((db) => db.collection('sales').updateOne({ _id: ObjectId(_id) }, { $set: { itensSold } }))
+  .then(() => { console.log(_id); return { _id, itensSold }; });
 
 module.exports = {
   createProduct,
