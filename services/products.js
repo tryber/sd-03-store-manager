@@ -30,7 +30,7 @@ function handleExistence(product, shouldExists) {
 }
 
 async function verifyAllExistencesById(ids) {
-  const products = await getAllById(ids);
+  const products = await productModel.getAllById(ids);
   if (products.length === ids.length) return { error: true, message: 'Not all products exists' };
   return products;
 }
@@ -59,7 +59,7 @@ async function getAll() {
 }
 
 async function getAllById(ids) {
-  return productsModel.getAllById(ids);
+  return productModel.getAllById(ids);
 }
 
 async function getByName(name) {
