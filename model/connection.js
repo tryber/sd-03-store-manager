@@ -14,9 +14,9 @@ if (process.env.MONGO_DB_URL) {
 const connect = () =>
   MongoClient.connect(MONGO_DB_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
-    .then(connection => connection.db(DB_NAME));
+    .then((connection) => connection.db(DB_NAME));
 
 module.exports = {
   connect,
