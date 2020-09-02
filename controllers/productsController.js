@@ -28,8 +28,8 @@ const getProductById = rescue(async (req, res) => {
   if (products.err) {
     return res.status(422).json(products);
   }
-  const result = { products };
-  return res.status(200).json(result);
+
+  return res.status(200).json(products);
 });
 
 const updateProduct = rescue(async (req, res) => {
@@ -42,7 +42,7 @@ const updateProduct = rescue(async (req, res) => {
     return res.status(422).json(products);
   }
   const result = { products };
-  return res.status(201).json(result);
+  return res.status(200).json(result);
 });
 
 const deleteProduct = rescue(async (req, res) => {
