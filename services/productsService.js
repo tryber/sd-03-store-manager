@@ -88,8 +88,6 @@ const deleteProduct = async (id) => {
   }
 
   await productsModel.deleteProduct(id);
-
-  return { message: 'Produto deletado com sucesso' };
 };
 
 module.exports = {

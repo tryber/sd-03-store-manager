@@ -4,13 +4,13 @@ const productsService = require('../services/productsService');
 const createProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
 
-  const product = await productsService.createProduct(name, quantity);
+  const createdProduct = await productsService.createProduct(name, quantity);
 
-  if (product.err) {
-    return res.status(422).json(product);
+  if (createdProduct.err) {
+    return res.status(422).json(createdProduct);
   }
 
-  return res.status(201).json(product);
+  return res.status(201).json(createdProduct);
 });
 
 const getAllProducts = rescue(async (_req, res) => {
@@ -35,25 +35,25 @@ const updateProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
   const { id } = req.params;
 
-  const product = await productsService.updateProduct(id, name, quantity);
+  const updatedProduct = await productsService.updateProduct(id, name, quantity);
 
-  if (product.err) {
-    return res.status(422).json(product);
+  if (updatedProduct.err) {
+    return res.status(422).json(updatedProduct);
   }
 
-  return res.status(200).json(product);
+  return res.status(200).json(updatedProduct);
 });
 
 const deleteProduct = rescue(async (req, res) => {
   const { id } = req.params;
 
-  const product = await productsService.deleteProduct(id);
+  const deletedProduct = await productsService.deleteProduct(id);
 
-  if (product.err) {
-    return res.status(422).json(product);
+  if (deletedProduct && deletedProduct.err) {
+    return res.status(422).json(deletedProduct);
   }
 
-  return res.status(200).json(product);
+  return res.status(200).end();
 });
 
 module.exports = {
