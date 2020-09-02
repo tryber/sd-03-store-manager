@@ -5,25 +5,14 @@ const {
   readOrDeleteById,
   listProducts,
 } = require('../services/productsServices');
+const dataMiddleware = require('../middlewares/dataMiddleware');
 const { generateError } = require('./utils');
 
 const products = Router();
 
 products
   .route('/')
-  .post(async (req, res, next) => {
-    try {
-      const { name, quantity } = req.body;
-      const product = await createProduct(name, quantity);
-
-      if (product.message) throw new Error(product.message);
-
-      return res.status(201).json(product);
-    } catch (error) {
-      const err = generateError(422, error, 'invalid_data');
-      return next(err);
-    }
-  })
+  .post(dataMiddleware(createProduct))
   .get(async (_req, res, next) => {
     try {
       const productslist = await listProducts();

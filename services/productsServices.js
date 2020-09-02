@@ -7,7 +7,7 @@ const {
 } = require('../models/productsModel');
 const { productRegistryValidation, productUpdateValidation } = require('./validation');
 
-const createProduct = async (name, quantity) => {
+const createProduct = async ({ name, quantity }) => {
   try {
     const bodyValidation = await productRegistryValidation(name, quantity);
     const newProduct = !bodyValidation && (await createProducts(name, quantity));
