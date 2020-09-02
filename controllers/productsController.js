@@ -14,47 +14,46 @@ const createProduct = rescue(async (req, res) => {
 });
 
 const getAllProducts = rescue(async (_req, res) => {
-  const result = {};
-  result.products = await productsService.getAllProducts();
+  const products = await productsService.getAllProducts();
 
-  return res.status(200).json(result);
+  return res.status(200).json(products);
 });
 
 const getProductById = rescue(async (req, res) => {
   const { id } = req.params;
 
-  const products = await productsService.getProductById(id);
+  const product = await productsService.getProductById(id);
 
-  if (products.err) {
-    return res.status(422).json(products);
+  if (product.err) {
+    return res.status(422).json(product);
   }
 
-  return res.status(200).json(products);
+  return res.status(200).json(product);
 });
 
 const updateProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
   const { id } = req.params;
 
-  const products = await productsService.updateProduct(id, name, quantity);
+  const product = await productsService.updateProduct(id, name, quantity);
 
-  if (products.err) {
-    return res.status(422).json(products);
+  if (product.err) {
+    return res.status(422).json(product);
   }
-  const result = { products };
-  return res.status(200).json(result);
+
+  return res.status(200).json(product);
 });
 
 const deleteProduct = rescue(async (req, res) => {
   const { id } = req.params;
 
-  const products = await productsService.deleteProduct(id);
+  const product = await productsService.deleteProduct(id);
 
-  if (products.err) {
-    return res.status(422).json(products);
+  if (product.err) {
+    return res.status(422).json(product);
   }
-  const result = { products };
-  return res.status(200).json(result);
+
+  return res.status(200).json(product);
 });
 
 module.exports = {

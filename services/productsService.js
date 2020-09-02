@@ -71,9 +71,9 @@ const deleteProduct = async (id) => {
     return { err: { code: 'invalid_data', message: 'Wrong id format' } };
   }
 
-  const { name, quantity } = productsModel.getProductById(id);
+  const product = productsModel.getProductById(id);
 
-  if (!name) {
+  if (!product) {
     return {
       err: { code: 'invalid_data', message: 'Wrong id format' },
     };
@@ -81,7 +81,7 @@ const deleteProduct = async (id) => {
 
   await productsModel.deleteProduct(id);
 
-  return { _id: id, name, quantity };
+  return { message: 'Produto deletado com sucesso' };
 };
 
 module.exports = {

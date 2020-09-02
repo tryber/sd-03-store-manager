@@ -10,7 +10,9 @@ const getProductByName = async (searchName) =>
   connect().then((db) => db.collection('products').findOne({ name: searchName }));
 
 const getAllProducts = async () =>
-  connect().then((db) => db.collection('products').find({}).toArray());
+  connect()
+    .then((db) => db.collection('products').find({}).toArray())
+    .then((products) => ({ products }));
 
 const getProductById = async (searchId) =>
   connect().then((db) => db.collection('products').findOne(ObjectId(searchId)));
@@ -22,8 +24,10 @@ const updateProduct = async (id, name, quantity) =>
     )
     .then(() => ({ _id: id, name, quantity }));
 
-const deleteProduct = async (searchId) =>
-  connect().then((db) => db.collection('products').deleteOne({ _id: ObjectId(searchId) }));
+const deleteProduct = async (id) =>
+  connect()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }))
+    .then((deleted) => deleted);
 
 module.exports = {
   createProduct,
