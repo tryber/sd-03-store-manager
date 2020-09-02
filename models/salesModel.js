@@ -15,4 +15,14 @@ const createSales = async (products) => {
   }
 };
 
-module.exports = { createSales };
+const getAllSales = async () => {
+  try {
+    const db = await connection();
+    const searchAll = await db.collection('sales').find().toArray();
+    return searchAll;
+  } catch (error) {
+    throw new Error('sales search failed');
+  }
+};
+
+module.exports = { createSales, getAllSales };

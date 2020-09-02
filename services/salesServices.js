@@ -1,4 +1,4 @@
-const { createSales } = require('../models/salesModel');
+const { createSales, getAllSales } = require('../models/salesModel');
 const { salesRegistryValidation } = require('./validation');
 
 const createSale = async (products = []) => {
@@ -20,4 +20,13 @@ const createSale = async (products = []) => {
   }
 };
 
-module.exports = { createSale };
+const listSales = async () => {
+  try {
+    const sales = await getAllSales();
+    return [...sales];
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+module.exports = { createSale, listSales };

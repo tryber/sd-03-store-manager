@@ -46,7 +46,7 @@ const getAllProducts = async () => {
     const searchAll = await db.collection('products').find().toArray();
     return searchAll;
   } catch (error) {
-    throw new Error('product search failed');
+    throw new Error('products search failed');
   }
 };
 
