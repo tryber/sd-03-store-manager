@@ -8,9 +8,9 @@ const getAllSales = async () => connect()
     .find({})
     .toArray());
 
-const createSale = async (name, quantity) => connect()
-  .then((db) => db.collection('sales').insertOne({ name, quantity }))
-  .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
+const createSale = async (productId, quantity) => connect()
+  .then((db) => db.collection('sales').insertOne({ itensSold : { productId, quantity }}))
+  .then(({ insertedId }) => ({ _id: insertedId, itensSold : { productId, quantity } }));
 
 const getSaleById = async (id) => connect()
   .then((db) => db.collection('sales').findOne(ObjectId(id)));
@@ -18,9 +18,9 @@ const getSaleById = async (id) => connect()
 const deleteSale = async (id) => connect()
   .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
 
-const updateSale = async (id, { name, quantity }) => connect()
-  .then((db) => db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
-  .then(() => ({ _id: id, name, quantity }));
+const updateSale = async (id, { itensSold : { productId, quantity }}) => connect()
+  .then((db) => db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { itensSold : { productId, quantity }} }))
+  .then(() => ({ _id: id, itensSold : { productId, quantity }}));
 
 module.exports = {
   getAllSales,
