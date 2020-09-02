@@ -32,7 +32,7 @@ const updateProduct = rescue(async (req, res) => {
   if (updatedProduct.err) {
     return res.status(422).json(updatedProduct);
   }
-  return res.status(201).json(updatedProduct);
+  return res.status(200).json(updatedProduct);
 });
 
 const deleteProduct = rescue(async (req, res) => {
@@ -41,7 +41,7 @@ const deleteProduct = rescue(async (req, res) => {
   if (deletedProduct && deletedProduct.err) {
     return res.status(422).json(deletedProduct);
   }
-  return res.status(200).json(deletedProduct);
+  return res.status(200).end();
 });
 
 module.exports = {
