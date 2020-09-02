@@ -72,6 +72,6 @@ module.exports = {
   getSaleById,
   updateSale,
   deleteSale,
-  updateProductAfterSale,
   updateProductAfterDeletion,
+  updateProductAfterSale,
 };
