@@ -20,9 +20,9 @@ const deleteProduct = async (id) => connect()
 
 const updateProduct = async (id, { name, quantity }) => connect()
   .then((db) => db.collection('products').updateOne({
-    _id: ObjectId(id)
+    _id: ObjectId(id),
   }, {
-    $set: { name, quantity }
+    $set: { name, quantity },
   }))
   .then(() => ({ _id: id, name, quantity }));
 
