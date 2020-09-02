@@ -20,7 +20,7 @@ products
 
       return res.status(201).json(product);
     } catch (error) {
-      const err = generateError(422, error);
+      const err = generateError(422, error, 'invalid_data');
       return next(err);
     }
   })
@@ -30,7 +30,7 @@ products
 
       return res.status(200).json({ products: productslist });
     } catch (error) {
-      const err = generateError(422, error);
+      const err = generateError(422, error, 'invalid_data');
       return next(err);
     }
   });
@@ -44,7 +44,7 @@ products
 
       return res.status(200).json(productById);
     } catch (error) {
-      const err = generateError(422, error);
+      const err = generateError(422, error, 'invalid_data');
       return next(err);
     }
   })
@@ -58,7 +58,7 @@ products
 
       return res.status(200).json(product);
     } catch (error) {
-      const err = generateError(422, error);
+      const err = generateError(422, error, 'invalid_data');
       return next(err);
     }
   })
@@ -69,7 +69,7 @@ products
 
       return res.status(200).json(deletedProduct);
     } catch (error) {
-      const err = generateError(422, error);
+      const err = generateError(422, error, 'invalid_data');
       return next(err);
     }
   });
