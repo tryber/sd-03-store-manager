@@ -9,9 +9,13 @@ const createProduct = rescue(async (req, res) => {
   return res.status(201).json(product);
 });
 
+const getAll = async (callback, res, okstatus, type) => {
+  const result = await callback();
+  return res.status(okstatus).json({ [type]: result });
+};
+
 const getAllProducts = rescue(async (_req, res) => {
-  const products = await services.serviceGetAllProducts();
-  return res.status(200).json({ products });
+  getAll(services.serviceGetAllProducts, res, 200, 'products');
 });
 
 const middleWare = async ({ id }, callback, res, okStatus, notOkStatus) => {
@@ -51,8 +55,7 @@ const createSale = async (req, res) => {
 };
 
 const getAllSales = rescue(async (_req, res) => {
-  const sales = await services.serviceGetAllSales();
-  return res.status(200).json({ sales });
+  getAll(services.serviceGetAllSales, res, 200, 'sales');
 });
 
 const getSaleById = rescue(async (req, res) => {
@@ -79,13 +82,13 @@ const deleteSale = rescue(async (req, res) => {
 
 module.exports = {
   createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-  createSale,
-  getAllSales,
-  getSaleById,
-  updateSale,
   deleteSale,
+  getProductById,
+  deleteProduct,
+  getAllProducts,
+  getAllSales,
+  updateSale,
+  createSale,
+  updateProduct,
+  getSaleById,
 };

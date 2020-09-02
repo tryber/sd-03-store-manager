@@ -75,11 +75,13 @@ const serviceCreateProduct = async ({ name, quantity }) => {
   return storeModel.createProduct(name, quantity);
 };
 
-const serviceGetProductById = async (id) => {
-  const product = await storeModel.getProductById(id);
-  if (!product) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
-  return product;
+const getById = (callback, id, code, message) => {
+  const result = callback(id);
+  if (!result) return { err: { code, message } };
+  return result;
 };
+
+const serviceGetProductById = async (id) => getById(storeModel.getProductById, id, 'invalid_data', 'Wrong id format');
 
 const serviceUpdateProduct = async (id, { name, quantity }) => {
   const product = await validateUpdate(name, quantity);
@@ -103,11 +105,7 @@ const serviceCreateSale = async (soldItems) => {
 
 const serviceGetAllSales = async () => storeModel.getAllSales();
 
-const serviceGetSaleById = async (id) => {
-  const sale = await storeModel.getSaleById(id);
-  if (!sale) return { err: { code: 'not_found', message: 'Sale not found' } };
-  return sale;
-};
+const serviceGetSaleById = (id) => getById(storeModel.getSaleById, id, 'not_found', 'Sale not found');
 
 const serviceUpdateSale = async (id, soldItens) => {
   const sale = await validateSalesUpdate(soldItens);
