@@ -71,23 +71,19 @@ async function getSale(req, res) {
 }
 
 async function updateSale(req, res) {
-  try {
-    const { id } = req.params;
-    const sale = req.body;
-    const { message } = await Validation.validadeSale(sale);
-    if (message) {
-      throw new Error(message);
-    }
-    const Sale = await Sales.updateSale(id, sale);
-    res.status(200).send(Sale);
-  } catch (error) {
+  const { id } = req.params;
+  const sale = req.body;
+  const { message } = await Validation.validadeSale(sale);
+  if (message) {
     const err = {
       err: {
-        code: 'invalid_data', message: error.message,
+        code: 'invalid_data', message,
       },
     };
-    res.status(422).send(err);
+    return res.status(422).send(err);
   }
+  const Sale = await Sales.updateSale(id, sale);
+  res.status(200).send(Sale);
 }
 
 async function deleteSale(req, res) {
