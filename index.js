@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const controllers = require('./controllers');
+const handleApiErrorMiddleware = require('./middlewares/handleApiErrorMiddleware');
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,8 +14,11 @@ app.get('/', (request, response) => {
 
 app.post('/products', controllers.productsController.productsRegister);
 
-app.use((err, req, res, next) =>
-  (err ? console.log(err) : console.log('ok')));
+app.use((err, _req, res, _next) =>
+  (err
+    ? console.log(err.obj)
+    : res.status(500).json({ message: 'Internal error' })
+  ));
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('Listening on 3000'));

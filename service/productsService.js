@@ -17,7 +17,9 @@ const shouldCreateProduct = async (name, quantity) => {
     const response = await insertProduct(name, quantity);
     return response;
   }
-  throw new Error('Nome ou quantidade inválidos');
+  const err = new Error('Nome ou quantidade inválidos');
+  err.obj = 'lll';
+  throw err;
 };
 
 module.exports = {
