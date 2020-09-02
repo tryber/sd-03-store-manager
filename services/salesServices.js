@@ -13,7 +13,6 @@ const productsValidation = async (products = []) =>
 const createSale = async (products = []) => {
   try {
     const reqValidation = await productsValidation(products);
-    console.log(reqValidation);
     const newSale = reqValidation.length === 0 && (await createSales(products));
 
     return { ...newSale };
