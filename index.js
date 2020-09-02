@@ -22,4 +22,11 @@ app.delete('/products/:id', productsController.deleteProduct);
 
 app.post('/sales', salesController.createSale);
 
+app.put('/sales/:id', salesController.updateSale);
+
+app.get('/sales', salesController.getAllSales);
+app.get('/sales/:id', salesController.getSaleById);
+
+app.delete('/sales/:id', salesController.deleteSale);
+
 app.listen(3000, () => console.log('Ouvindo na porta 3000'));
