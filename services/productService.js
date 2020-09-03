@@ -36,7 +36,6 @@ const registerProduct = async (name, quantity) => {
   /*  Criar as validações de regra de negócio aqui e enviar a requisição para o MongoDB */
   /*  Validação de dados */
   const dataValidated = await ValidarDados(name, quantity);
-  console.log('resultado da validacao', dataValidated);
   if (dataValidated.error) {
     const { error, message, code } = dataValidated;
     return { error, message, code };
