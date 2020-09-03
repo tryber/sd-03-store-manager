@@ -1,7 +1,7 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
-const { productService, salesServices, schemas } = require('../services');
+const { salesServices, schemas } = require('../services');
 const { verifyIdParam } = require('./middlewares');
 
 const salesRouter = express.Router();
@@ -9,40 +9,26 @@ const salesRouter = express.Router();
 // const SHOULD_NOT_EXISTS = 'should not exists';
 const SHOULD_EXISTS = 'should exists';
 
-/**
- * Executa um servico de sales (salesServices) e devolve o resultado como json com o status
- * @param {string} func
- * @param {array of string} bodyParams propriedades a se passar para o sales services
- * @param {number} status
- */
-function execute(func, bodyParams, status = 200) {
-  return rescue(async (req, res) => {
-    const params = bodyParams.map((param) => req.body[param]);
-    const result = await salesServices[func](...params);
-    return res.status(status).json(result);
-  });
-}
+// async function verifyExistenceOfProducts(req, _, next) {
+//   const ids = req.body.map(({ productId }) => productId);
+//   const toSaleProducts = await productService.verifyAllExistencesById(ids);
 
-async function verifyExistenceOfProducts(req, _, next) {
-  const ids = req.body.map(({ productId }) => productId);
-  const toSaleProducts = await productService.verifyAllExistencesById(ids);
+//   if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message, 'invalid_data'));
 
-  if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message, 'invalid_data'));
-
-  return next();
-}
+//   return next();
+// }
 
 function validateSale(req, _, next) {
   const { error } = schemas.saleSchema.validate({ products: req.body });
 
-  error ? next(Boom.badData(error.message, 'invalid_data')) : next();
+  return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
 function validateProduct(req, _, next) {
   const [{ productId, quantity }] = req.body;
   const { error } = schemas.saleProductSchema.validate({ productId, quantity });
 
-  error ? next(Boom.badData(error.message, 'invalid_data')) : next();
+  return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
 async function addSale(req, res) {
@@ -59,7 +45,7 @@ function verifyExistenceOfSale(shouldExists = SHOULD_EXISTS) {
   return rescue(async (req, res, next) => {
     const { id } = req.params;
     const sale = await salesServices.verifyExistenceById(id, shouldExists);
-    console.log('chegou aqui', sale)
+
     if (sale.error) return next(Boom.badRequest(sale.message, 'invalid_data'));
 
     res.saleById = sale;

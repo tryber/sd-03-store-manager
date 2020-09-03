@@ -9,7 +9,7 @@ function verifyIdParam(message = 'Wrong id format') {
     if (isValid.error) return next(Boom.badData(message, 'invalid_data'));
 
     return next();
-  }
+  };
 }
 
 module.exports = {

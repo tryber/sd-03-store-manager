@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const idSchema = Joi.string().max(24).min(24)
-  .error(() => new Error('Wrong product ID or invalid quantity' ));
+  .error(() => new Error('Wrong product ID or invalid quantity'));
 
 const productName = Joi.string().min(5)
   .error(() => new Error('"name" length must be at least 5 characters long'));
@@ -10,8 +10,8 @@ const productQuantity = Joi.number().integer().min(1)
   .error(([{ local }]) => new Error(
     (typeof local.value !== 'number')
     ? '"quantity" must be a number'
-    : '"quantity" must be larger than or equal to 1'
-  )
+    : '"quantity" must be larger than or equal to 1',
+  ),
 );
 
 const productSchema = Joi.object({
