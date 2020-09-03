@@ -24,12 +24,9 @@ const saleProductSchema = Joi.object({
   quantity: productQuantity.required(),
 }).error(() => new Error('Wrong product ID or invalid quantity'));
 
-const saleSchema = Joi.object({
-  products: Joi.array().items(
-    saleProductSchema.required(),
-  ).required(),
-});
-
+const saleSchema = Joi.array().items(
+  saleProductSchema.required(),
+).required();
 
 module.exports = {
   saleProductSchema,

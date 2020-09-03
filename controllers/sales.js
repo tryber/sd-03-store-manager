@@ -19,7 +19,8 @@ const SHOULD_EXISTS = 'should exists';
 // }
 
 function validateSale(req, _, next) {
-  const { error } = schemas.saleSchema.validate({ products: req.body });
+  const products = req.body;
+  const { error } = schemas.saleSchema.validate(products);
 
   return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
