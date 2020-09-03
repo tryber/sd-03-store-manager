@@ -50,7 +50,7 @@ const productsList = async (_req, res, next) => {
   try {
     const productslist = await listProducts();
 
-    return res.status(200).json({ products: productslist });
+    return res.status(200).json({ products: [...productslist] });
   } catch (error) {
     const err = generateError(422, error, 'invalid_data');
     return next(err);
