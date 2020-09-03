@@ -39,6 +39,22 @@ products.get('/:id', rescue(async (req, res) => {
   return res.status(200).json(product);
 }));
 
+products.put('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const product = await productService.updateProductById(id, name, quantity);
+
+  if (product.error) {
+    const { code, message } = product;
+    return res
+      .status(422)
+      .json({ err: { code, message } });
+  }
+
+  return res.status(200).json(product);
+}));
+
 module.exports = {
   products,
 };

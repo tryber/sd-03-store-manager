@@ -70,8 +70,25 @@ const findProductById = async (id) => {
   return product;
 };
 
+const updateProductById = async (id, name, quantity) => {
+  /*  Criar as validações de regra de negócio aqui e enviar a requisição para o MongoDB */
+  /*  Validação de dados */
+  const dataValidated = await ValidarDados(name, quantity);
+  if (dataValidated.error) {
+    const { error, message, code } = dataValidated;
+    return { error, message, code };
+  }
+
+  // Atualização do produto
+  const { _id } = await productModel.getProductById(id);
+  const u = await productModel.updateProductById(_id, dataValidated);
+
+  return u;
+};
+
 module.exports = {
   registerProduct,
   findAllProducts,
   findProductById,
+  updateProductById,
 };
