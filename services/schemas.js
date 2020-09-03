@@ -22,7 +22,7 @@ const productSchema = Joi.object({
 const saleProductSchema = Joi.object({
   productId: idSchema.required(),
   quantity: productQuantity.required(),
-});
+}).error(() => new Error('Wrong product ID or invalid quantity'));
 
 const saleSchema = Joi.object({
   products: Joi.array().items(
