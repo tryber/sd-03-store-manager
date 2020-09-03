@@ -3,7 +3,7 @@ const generic = require('./generic');
 
 async function verifyAllExistencesById(ids) {
   const products = await productModel.getAllById(ids);
-  if (products.length === ids.length) return { error: true, message: 'Not all products exists' };
+  if (products.length !== ids.length) return { error: true, message: 'Not all products exists' };
   return products;
 }
 

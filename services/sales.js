@@ -3,17 +3,17 @@ const generic = require('./generic');
 
 async function verifyExistenceById(id, shouldExists) {
   const sale = await salesModel.getById(id);
-  console.log('service existence', sale);
   return generic.handleExistence(sale, shouldExists);
 }
 
-async function addSale(products) {
-  const { insertedId } = await salesModel.createSale(products);
-  return { _id: insertedId, products };
+async function addSale(itensSold) {
+  const { insertedId } = await salesModel.createSale(itensSold);
+  return { _id: insertedId, itensSold };
 }
 
 async function getAll() {
-  return salesModel.getAll();
+  const sales = await salesModel.getAll();
+  return { sales };
 }
 
 async function getById(id) {

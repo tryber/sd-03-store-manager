@@ -24,18 +24,16 @@ function execute(func, bodyParams, status = 200) {
 }
 
 async function verifyExistenceOfProducts(req, _, next) {
-  const { products } = req.body;
-  const ids = products.map(({ productId }) => productId);
+  const ids = req.body.map(({ productId }) => productId);
   const toSaleProducts = await productService.verifyAllExistencesById(ids);
+
   if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message));
 
   return next();
 }
 
-function validateSale(req, _) {
-  const { products } = req.body || {};
-  const { error } = schemas.saleSchema.validate({ products });
-
+function validateSale(req, _, next) {
+  const { error } = schemas.saleSchema.validate({ products: req.body });
   error ? next(Boom.badData(error.message)) : next();
 }
 
@@ -46,11 +44,11 @@ function validateProduct(req, _) {
   error ? next(Boom.badData(error.message)) : next();
 }
 
-// async function addSale(req, res) {
-//   const { products } = req.body;
-//   const register = await salesServices.addSale(products);
-//   res.status(201).json(register);
-// }
+async function addSale(req, res) {
+  const register = await salesServices.addSale(req.body);
+  console.log('addSale controller sale', register)
+  res.status(200).json(register);
+}
 
 async function getAllSales(_req, res) {
   const sales = await salesServices.getAll();
@@ -93,9 +91,8 @@ salesRouter
   .post(
     validateSale,
     rescue(verifyExistenceOfProducts),
-    execute('addSale', ['products'], 201),
-  )
-  .get(rescue(getAllSales));
+    rescue(addSale),
+  ).get(rescue(getAllSales));
 
 salesRouter
   .route('/:id')

@@ -17,7 +17,7 @@ const productQuantity = Joi.number().integer().min(1)
 const productSchema = Joi.object({
   name: productName.required(),
   quantity: productQuantity.required(),
-});
+}).error(() => ({ error: true, message: 'Products is empty' }));
 
 const saleProductSchema = Joi.object({
   productId: idSchema.required(),
@@ -26,8 +26,8 @@ const saleProductSchema = Joi.object({
 
 const saleSchema = Joi.object({
   products: Joi.array().items(
-    saleProductSchema.required().error(() => ({ error: true, message: 'Products is empty' })),
-  ),
+    saleProductSchema.required(),
+  ).required(),
 });
 
 

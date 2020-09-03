@@ -22,7 +22,7 @@ async function getById(id) {
 }
 
 async function getAllById(ids) {
-  const productsColl = connectTo('products');
+  const productsColl = await connectTo('products');
   return productsColl.find({ _id: { $in: ids.map((id) => ObjectID(id)) } }).toArray();
 }
 

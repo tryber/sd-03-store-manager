@@ -27,9 +27,11 @@ function threatBoomErr({ payload }) {
 
 app.use((err, _req, res, _next) => {
   if (Boom.isBoom(err)) {
+    const { payload, statusCode } = err.output;
     console.error(
-`message, ${err.output.message}
-error -> code, ${err.output.error}`
+`message, ${payload.message}
+error -> code, ${payload.error}
+status, ${statusCode}`
     );
     return res
     .status(err.output.statusCode)
