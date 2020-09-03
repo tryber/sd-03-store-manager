@@ -5,6 +5,6 @@ const sales = Router();
 
 sales.route('/').post(middlewares.registerSale).get(middlewares.listSales);
 
-sales.route(':id/').put(middlewares.updateSale);
+sales.route('/:id').put(middlewares.updateSale);
 
 module.exports = sales;

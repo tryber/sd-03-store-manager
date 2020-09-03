@@ -21,7 +21,7 @@ const updateSalesById = async (id, sale = []) => {
   const { productId, quantity } = product;
   const connect = await connection('sales');
   const salesUpdate = await connect.findOneAndUpdate(
-    { _id: ObjectID(id), 'itensSold._id': ObjectID(productId) },
+    { _id: ObjectID(id), itensSold: { $elemMatch: { productId } } },
     { $set: { quantity } },
   );
   const { _id } = salesUpdate.value;

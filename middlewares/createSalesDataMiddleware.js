@@ -15,7 +15,7 @@ const salesCreate = async (req, res, next) => {
 };
 
 const modifySale = async (req, res, next) => {
-  const [sale] = req.body;
+  const sale = req.body;
   const { id } = req.params;
   try {
     const updateSale = await updateSaleQuantity(id, sale);
