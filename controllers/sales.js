@@ -3,6 +3,7 @@ const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
 const { salesServices, schemas } = require('../services');
 const { verifyIdParam } = require('./middlewares');
+const products = require('../models/products');
 
 const salesRouter = express.Router();
 
@@ -26,9 +27,10 @@ function validateSale(req, _, next) {
 }
 
 function validateProduct(req, _, next) {
-  const [{ productId, quantity }] = req.body;
-  const { error } = schemas.saleProductSchema.validate({ productId, quantity });
-
+  const products = [...req.body];
+  const { error } = products.map(schemas.saleProductSchema.validate)
+    .find(({ error: err }) => err);
+  console.log('error', error)
   return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
@@ -83,8 +85,9 @@ salesRouter
 
 salesRouter
   .route('/:id')
-  .get(verifyIdParam('Wrong sale ID format'), rescue(getById))
-  .put(verifyIdParam('Wrong sale ID format'), validateProduct, rescue(updateOneItem))
-  .delete(verifyIdParam('Wrong sale ID format'), verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
+  .all(verifyIdParam('Wrong sale ID format'))
+  .get(rescue(getById))
+  .put(validateProduct, rescue(updateOneItem))
+  .delete(verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
 
 module.exports = salesRouter;

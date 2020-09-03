@@ -76,8 +76,9 @@ productsRouter
 
 productsRouter
   .route('/:id')
-  .get(verifyIdParam(), rescue(getById))
-  .put(validateProduct, verifyIdParam(), verifyExistenceById(SHOULD_EXISTS), rescue(update))
-  .delete(verifyIdParam(), rescue(deleteById));
+  .all(verifyIdParam())
+  .get(rescue(getById))
+  .put(validateProduct, verifyExistenceById(SHOULD_EXISTS), rescue(update))
+  .delete(rescue(deleteById));
 
 module.exports = productsRouter;
