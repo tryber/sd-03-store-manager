@@ -3,13 +3,15 @@ const Joi = require('joi');
 const productModel = require('../models/productModel');
 
 const schema = Joi.object({
-  name: Joi.string().min(5).required(),
-  quantity: Joi.number().integer().min(1).required(),
+  name: Joi.string().min(5),
+  quantity: Joi.number().integer().min(1),
+  id: Joi.string().min(24),
 });
 
 const ERRORSmessage = {
   1: { message: '"quantity" must be larger than or equal to 1' },
   2: { message: 'Product already exists' },
+  3: { message: 'Wrong id format' },
 };
 
 const ERRORScode = {
@@ -51,6 +53,26 @@ const registerProduct = async (name, quantity) => {
   return product;
 };
 
+const findAllProducts = async () => {
+  const products = await productModel.getAllProducts();
+  return { products: [...products] };
+};
+
+const findProductById = async (id) => {
+  // Validação de id
+  const { error, value } = schema.validate({ id });
+
+  if (error) {
+    return { err: { error: true, code: ERRORScode.code1, message: ERRORSmessage[3].message } };
+  }
+
+  const product = await productModel.getProductById(value.id);
+
+  return product;
+};
+
 module.exports = {
   registerProduct,
+  findAllProducts,
+  findProductById,
 };
