@@ -1,5 +1,5 @@
 const { ObjectID } = require('mongodb');
-const { connection, connectAndFindAll } = require('./connection');
+const { connection, connectAndFindAll, connectAndFindById } = require('./connection');
 
 const createSales = async (products) => {
   try {
@@ -51,10 +51,9 @@ const getAllSales = async () => {
 
 const getSaleById = async (id) => {
   try {
-    const connect = await connection('sales');
-    const saleQuery = await connect.findOne(ObjectID(id));
-    if (!saleQuery.name) throw new Error();
-    return saleQuery;
+    const query = connectAndFindById(id, 'sales', 'Sale not found');
+
+    return query;
   } catch (error) {
     throw new Error('Sale not found');
   }
