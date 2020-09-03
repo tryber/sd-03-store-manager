@@ -4,7 +4,7 @@ const {
   updateSaleQuantity,
   readOrDeleteSaleById,
 } = require('../services/salesServices');
-const { generateError } = require('../controllers/utils');
+const { generateError } = require('../utils');
 
 const salesCreate = async (req, res, next) => {
   try {

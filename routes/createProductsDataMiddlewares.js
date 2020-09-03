@@ -4,7 +4,7 @@ const {
   readOrDeleteById,
   listProducts,
 } = require('../services/productsServices');
-const { generateError } = require('../controllers/utils');
+const { generateError } = require('../utils');
 
 const productCreate = async (req, res, next) => {
   try {
