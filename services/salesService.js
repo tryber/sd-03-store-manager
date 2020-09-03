@@ -1,6 +1,6 @@
-const productsModel = require('../models/productsModel');
-const salesModel = require('../models/salesModel');
-const { validateId, validateSaleData } = require('./helpers');
+const { salesModel, productsModel } = require('../models');
+const { validateId, validateSaleData, getErrorObject } = require('./helpers');
+const { invalidData, wrongFormatOrQuantity, wrondFormatSaleId } = require('./errorCodes');
 
 const createSale = (products) => {
   const isDataValid = validateSaleData(products);
@@ -8,19 +8,12 @@ const createSale = (products) => {
   if (isDataValid) {
     products.forEach(({ productId }) => {
       const product = productsModel.getProductById(productId);
-      if (!product) {
-        return {
-          err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-        };
-      }
+
+      if (!product) getErrorObject(invalidData, wrongFormatOrQuantity);
     });
   }
 
-  if (!isDataValid) {
-    return {
-      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-    };
-  }
+  if (!isDataValid) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
   const sale = salesModel.createSale(products);
 
@@ -36,9 +29,7 @@ const getSaleById = async (id) => {
 
   const sale = await salesModel.getSaleById(id);
 
-  if (!sale) {
-    return { err: { code: 'not_found', message: 'Sale not found' } };
-  }
+  if (!sale) return getErrorObject('not_found', 'Sale not found');
 
   return sale;
 };
@@ -46,11 +37,7 @@ const getSaleById = async (id) => {
 const updateSale = async (id, products) => {
   const isDataValid = validateSaleData(products);
 
-  if (!isDataValid) {
-    return {
-      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-    };
-  }
+  if (!isDataValid) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
   const updatedSale = await salesModel.updateSale(id, products);
 
@@ -58,17 +45,13 @@ const updateSale = async (id, products) => {
 };
 
 const deleteSale = async (id) => {
-  const isIdValid = validateId(id, 'Wrong sale ID format');
+  const isIdValid = validateId(id, wrondFormatSaleId);
 
   if (typeof isIdValid === 'object') return isIdValid;
 
   const sale = await salesModel.getSaleById(id);
 
-  if (!sale) {
-    return {
-      err: { code: 'invalid_data', message: 'Wrong sale ID format' },
-    };
-  }
+  if (!sale) return getErrorObject(invalidData, wrondFormatSaleId);
 
   await salesModel.deleteSale(id);
 };

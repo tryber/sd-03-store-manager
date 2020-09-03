@@ -1,4 +1,4 @@
-const invalidData = 'invalid_data';
+const { invalidData } = require('./errorCodes');
 
 const getErrorObject = (code, message) => ({ err: { code, message } });
 
@@ -14,6 +14,7 @@ const validateProductData = (name, quantity) => {
   if (typeof quantity !== 'number') {
     return getErrorObject(invalidData, '"quantity" must be a number');
   }
+
   return true;
 };
 

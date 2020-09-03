@@ -1,16 +1,16 @@
 const rescue = require('express-rescue');
-const salesService = require('../services/salesService');
+const { salesService } = require('../services');
 
 const createSale = rescue(async (req, res) => {
   const products = req.body;
 
-  const createdSales = await salesService.createSale(products);
+  const createdSale = await salesService.createSale(products);
 
-  if (createdSales.err) {
-    return res.status(422).json(createdSales);
+  if (createdSale.err) {
+    return res.status(422).json(createdSale);
   }
 
-  return res.status(200).json(createdSales);
+  return res.status(200).json(createdSale);
 });
 
 const getAllSales = rescue(async (_req, res) => {
@@ -24,7 +24,7 @@ const getSaleById = rescue(async (req, res) => {
 
   const sale = await salesService.getSaleById(id);
 
-  if (sale && sale.err) {
+  if (sale.err) {
     return res.status(404).json(sale);
   }
 
