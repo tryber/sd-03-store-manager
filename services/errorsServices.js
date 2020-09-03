@@ -6,6 +6,8 @@ const PRODUCT_ALREADY_EXISTS = 'Product already exists';
 const WRONG_ID = 'Wrong id format';
 const UNKNOW_PRODUCT = 'Unknow product ID';
 const INVALID_ID_OR_QUANTITY = 'Wrong product ID or invalid quantity';
+const WRONG_SALE_ID = 'Wrong sale ID format';
+const SALE_NOT_FOUND = 'Sale not found';
 
 const errMessage = (code, message) => ({
   err: {
@@ -23,5 +25,7 @@ module.exports = {
   WRONG_ID,
   UNKNOW_PRODUCT,
   INVALID_ID_OR_QUANTITY,
+  WRONG_SALE_ID,
+  SALE_NOT_FOUND,
   errMessage,
 };

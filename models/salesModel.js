@@ -1,7 +1,7 @@
 const ObjectId = require('mongodb').ObjectID;
 const connect = require('./connection');
 
-const registerSales = (sales) =>
+const registerSales = async (sales) =>
   connect()
     .then((db) => db.collection('sales').insertOne({ itensSold: sales }))
     .then(({ insertedId }) => ({ _id: insertedId, itensSold: sales }));
@@ -38,9 +38,18 @@ const updateSale = async (id, { productId, quantity }) =>
       process.exit(1);
     });
 
+const deleteSale = async (id) =>
+  connect()
+    .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }))
+    .catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+
 module.exports = {
   registerSales,
   getSaleById,
   getAllSales,
   updateSale,
+  deleteSale,
 };

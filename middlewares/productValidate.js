@@ -6,6 +6,7 @@ const {
   INVALID_QUANTITY_TYPE,
   INVALID_ID_OR_QUANTITY,
   WRONG_ID,
+  WRONG_SALE_ID,
   errMessage,
 } = require('../services/errorsServices');
 
@@ -31,6 +32,10 @@ const idValidationRules = [
   param('id', errMessage('invalid_data', WRONG_ID)).isMongoId(),
 ];
 
+const idSaleRules = [
+  param('id', errMessage('invalid_data', WRONG_SALE_ID)).isMongoId(),
+];
+
 const addSaleValidationRules = [
   body().isArray(),
   body('*.productId', errMessage('invalid_data', INVALID_ID_OR_QUANTITY)).isMongoId(),
@@ -42,4 +47,5 @@ module.exports = {
   productValidate: productValidate(productValidationRules),
   idValidate: productValidate(idValidationRules),
   saleValidate: productValidate(addSaleValidationRules),
+  idSaleValidate: productValidate(idSaleRules),
 };
