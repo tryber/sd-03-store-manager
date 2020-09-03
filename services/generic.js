@@ -1,6 +1,6 @@
 function verifyId(id) {
   if (!id || id.length !== 24) {
-    return { error: true, message: 'Wrong Id format' };
+    return { error: true, message: 'Wrong sale ID format' };
   }
   return true;
 }

@@ -12,8 +12,8 @@ const SHOULD_EXISTS = 'should exists';
 function validateProduct(req, _res, next) {
   const { name, quantity } = req.body || {};
   const { error } = schemas.productSchema.validate({ name, quantity });
-  console.log(error)
-  return error ? next(Boom.badData(error)) : next();
+
+  return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
 /**
@@ -24,7 +24,7 @@ function verifyExistenceByName(shouldExists = SHOULD_EXISTS) {
     const { name } = req.body;
     const product = await productService.verifyExistenceByName(name, shouldExists);
 
-    if (product && product.error) next(Boom.badData(product.message));
+    if (product && product.error) next(Boom.badData(product.message, 'invalid_data'));
 
     res.productByName = product;
     next();
@@ -36,7 +36,7 @@ function verifyExistenceById(shouldExists = SHOULD_EXISTS) {
     const { id } = req.params;
     const product = await productService.verifyExistenceById(id, shouldExists);
 
-    if (product.error) return next(Boom.notFound(product.message));
+    if (product.error) return next(Boom.notFound(product.message, 'invalid_data'));
 
     res.productById = product;
     return next();
@@ -65,7 +65,7 @@ async function deleteById(req, res) {
 async function getById(req, res, next) {
   const product = await productService.getById(req.params.id);
   return !product
-  ? next(Boom.badRequest('invalid_data'))
+  ? next(Boom.badRequest('invalid_data', 'invalid_data'))
   : res.status(200).json(product);
 }
 
@@ -76,8 +76,8 @@ productsRouter
 
 productsRouter
   .route('/:id')
-  .get(verifyIdParam, rescue(getById))
-  .put(validateProduct, verifyIdParam, verifyExistenceById(SHOULD_EXISTS), rescue(update))
-  .delete(verifyIdParam, rescue(deleteById));
+  .get(verifyIdParam(), rescue(getById))
+  .put(validateProduct, verifyIdParam(), verifyExistenceById(SHOULD_EXISTS), rescue(update))
+  .delete(verifyIdParam(), rescue(deleteById));
 
 module.exports = productsRouter;

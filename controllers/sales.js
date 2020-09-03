@@ -27,7 +27,7 @@ async function verifyExistenceOfProducts(req, _, next) {
   const ids = req.body.map(({ productId }) => productId);
   const toSaleProducts = await productService.verifyAllExistencesById(ids);
 
-  if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message));
+  if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message, 'invalid_data'));
 
   return next();
 }
@@ -35,14 +35,14 @@ async function verifyExistenceOfProducts(req, _, next) {
 function validateSale(req, _, next) {
   const { error } = schemas.saleSchema.validate({ products: req.body });
 
-  error ? next(Boom.badData(error.message)) : next();
+  error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
 function validateProduct(req, _, next) {
-  const { productId, quantity } = req.body;
+  const [{ productId, quantity }] = req.body;
   const { error } = schemas.saleProductSchema.validate({ productId, quantity });
-  console.log('productId, quantity, error', productId, quantity, error.message)
-  error ? next(Boom.badData(error.message)) : next();
+
+  error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
 async function addSale(req, res) {
@@ -59,22 +59,25 @@ function verifyExistenceOfSale(shouldExists = SHOULD_EXISTS) {
   return rescue(async (req, res, next) => {
     const { id } = req.params;
     const sale = await salesServices.verifyExistenceById(id, shouldExists);
-
-    if (sale.error) return next(Boom.badRequest(sale.message));
+    console.log('chegou aqui', sale)
+    if (sale.error) return next(Boom.badRequest(sale.message, 'invalid_data'));
 
     res.saleById = sale;
     return next();
   });
 }
-// async function getById(req, res) {
-//   const { id } = req.params;
-//   const sale = await salesServices.getById(id);
-//   res.status(200).json(sale);
-// }
+
+async function getById(req, res, next) {
+  const { id } = req.params;
+  const sale = await salesServices.getById(id);
+
+  if (!sale) return next(Boom.notFound('Sale not found', 'not_found'));
+  res.status(200).json(sale);
+}
 
 async function updateOneItem(req, res) {
   const { id } = req.params;
-  const { productId, quantity } = req.body;
+  const [{ productId, quantity }] = req.body;
   const result = await salesServices.updateItenById(id, productId, quantity);
   res.status(200).json(result);
 }
@@ -93,8 +96,8 @@ salesRouter
 
 salesRouter
   .route('/:id')
-  .get(verifyIdParam, execute('getById', ['id'], 200))
-  .put(verifyIdParam, validateProduct, rescue(updateOneItem))
-  .delete(verifyIdParam, verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
+  .get(verifyIdParam('Wrong sale ID format'), rescue(getById))
+  .put(verifyIdParam('Wrong sale ID format'), validateProduct, rescue(updateOneItem))
+  .delete(verifyIdParam('Wrong sale ID format'), verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
 
 module.exports = salesRouter;

@@ -21,7 +21,8 @@ async function getById(id) {
 }
 
 async function updateItenById(id, productId, quantity) {
-  return salesModel.updateById(id, productId, { quantity });
+  await salesModel.updateById(id, productId, { quantity });
+  return { _id: id, itensSold: [{ productId, quantity }] };
 }
 
 async function deleteSaleById(id) {

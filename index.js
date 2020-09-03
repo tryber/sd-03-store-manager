@@ -19,23 +19,20 @@ app.use('/sales', sales);
 
 app.all(/.*/, (req, res) => res.json({ message: `${req.path} não encontrado` }));
 
-function threatBoomErr({ payload }) {
+function threatBoomErr({ payload }, data) {
   const { message, error } = payload;
-  const code = error === 'Unprocessable Entity' ? 'invalid_data' : error;
+  console.log(data)
+  const code = data || error;
   return { err: { code, message } };
 }
 
 app.use((err, _req, res, _next) => {
   if (Boom.isBoom(err)) {
-    const { payload, statusCode } = err.output;
-    console.error(
-`message, ${payload.message}
-error -> code, ${payload.error}
-status, ${statusCode}`
-    );
+    const { data, output: { payload, statusCode } } = err;
+    console.error(`${payload.message} / ${payload.error} / ${statusCode}`);
     return res
     .status(err.output.statusCode)
-    .json(threatBoomErr(err.output));
+    .json(threatBoomErr(err.output, data));
   }
   return res.json({ status: 500, message: err.message, data: err.stack });
 });
