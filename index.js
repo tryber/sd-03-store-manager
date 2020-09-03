@@ -26,8 +26,11 @@ function threatBoomErr({ payload }) {
 }
 
 app.use((err, _req, res, _next) => {
-  console.error('midleware de erro', err);
   if (Boom.isBoom(err)) {
+    console.error(
+`message, ${err.output.message}
+error -> code, ${err.output.error}`
+    );
     return res
     .status(err.output.statusCode)
     .json(threatBoomErr(err.output));

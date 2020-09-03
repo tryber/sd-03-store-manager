@@ -1,17 +1,5 @@
 const { productModel } = require('../models');
-const Joi = require('joi');
 const generic = require('./generic');
-
-const productSchema = Joi.object({
-  name: Joi.string().min(5).required()
-    .error(() => new Error('"name" length must be at least 5 characters long')),
-  quantity: Joi.number().integer().min(1).required()
-    .error(([{ local }]) => new Error(
-      (typeof local.value !== 'number')
-      ? '"quantity" must be a number'
-      : '"quantity" must be larger than or equal to 1'
-    )),
-});
 
 async function verifyAllExistencesById(ids) {
   const products = await productModel.getAllById(ids);
@@ -66,7 +54,6 @@ async function deleteById(id) {
 }
 
 module.exports = {
-  productSchema,
   verifyAllExistencesById,
   verifyExistenceByName,
   verifyExistenceById,

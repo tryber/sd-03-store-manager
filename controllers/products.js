@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
-const { productService } = require('../services');
+const { productService, schemas } = require('../services');
 const { verifyIdParam } = require('./middlewares');
 
 const productsRouter = Router();
@@ -11,10 +11,9 @@ const SHOULD_EXISTS = 'should exists';
 
 function validateProduct(req, _res, next) {
   const { name, quantity } = req.body || {};
-  const { error } = productService.productSchema.validate({ name, quantity });
-  console.log('inside validate Product on Controller', error)
-  if (error) return next(Boom.badData(error));
-  return next();
+  const { error } = schemas.productSchema.validate({ name, quantity });
+  console.log(error)
+  return error ? next(Boom.badData(error)) : next();
 }
 
 /**
@@ -65,8 +64,9 @@ async function deleteById(req, res) {
 
 async function getById(req, res, next) {
   const product = await productService.getById(req.params.id);
-  if (!product) return next(Boom.badRequest('invalid_data'));
-  return res.status(200).json(product);
+  return !product
+  ? next(Boom.badRequest('invalid_data'))
+  : res.status(200).json(product);
 }
 
 productsRouter

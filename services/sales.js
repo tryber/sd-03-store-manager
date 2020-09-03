@@ -1,28 +1,5 @@
 const { salesModel } = require('../models');
-const { validate } = require('@expresso/validator');
 const generic = require('./generic');
-
-const saleProductSchema = {
-  type: 'object',
-  properties: {
-    productId: { type: 'string', maxLength: 24, minLength: 23 },
-    quantity: { type: 'integer', minimum: 0 },
-  },
-  additionalProperties: false,
-  required: ['productId', 'quantity'],
-};
-
-const salesSchema = {
-  type: 'object',
-  properties: {
-    products: {
-      type: 'array',
-      itens: saleProductSchema,
-    },
-  },
-  additionalProperties: false,
-  required: ['products'],
-};
 
 async function verifyExistenceById(id, shouldExists) {
   const sale = await salesModel.getById(id);
@@ -52,8 +29,6 @@ async function deleteSaleById(id) {
 }
 
 module.exports = {
-  validateSale: validate(salesSchema),
-  validateProduct: validate(saleProductSchema),
   verifyExistenceById,
   addSale,
   getAll,

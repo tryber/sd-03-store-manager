@@ -1,7 +1,7 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
-const { productService, salesServices } = require('../services');
+const { productService, salesServices, schemas } = require('../services');
 const { verifyIdParam } = require('./middlewares');
 
 const salesRouter = express.Router();
@@ -27,10 +27,23 @@ async function verifyExistenceOfProducts(req, _, next) {
   const { products } = req.body;
   const ids = products.map(({ productId }) => productId);
   const toSaleProducts = await productService.verifyAllExistencesById(ids);
-
   if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message));
 
   return next();
+}
+
+function validateSale(req, _) {
+  const { products } = req.body || {};
+  const { error } = schemas.saleSchema.validate({ products });
+
+  error ? next(Boom.badData(error.message)) : next();
+}
+
+function validateProduct(req, _) {
+  const { productId, quantity } = req.body || {};
+  const { error } = schemas.saleProductSchema.validate({ productId, quantity });
+
+  error ? next(Boom.badData(error.message)) : next();
 }
 
 // async function addSale(req, res) {
@@ -78,7 +91,7 @@ async function deleteSale(req, res) {
 salesRouter
   .route('/')
   .post(
-    salesServices.validateSale,
+    validateSale,
     rescue(verifyExistenceOfProducts),
     execute('addSale', ['products'], 201),
   )
@@ -87,7 +100,7 @@ salesRouter
 salesRouter
   .route('/:id')
   .get(verifyIdParam, execute('getById', ['id'], 200))
-  .put(verifyIdParam, salesServices.validateProduct, rescue(updateOneItem))
+  .put(verifyIdParam, validateProduct, rescue(updateOneItem))
   .delete(verifyIdParam, verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
 
 module.exports = salesRouter;
