@@ -7,6 +7,12 @@ const createProduct = async (name, quantity) => (
     .then((result) => ({ _id: result.insertedId, name, quantity }))
 );
 
+const getProductByEq = async (name) => (
+  connection()
+    .then((db) => db.collection('products').findOne({ name: { $eq: name } }))
+);
+
 module.exports = {
   createProduct,
+  getProductByEq,
 };
