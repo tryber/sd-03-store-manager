@@ -30,19 +30,23 @@ const createProduct = async (req, res) => {
 
 const showAllProducts = async (_req, res) => {
   const result = await services.productService.showAllProducts();
-  return res.status(200).send({ "products": result });
+  return res.status(200).send({ products: result });
 };
 
 const getProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
   const result = await services.productService.getProductById(id);
+  let message = 'No message';
+
   if (!result) {
-    const response = { err: { message: 'No product found', code: 'invalid_data' } };
-    return res.status(422).send(response);
+    message = 'No product found';
+  } else if (result.message) {
+    message = 'Wrong id format';
   }
-  if (result.message) {
-    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
+
+  if (message !== 'No message') {
+    const response = { err: { message, code: 'invalid_data' } };
     return res.status(422).send(response);
   }
   return res.status(200).send(result);

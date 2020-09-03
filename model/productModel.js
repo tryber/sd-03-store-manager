@@ -24,7 +24,7 @@ const createProductInDB = async (name, quantity) =>
     .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
 
 const getProductById = async (id) => mongoc.connect()
-  .then(db => db.collection('products').findOne(ObjectId(id)))
+  .then((db) => db.collection('products').findOne(ObjectId(id)))
   .catch((error) => error);
 
 module.exports = {
