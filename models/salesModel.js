@@ -1,3 +1,4 @@
+const { ObjectID } = require('mongodb');
 const { connection, connectAndFindAll } = require('./connection');
 
 const createSales = async (products) => {
@@ -15,6 +16,18 @@ const createSales = async (products) => {
   }
 };
 
+const updateSalesById = async (id, sale = []) => {
+  const [product] = sale;
+  const { productId, quantity } = product;
+  const connect = await connection('sales');
+  const salesUpdate = await connect.findOneAndUpdate(
+    { _id: ObjectID(id), 'itensSold._id': ObjectID(productId) },
+    { $set: { quantity } },
+  );
+  const { _id } = salesUpdate.value;
+  return { _id, itensSold: [{ ...product }] };
+};
+
 const getAllSales = async () => {
   try {
     const searchAllSales = await connectAndFindAll('sales');
@@ -24,4 +37,4 @@ const getAllSales = async () => {
   }
 };
 
-module.exports = { createSales, getAllSales };
+module.exports = { createSales, getAllSales, updateSalesById };

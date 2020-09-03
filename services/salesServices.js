@@ -1,4 +1,4 @@
-const { createSales, getAllSales } = require('../models/salesModel');
+const { createSales, getAllSales, updateSalesById } = require('../models/salesModel');
 const { salesRegistryValidation } = require('./validation');
 
 /* valida se alguma mensage de erro de validação é
@@ -21,6 +21,17 @@ const createSale = async (products = []) => {
   }
 };
 
+const updateSaleQuantity = async (id, sale = []) => {
+  try {
+    const reqValidation = await productsValidation(sale);
+    const updateSale = reqValidation.length === 0 && (await updateSalesById(id, sale));
+
+    return { ...updateSale };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const listSales = async () => {
   try {
     const sales = await getAllSales();
@@ -31,4 +42,4 @@ const listSales = async () => {
   }
 };
 
-module.exports = { createSale, listSales };
+module.exports = { createSale, listSales, updateSaleQuantity };
