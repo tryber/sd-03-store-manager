@@ -1,5 +1,10 @@
 const { ObjectID } = require('mongodb');
-const { connection, connectAndFindAll, connectAndFindById } = require('./connection');
+const {
+  connection,
+  connectAndFindAll,
+  connectAndFindById,
+  connectAndDeleteById,
+} = require('./connection');
 
 const createSales = async (products) => {
   try {
@@ -30,11 +35,9 @@ const updateSalesById = async (id, sale = []) => {
 
 const deleteSaleById = async (id) => {
   try {
-    const connect = await connection('sales');
-    const deleteSale = await connect.findOneAndDelete({ _id: ObjectID(id) });
-    const { _id, name, quantity } = deleteSale.value;
+    const deleteQuery = connectAndDeleteById(id, 'sales', 'Wrong sale ID format');
 
-    return { _id, name, quantity };
+    return deleteQuery;
   } catch (error) {
     throw new Error('Wrong sale ID format');
   }
