@@ -1,57 +1,73 @@
 const products = require('../models/productsModel');
 
-const isProductValid = (name, quantity) => {
+const isNameValid = async (name) => {
+  let output;
+  const alreadyExists = await products.getProductByName(name);
   if (typeof name !== 'string') {
-    return {
+    output = {
       err: { code: 'invalid_data', message: '"name" must be a string' },
     };
-  }
-
-  if (typeof quantity !== 'number') {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be a number' },
-    };
-  }
-
-  if (!Number.isInteger(quantity)) {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be an integer' },
-    };
-  }
-
-  if (name.length < 5) {
-    return {
+  } else if (name.length < 5) {
+    output = {
       err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
     };
-  }
-
-  if (quantity <= 0) {
-    return {
-      err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
-    };
-  }
-  if (products.getProductByName(name) !== null) {
-    return {
+  } else if (alreadyExists !== null) {
+    output = {
       err: { code: 'invalid_data', message: 'Product already exists' },
     };
-  }
+  } else output = true;
+  return output;
+};
+
+const isQuantityValid = async (quantity) => {
+  let output;
+
+  if (typeof quantity !== 'number') {
+    output = {
+      err: { code: 'invalid_data', message: '"quantity" must be a number' },
+    };
+  } else if (quantity <= 0) {
+    output = {
+      err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
+    };
+  } else if (!Number.isInteger(quantity)) {
+    output = {
+      err: { code: 'invalid_data', message: '"quantity" must be an integer' },
+    };
+  } else output = true;
+  return output;
+};
+
+const isProductValid = (nameValidation, quantityValidation) => {
+  let output;
+
+  if (nameValidation.err) {
+    output = nameValidation;
+  } else if (quantityValidation.err) {
+    output = quantityValidation;
+  } else output = true;
+  return output;
+};
+
+const addProduct = async (data) => {
+  const { name, quantity } = data;
+
+  const nameValidation = await isNameValid(name);
+
+  const quantityValidation = await isQuantityValid(quantity);
+
+  const productValidation = await isProductValid(nameValidation, quantityValidation);
+
+  if (typeof productValidation === 'object') return productValidation;
+
+  const product = await products.addProduct(name, quantity);
+
+  return product;
 };
 
 const getAll = async () => {
   const result = await products.getAllProducts();
   return result;
-};
-
-const add = async (data) => {
-  const { name, quantity } = data;
-
-  const validation = isProductValid(name, quantity);
-
-  if (validation.err) return validation;
-
-  const product = await products.add(name, quantity);
-
-  return product;
 };
 
 const getProductByName = async (name) => {
@@ -60,4 +76,4 @@ const getProductByName = async (name) => {
   return product;
 };
 
-module.exports = { add, getProductByName, getAll };
+module.exports = { addProduct, getProductByName, getAll };

@@ -2,7 +2,7 @@ const connect = require('./connect');
 
 const getAllProducts = async () => {
   const db = await connect();
-  return db.collection('products').find().toArray();
+  return db.collection('products').find({}).toArray();
 };
 
 const getProductByName = async (query) => {
@@ -15,13 +15,16 @@ const getProductById = async (productId) => {
   return db.collection('products').findOne({ id: productId });
 };
 
-const add = async (name, quantity) => {
+const addProduct = async (name, quantity) => {
   const db = await connect();
-  return db.collection('products').insertOne({ name, quantity });
+  let product = await db.collection('products').insertOne({ name, quantity });
+  const { insertedId } = product;
+  product = { _id: insertedId, name, quantity };
+  return product;
 };
 
 module.exports = {
-  add,
+  addProduct,
   getAllProducts,
   getProductByName,
   getProductById,

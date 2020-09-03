@@ -3,9 +3,9 @@ const productsService = require('../services/productsService');
 
 const createProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
-  const product = await productsService.add({ name, quantity });
+  const product = await productsService.addProduct({ name, quantity });
   if (product.err) return res.status(422).json(product);
-  return res.status(201).json(product.ops);
+  return res.status(201).json(product);
 });
 
 const getAllProducts = rescue(async (req, res) => {
