@@ -24,14 +24,13 @@ const getAllSales = async () =>
 
 const updateSale = async (id, { productId, quantity }) =>
   connect()
-    .then((db) => db.collection('sales')
-      .updateOne(
-        { _id: id },
-        { $set: { 'itensSold.$[id].productId': productId, 'itensSold.$[qtd].quantity': quantity } },
-        {
-          arrayFilters: [{ 'id.productId': productId }, { 'qtd.quantity': quantity }],
-        },
-      ))
+    .then((db) => db.collection('sales').updateOne(
+      { _id: id },
+      { $set: { 'itensSold.$[id].productId': productId, 'itensSold.$[qtd].quantity': quantity } },
+      {
+        arrayFilters: [{ 'id.productId': productId }, { 'qtd.quantity': quantity }],
+      },
+    ))
     .then(() => ({ _id: id, itensSold: [{ productId, quantity }] }))
     .catch((err) => {
       console.error(err);
