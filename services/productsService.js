@@ -1,16 +1,37 @@
-const { listAllProducts, listProductsById, createCollectionProducts } = require('../models/products');
+const {
+  createCollectionProducts,
+  listAllProducts,
+  listProductsById,
+  updateProductsByIdBank,
+  deleteProductsByIdBank,
+} = require('../models/products');
+
+const validateProduct = async (name, quantity) => {
+  if (name.length < 5 && typeof (name !== 'string')) {
+    return {
+      err:
+        { message: '"name" length must be at least 5 characters long', code: 'invalid_data' },
+    };
+  }
+  if (quantity < 1) {
+    return {
+      err: { message: '"quantity" must be larger than or equal to 1', code: 'invalid_data' },
+    };
+  }
+  if (typeof quantity !== 'number') {
+    return {
+      err: { message: '"quantity" must be a number', code: 'invalid_data' },
+    };
+  }
+  return false;
+};
 
 const createProducts = async (name, quantity) => {
-  if (!name.length > 5 && typeof (!name === 'string')) {
-    return { error: { message: '"name" length must be at least 5 characters long', code: 'invalid_data' } };
-  }
+  const validation = await validateProduct(name, quantity);
+  // console.log(validation.error, 'vali');
+  if (validation.err) return validation;
 
-  if (!Number.isInteger(quantity) > 0) {
-    return { error: { message: '"quantity" must be larger than or equal to 1', code: 'invalid_data' } };
-  }
-
-  const register = await createCollectionProducts(name, quantity);
-  return register;
+  return createCollectionProducts(name, quantity);
 };
 
 const getAllProducts = async () => {
@@ -23,4 +44,20 @@ const getAllProductsById = async (id) => {
   return productsId;
 };
 
-module.exports = { getAllProducts, createProducts, getAllProductsById };
+const updateProductsById = async (id, name, quantity) => {
+  const update = await updateProductsByIdBank(id, name, quantity);
+  return update;
+};
+
+const deleteProductsById = async (id) => {
+  const deleting = await deleteProductsByIdBank(id);
+  return deleting;
+};
+
+module.exports = {
+  createProducts,
+  getAllProducts,
+  getAllProductsById,
+  updateProductsById,
+  deleteProductsById,
+};
