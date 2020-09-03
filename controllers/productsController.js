@@ -1,17 +1,17 @@
 const { Router } = require('express');
-const middlewares = require('../middlewares');
+const routes = require('../routes');
 
 const products = Router();
 
 products
   .route('/')
-  .post(middlewares.registerProduct)
-  .get(middlewares.listProducts);
+  .post(routes.registerProduct)
+  .get(routes.listProducts);
 
 products
   .route('/:id')
-  .get(middlewares.deleteReadProduct())
-  .put(middlewares.updateProduct)
-  .delete(middlewares.deleteReadProduct('delete'));
+  .get(routes.deleteReadProduct())
+  .put(routes.updateProduct)
+  .delete(routes.deleteReadProduct('delete'));
 
 module.exports = products;

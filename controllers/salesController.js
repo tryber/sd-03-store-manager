@@ -1,17 +1,17 @@
 const { Router } = require('express');
-const middlewares = require('../middlewares');
+const routes = require('../routes');
 
 const sales = Router();
 
 sales
   .route('/')
-  .post(middlewares.registerSale)
-  .get(middlewares.listSales);
+  .post(routes.registerSale)
+  .get(routes.listSales);
 
 sales
   .route('/:id')
-  .get(middlewares.deleteReadSale())
-  .put(middlewares.updateSale)
-  .delete(middlewares.deleteReadSale('delete', 'invalid_data', 422));
+  .get(routes.deleteReadSale())
+  .put(routes.updateSale)
+  .delete(routes.deleteReadSale('delete', 'invalid_data', 422));
 
 module.exports = sales;
