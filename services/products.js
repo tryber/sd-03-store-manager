@@ -1,24 +1,17 @@
 const { productModel } = require('../models');
-const { validate } = require('@expresso/validator');
+const Joi = require('joi');
 const generic = require('./generic');
 
-const productsSchema = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      minLength: 5,
-    },
-    quantity: {
-      type: 'number',
-      minimum: 1,
-    },
-  },
-  additionalProperties: false,
-  required: ['name', 'quantity'],
-};
-
-const validateProduct = validate(productsSchema);
+const productSchema = Joi.object({
+  name: Joi.string().min(5).required()
+    .error(() => new Error('"name" length must be at least 5 characters long')),
+  quantity: Joi.number().integer().min(1).required()
+    .error(([{ local }]) => new Error(
+      (typeof local.value !== 'number')
+      ? '"quantity" must be a number'
+      : '"quantity" must be larger than or equal to 1'
+    )),
+});
 
 async function verifyAllExistencesById(ids) {
   const products = await productModel.getAllById(ids);
@@ -73,11 +66,11 @@ async function deleteById(id) {
 }
 
 module.exports = {
+  productSchema,
   verifyAllExistencesById,
   verifyExistenceByName,
   verifyExistenceById,
   createProduct,
-  validateProduct,
   getAll,
   getAllById,
   getByName,
