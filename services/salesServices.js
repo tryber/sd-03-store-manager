@@ -42,12 +42,10 @@ const readOrDeleteSaleById = async (id, operation = 'read') => {
   try {
     const func = (callback) => callback(id);
 
-    const data = async () => {
-      if (operation === 'delete') return func(deleteSaleById);
-      return func(getSaleById);
-    };
-    const dataReturn = await data();
-    return dataReturn;
+    const data = async () => (operation === 'delete' ? func(deleteSaleById) : func(getSaleById));
+
+    const callbackReturn = await data();
+    return callbackReturn;
   } catch (error) {
     throw new Error(error.message);
   }
