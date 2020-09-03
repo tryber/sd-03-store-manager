@@ -7,17 +7,12 @@ const products = Router();
 
 products.post(
   '/',
-  rescue(async (req, res) => {
+  rescue(async (req, res, next) => {
     const { name, quantity } = req.body;
 
     const product = await productService.registerProduct(name, quantity);
 
-    if (product.error) {
-      const { code, message } = product;
-      return res
-        .status(422)
-        .json({ err: { code, message } });
-    }
+    if (product.error) return next(product);
 
     return res.status(201).json(product);
   }),
@@ -39,18 +34,13 @@ products.get('/:id', rescue(async (req, res) => {
   return res.status(200).json(product);
 }));
 
-products.put('/:id', rescue(async (req, res) => {
+products.put('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
 
   const product = await productService.updateProductById(id, name, quantity);
 
-  if (product.error) {
-    const { code, message } = product;
-    return res
-      .status(422)
-      .json({ err: { code, message } });
-  }
+  if (product.error) return next(product);
 
   return res.status(200).json(product);
 }));

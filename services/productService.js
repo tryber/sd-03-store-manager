@@ -20,8 +20,6 @@ const ERRORScode = {
 
 const ValidarDados = async (name, quantity) => {
   const { value, error } = schema.validate({ name, quantity });
-  console.log('Entrou em ValidarDados, imprime value', value);
-  console.log('Entrou em ValidarDados, imprime error', error);
 
   if (error && error.details[0].type === 'number.min') {
     return { error: true, message: ERRORSmessage[1].message, code: ERRORScode.code1 };
@@ -36,10 +34,7 @@ const registerProduct = async (name, quantity) => {
   /*  Criar as validações de regra de negócio aqui e enviar a requisição para o MongoDB */
   /*  Validação de dados */
   const dataValidated = await ValidarDados(name, quantity);
-  if (dataValidated.error) {
-    const { error, message, code } = dataValidated;
-    return { error, message, code };
-  }
+  if (dataValidated.error) return dataValidated;
 
   // Verificar unicidade
   const foundProduct = await productModel.getProductByEq(dataValidated.name);
@@ -74,10 +69,7 @@ const updateProductById = async (id, name, quantity) => {
   /*  Criar as validações de regra de negócio aqui e enviar a requisição para o MongoDB */
   /*  Validação de dados */
   const dataValidated = await ValidarDados(name, quantity);
-  if (dataValidated.error) {
-    const { error, message, code } = dataValidated;
-    return { error, message, code };
-  }
+  if (dataValidated.error) return dataValidated;
 
   // Atualização do produto
   const { _id } = await productModel.getProductById(id);
