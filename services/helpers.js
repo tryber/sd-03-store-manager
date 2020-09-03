@@ -23,7 +23,6 @@ const validateID = (id, msg = 'id') => {
   if (id.length < 24) {
     return { err: { code: 'invalid_data', message: `Wrong ${msg} format` } };
   }
-
   return true;
 };
 
