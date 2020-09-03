@@ -10,8 +10,8 @@ products
 
 products
   .route('/:id')
-  .get(middlewares.deleteReadProduct)
+  .get(middlewares.deleteReadProduct())
   .put(middlewares.updateProduct)
-  .delete(middlewares.deleteReadProduct);
+  .delete(middlewares.deleteReadProduct('delete'));
 
 module.exports = products;

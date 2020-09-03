@@ -1,4 +1,10 @@
-const { createSales, getAllSales, updateSalesById } = require('../models/salesModel');
+const {
+  createSales,
+  updateSalesById,
+  deleteSaleById,
+  getAllSales,
+  getSaleById,
+} = require('../models/salesModel');
 const { salesRegistryValidation } = require('./validation');
 
 /* valida se alguma mensage de erro de validação é
@@ -32,6 +38,21 @@ const updateSaleQuantity = async (id, sale = []) => {
   }
 };
 
+const readOrDeleteSaleById = async (id, operation = 'read') => {
+  try {
+    const func = (callback) => callback(id);
+
+    const data = async () => {
+      if (operation === 'delete') return func(deleteSaleById);
+      return func(getSaleById);
+    };
+    const dataReturn = await data();
+    return dataReturn;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const listSales = async () => {
   try {
     const sales = await getAllSales();
@@ -42,4 +63,4 @@ const listSales = async () => {
   }
 };
 
-module.exports = { createSale, listSales, updateSaleQuantity };
+module.exports = { createSale, listSales, updateSaleQuantity, readOrDeleteSaleById };

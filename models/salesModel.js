@@ -21,11 +21,23 @@ const updateSalesById = async (id, sale = []) => {
   const { productId, quantity } = product;
   const connect = await connection('sales');
   const salesUpdate = await connect.findOneAndUpdate(
-    { _id: ObjectID(id), itensSold: { $elemMatch: { productId } } },
+    { _id: ObjectID(id), 'itensSold.productId': productId },
     { $set: { quantity } },
   );
   const { _id } = salesUpdate.value;
   return { _id, itensSold: [{ ...product }] };
+};
+
+const deleteSaleById = async (id) => {
+  try {
+    const connect = await connection('sales');
+    const deleteSale = await connect.findOneAndDelete({ _id: ObjectID(id) });
+    const { _id, name, quantity } = deleteSale.value;
+
+    return { _id, name, quantity };
+  } catch (error) {
+    throw new Error('Wrong sale ID format');
+  }
 };
 
 const getAllSales = async () => {
@@ -37,4 +49,15 @@ const getAllSales = async () => {
   }
 };
 
-module.exports = { createSales, getAllSales, updateSalesById };
+const getSaleById = async (id) => {
+  try {
+    const connect = await connection('sales');
+    const saleQuery = await connect.findOne(ObjectID(id));
+    if (!saleQuery.name) throw new Error();
+    return saleQuery;
+  } catch (error) {
+    throw new Error('Sale not found');
+  }
+};
+
+module.exports = { createSales, updateSalesById, deleteSaleById, getAllSales, getSaleById };

@@ -34,10 +34,10 @@ const modifyProduct = async (req, res, next) => {
   }
 };
 
-const deleteReadProduct = async (req, res, next) => {
+const deleteReadProduct = (operation = 'read') => async (req, res, next) => {
   const { id } = req.params;
   try {
-    const deletedProduct = await readOrDeleteById(id, 'delete');
+    const deletedProduct = await readOrDeleteById(id, operation);
 
     return res.status(200).json(deletedProduct);
   } catch (error) {

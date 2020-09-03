@@ -1,4 +1,9 @@
-const { createSale, listSales, updateSaleQuantity } = require('../services/salesServices');
+const {
+  createSale,
+  listSales,
+  updateSaleQuantity,
+  readOrDeleteSaleById,
+} = require('../services/salesServices');
 const { generateError } = require('../controllers/utils');
 
 const salesCreate = async (req, res, next) => {
@@ -28,6 +33,18 @@ const modifySale = async (req, res, next) => {
   }
 };
 
+const deleteReadSale = (operation = 'read', code = 'not_found', status = 404) => async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const deleteSale = await readOrDeleteSaleById(id, operation);
+
+    return res.status(200).json(deleteSale);
+  } catch (error) {
+    const err = generateError(status, error, code);
+    return next(err);
+  }
+};
+
 const salesList = async (_req, res, next) => {
   try {
     const saleslist = await listSales();
@@ -39,4 +56,4 @@ const salesList = async (_req, res, next) => {
   }
 };
 
-module.exports = { salesCreate, salesList, modifySale };
+module.exports = { salesCreate, modifySale, deleteReadSale, salesList };
