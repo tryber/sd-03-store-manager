@@ -5,7 +5,7 @@ const productController = require('./controllers/productsController');
 const salesController = require('./controllers/salesController');
 
 const app = express();
-mongoose.connect('mongodb://mondodb:27017/StoreManager', {
+mongoose.connect('mongodb://mongodb:27017/StoreManager', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
