@@ -4,12 +4,21 @@ const productService = require('../services/productsService');
 
 const app = express();
 
-const allProducts = app.get(
+const findAllProducts = app.get(
   '/products',
   rescue(async (_req, res) => {
-    const product = await productService.getAllStore('product');
+    const listProducts = await productService.getAllStore();
+    res.status(200).json(listProducts);
+  }),
+);
 
-    res.status(200).json(product);
+const findProductById = app.get(
+  '/products/:id',
+  rescue(async (req, res) => {
+    const product = await productService.findProductById(req.params.id);
+
+    if (product.err) return res.status(422).json(product);
+    return res.status(200).json(product);
   }),
 );
 
@@ -25,4 +34,4 @@ const createProduct = app.post(
   }),
 );
 
-module.exports = { allProducts, createProduct };
+module.exports = { findAllProducts, createProduct, findProductById };

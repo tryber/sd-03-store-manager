@@ -11,8 +11,10 @@ app.get('/', (request, response) => {
     response.send();
 });
 
+app.get('/products/:id', products.findProductById);
+app.get('/products', products.findAllProducts);
 app.post('/products', products.createProduct);
-app.get('/product', products.allProducts)
+
 
 const { PORT = 3000 } = process.env;
 
