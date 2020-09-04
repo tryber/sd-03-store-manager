@@ -9,6 +9,9 @@ sales
   .post('/', saleValidate, rescue(async (req, res) => {
     const products = req.body;
     const salesCreateds = await salesServices.createSales(products);
+    if (salesCreateds.error) {
+      return res.status(404).json(salesCreateds.message);
+    }
     return res.status(200).json(salesCreateds);
   }))
   .get('/:id', idSaleValidate, rescue(async (req, res) => {

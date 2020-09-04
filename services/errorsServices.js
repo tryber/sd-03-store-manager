@@ -8,6 +8,7 @@ const UNKNOW_PRODUCT = 'Unknow product ID';
 const INVALID_ID_OR_QUANTITY = 'Wrong product ID or invalid quantity';
 const WRONG_SALE_ID = 'Wrong sale ID format';
 const SALE_NOT_FOUND = 'Sale not found';
+const STOCK_ERROR_QUANTITY = 'Such amount is not permitted to sell';
 
 const errMessage = (code, message) => ({
   err: {
@@ -27,5 +28,6 @@ module.exports = {
   INVALID_ID_OR_QUANTITY,
   WRONG_SALE_ID,
   SALE_NOT_FOUND,
+  STOCK_ERROR_QUANTITY,
   errMessage,
 };
