@@ -45,6 +45,16 @@ products.put('/:id', rescue(async (req, res, next) => {
   return res.status(200).json(product);
 }));
 
+products.delete('/:id', rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const product = await productService.deleteProductById(id);
+
+  if (product.error) return next(product);
+
+  return res.status(200).json(product.value);
+}));
+
 module.exports = {
   products,
 };
