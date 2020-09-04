@@ -1,6 +1,7 @@
 version: '2' # required to adjust maintainability checks
 exclude_patterns:
   - '**/*.test.js'
+  - node_modules
 checks:
   argument-count:
     config:
