@@ -17,7 +17,7 @@ const productDataUpdate = async (data) => {
   await itensSoldData.map(async (item, index) => {
     const { _id: itemId, name, quantity } = await item;
     const quantUpdate = await (quantity + itensSoldQuantity[index]);
-    return updateProductById(itemId, name, quantUpdate);
+    await updateProductById(itemId, name, quantUpdate);
   });
   return data;
 };
@@ -27,7 +27,8 @@ const updateProductQuant = async (id) => {
     const deleteSale = await deleteSaleById(id);
 
     if (!deleteSale) return;
-    return productDataUpdate(deleteSale);
+    const data = await productDataUpdate(deleteSale);
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
