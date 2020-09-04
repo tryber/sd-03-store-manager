@@ -14,7 +14,9 @@ const salesCreate = async (req, res, next) => {
 
     return res.status(200).json(sale);
   } catch (error) {
-    const err = generateError(422, error, 'invalid_data');
+    const status = error.message === 'Such amount is not permitted to sell' ? 404 : 422;
+    const code = error.message === 'Such amount is not permitted to sell' ? 'stock_problem' : 'invalid_data';
+    const err = generateError(status, error, code);
     return next(err);
   }
 };

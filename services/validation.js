@@ -8,6 +8,7 @@ const errorResponses = {
   invalid_quantity: { message: '"quantity" must be larger than or equal to 1' },
   invalid_quantity_type: { message: '"quantity" must be a number' },
   invalid_sale_data: { message: 'Wrong product ID or invalid quantity' },
+  invalid_sale_quantity: { message: 'Such amount is not permitted to sell' },
 };
 
 // função de validação de requisição para os campos "name" e "quantity"
@@ -48,10 +49,16 @@ const checkProductsByName = async (name, message = errorResponses.invalid_data) 
   }
 };
 
-const checkProductsById = async (id, message = errorResponses.invalid_sale_data) => {
+const checkProductsById = async (
+  id,
+  quantity,
+  message1 = errorResponses.invalid_sale_data,
+  message2 = errorResponses.invalid_sale_quantity,
+) => {
   try {
     const idCheck = await getProductById(id);
-    if (!idCheck) return message;
+    if (!idCheck) return message1;
+    if (idCheck.quantity - quantity < 0) return message2;
     return false;
   } catch (error) {
     throw new Error(error.message);
@@ -111,7 +118,7 @@ const salesRegistryValidation = async (id, quantity) => {
     const salesValidation = saleSchema(id, quantity);
     const key = salesValidation && salesValidation.details[0].context.key;
     const errorKeyCheck = checkSaleSchemaError(key);
-    const dataCheck = await checkProductsById(id.toString());
+    const dataCheck = await checkProductsById(id, quantity);
 
     return errorKeyCheck || dataCheck || false;
   } catch (error) {

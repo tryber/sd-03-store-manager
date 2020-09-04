@@ -12,7 +12,8 @@ const { salesRegistryValidation } = require('./validation');
     retorna um array vazio e o processo de cadastro continua */
 const productsValidation = async (products = []) =>
   products.reduce(async (acc, { productId, quantity }) => {
-    if (await salesRegistryValidation(productId, quantity)) throw new Error('Wrong product ID or invalid quantity');
+    const validationfailed = await salesRegistryValidation(productId, quantity);
+    if (validationfailed) throw new Error(validationfailed.message || 'Wrong product ID or invalid quantity');
     return acc;
   }, []);
 
