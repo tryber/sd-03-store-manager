@@ -1,9 +1,9 @@
 const Products = require('../models/productsModel');
 const Validation = require('../services/validations');
 
-async function promise1(res, prod, req, status1, status2) {
+async function promise1(res, cb, req, status1, status2) {
   try {
-    const product = await prod(req);
+    const product = await cb(req);
     res.status(status1).send(product);
   } catch (error) {
     res.status(status2).send({
@@ -15,22 +15,22 @@ async function promise1(res, prod, req, status1, status2) {
   }
 }
 
-async function promise2(req, res, dest, prod) {
+async function promise2(req, res, cb, cb2) {
   try {
     let id;
     if (req.params) {
       id = req.params.id;
     }
     const { name, quantity } = req.body;
-    const { message } = await dest(name, quantity);
+    const { message } = await cb(name, quantity);
     if (message) {
       throw new Error(message);
     }
     if (id) {
-      const product = await prod(id, { name, quantity });
+      const product = await cb2(id, { name, quantity });
       res.status(200).send(product);
     } else {
-      const product = await prod({ name, quantity });
+      const product = await cb2({ name, quantity });
       res.status(201).send(product);
     }
   } catch (error) {

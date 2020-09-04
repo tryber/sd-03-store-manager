@@ -15,8 +15,8 @@ async function validation(req) {
   return data;
 }
 
-async function list(res, prod) {
-  const sales = await prod();
+async function list(res, cb) {
+  const sales = await cb();
   res.status(200).send({ sales });
 }
 
