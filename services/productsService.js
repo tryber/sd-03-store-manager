@@ -1,6 +1,6 @@
 const { productsModel } = require('../models');
 const { validateId, validateProductData, getErrorObject } = require('./helpers');
-const { invalidData, wrongFormat } = require('./errorCodes');
+const { invalidData, wrongFormat } = require('./errorLibrary');
 
 const createProduct = async (name, quantity) => {
   const isDataValid = validateProductData(name, quantity);

@@ -1,6 +1,6 @@
 const { salesModel, productsModel } = require('../models');
 const { validateId, validateSaleData, getErrorObject } = require('./helpers');
-const { invalidData, wrongFormatOrQuantity, wrondFormatSaleId } = require('./errorCodes');
+const { invalidData, wrongFormatOrQuantity, wrondFormatSaleId } = require('./errorLibrary');
 
 const createSale = (products) => {
   const isDataValid = validateSaleData(products);

@@ -1,4 +1,4 @@
-const { invalidData } = require('./errorCodes');
+const { invalidData } = require('./errorLibrary');
 
 const getErrorObject = (code, message) => ({ err: { code, message } });
 
