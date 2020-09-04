@@ -11,10 +11,13 @@ const ERRORSmessage = {
   2: { message: 'Product already exists' },
   3: { message: 'Wrong id format' },
   4: { message: 'Wrong product ID or invalid quantity' },
+  5: { message: 'Wrong sale ID format' },
+  6: { message: 'Sale not found' },
 };
 
 const ERRORScode = {
   code1: 'invalid_data',
+  code2: 'not_found',
 };
 
 const ValidarDados = async (name, quantity) => {
@@ -57,6 +60,14 @@ const VerCadProd = (arr1, arr2) => {
   return teste;
 };
 
+const ValidSaleId = (id) => {
+  const { value, error } = schema.validate({ id });
+
+  if (error) return { error: true, message: ERRORSmessage[5].message, code: ERRORScode.code1 };
+
+  return value.id;
+};
+
 module.exports = {
   schema,
   ERRORSmessage,
@@ -64,4 +75,5 @@ module.exports = {
   ValidarDados,
   VerCadProd,
   VerQtdVen,
+  ValidSaleId,
 };
