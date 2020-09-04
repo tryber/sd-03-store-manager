@@ -36,9 +36,9 @@ const updateSalesById = async (id, sale = []) => {
 const deleteSaleById = async (id) => {
   try {
     const deleteQuery = await connectAndDeleteById(id, 'sales', 'Wrong sale ID format');
-    const { _id, name, quantity } = deleteQuery;
+    const { _id, itensSold } = deleteQuery;
 
-    return { _id, name, quantity };
+    return { _id, itensSold };
   } catch (error) {
     throw new Error('Wrong sale ID format');
   }

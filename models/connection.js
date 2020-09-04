@@ -41,9 +41,8 @@ const connectAndDeleteById = async (id, collect = '', message = '') => {
   try {
     const dbconnect = await connection(collect);
     const deleteQuery = await dbconnect.findOneAndDelete({ _id: ObjectID(id) });
-    const { _id, name, quantity } = deleteQuery.value;
 
-    return { _id, name, quantity };
+    return deleteQuery.value;
   } catch (error) {
     throw new Error(message);
   }
