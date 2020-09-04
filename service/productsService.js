@@ -37,6 +37,7 @@ const shouldCreateProduct = async (name, quantity) => {
     const response = await insertProduct(name, quantity);
     return response;
   }
+
   throw new Error('Erro inesperado em productsService.js line 42');
 };
 

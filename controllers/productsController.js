@@ -1,7 +1,5 @@
 const rescue = require('express-rescue');
-const {
-  shouldCreateProduct,
-} = require('../service/productsService.js');
+const { shouldCreateProduct } = require('../service/productsService.js');
 
 // o rescue faz exatamente o try catch e joga o erro, se tiver no next(error) que é capturado por
 // um middleware de erro

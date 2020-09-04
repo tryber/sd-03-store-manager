@@ -14,9 +14,11 @@ app.get('/', (request, response) => {
 app.post('/products', controllers.productsController.productsRegister);
 
 app.use((err, _req, res, _next) =>
-  (err
-    ? res.status(err.status).json({ err: { message: err.message, code: err.code } })
-    : res.status(500).json({ message: 'Internal error' })
+  (err.status
+    ? res.status(err.status).json({ err: {
+      message: err.message, stack: err.stack, code: err.code,
+    } })
+    : res.status(500).json({ error: err.message, stack: err.stack, message: 'Internal error' })
   ));
 
 const port = process.env.PORT || 3000;
