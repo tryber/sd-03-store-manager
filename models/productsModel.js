@@ -58,6 +58,5 @@ module.exports = {
   getProductByName,
   listProducts,
   getProductById,
-  updateProduct,
- };
- 
+  updateProduct };
+  
