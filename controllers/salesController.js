@@ -1,64 +1,103 @@
-// const boom = require('@hapi/boom');
-// const { Router } = require('express');
-// const rescue = require('express-rescue');
+const Sales = require('../models/salesModel');
+const Validation = require('../services/validations');
 
-// const salesService = require('../services/salesService');
+async function validation(req) {
+  const data = req.body;
+  const { message } = await Validation.validadeSale(data);
+  const stock = await Validation.validadeStock(data);
 
-// const sales = Router();
+  if (message) {
+    throw new Error(message);
+  }
+  if (!stock) {
+    throw new Error('Such amount is not permitted to sell');
+  }
+  return data;
+}
 
-// sales.get('/', rescue(async (_, res) => {
-//   const sale = await salesService.getAllSales();
+async function list(res, cb) {
+  const sales = await cb();
+  res.status(200).send({ sales });
+}
 
-//   res.status(200).json(sale);
-// }));
+async function createSale(req, res) {
+  try {
+    const data = await validation(req);
+    const sale = await Sales.createSale(data);
+    res.status(200).send(sale);
+  } catch (error) {
+    let status = 422;
+    let code = 'invalid_data';
+    if (error.message === 'Such amount is not permitted to sell') {
+      status = 404;
+      code = 'stock_problem';
+    }
 
-// sales.post('/', rescue(async (req, res, next) => {
-//   const { itensSold: { productId, quantity } } = req.body;
+    const err = {
+      err: {
+        code, message: error.message,
+      },
+    };
+    res.status(status).send(err);
+  }
+}
 
-//   const sale = await salesService.createSale({ itensSold: { productId, quantity } });
+async function listSales(req, res) {
+  try {
+    await list(res, Sales.listSales);
+    // const sales = await Sales.listSales();
+    // res.status(200).send({ sales });
+  } catch (error) {
+    res.status(404).send([]);
+  }
+}
 
-//   if (sale.error) {
-//     return next(boom.badData(sale.message));
-//   }
+async function getSale(req, res) {
+  try {
+    const sale = await Sales.getSaleById(req.params.id);
+    if (!sale) {
+      throw new Error();
+    }
 
-//   return res.status(201).json(sale);
-// }));
+    res.status(201).send(sale);
+  } catch (error) {
+    res.status(404).send({
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    });
+  }
+}
 
-// sales.get('/:id', rescue(async (req, res, next) => {
-//   const { id } = req.params;
+async function updateSale(req, res) {
+  const { id } = req.params;
+  const sale = req.body;
+  const { message } = await Validation.validadeSale(sale);
+  if (message) {
+    const err = {
+      err: {
+        code: 'invalid_data', message,
+      },
+    };
+    return res.status(422).send(err);
+  }
+  const Sale = await Sales.updateSale(id, sale);
+  res.status(200).send(Sale);
+}
 
-//   const sale = await salesService.getsaleById(id);
+async function deleteSale(req, res) {
+  try {
+    const sale = await Sales.deleteSale(req.params.id);
+    res.status(200).send(sale);
+  } catch (error) {
+    res.status(422).send({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+    });
+  }
+}
 
-//   if (sale.error) {
-//     return next(boom.notFound(sale.message));
-//   }
-
-//   return res.status(200).json(sale);
-// }));
-
-// sales.delete('/:id', rescue(async (req, res) => {
-//   const { id } = req.params;
-
-//   await salesService.deletesale(id);
-
-//   return res.status(204).end();
-// }));
-
-// sales.put('/:id', rescue(async (req, res, next) => {
-//   const { id } = req.params;
-//   const { itensSold: { productId, quantity } } = req.body;
-
-//   const newSale = await salesService.updatesale(id, { itensSold: { productId, quantity } });
-
-//   if (newSale.error) {
-//     const error = newSale.code === 'not_found'
-//       ? boom.notFound(newSale.message)
-//       : boom.badData(newSale.message);
-
-//     return next(error);
-//   }
-
-//   return res.status(200).json(newSale);
-// }));
-
-// module.exports = sales;
+module.exports = { createSale, listSales, getSale, updateSale, deleteSale };

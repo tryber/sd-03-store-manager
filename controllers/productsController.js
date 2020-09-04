@@ -1,64 +1,70 @@
-const boom = require('@hapi/boom');
-const { Router } = require('express');
-const rescue = require('express-rescue');
+const Products = require('../models/productsModel');
+const Validation = require('../services/validations');
 
-const productsService = require('../services/productsService');
-
-const products = Router();
-
-products.get('/', rescue(async (_, res) => {
-  const product = await productsService.getAllProducts();
-
-  res.status(200).json(product);
-}));
-
-products.post('/', rescue(async (req, res, next) => {
-  const { name, quantity } = req.body;
-
-  const product = await productsService.createProduct(name, quantity);
-
-  if (product.error) {
-    return next(boom.badData(product.message));
+async function func(res, cb, req, status, status2) {
+  try {
+    const product = await cb(req);
+    res.status(status).send(product);
+  } catch (error) {
+    res.status(status2).send({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    });
   }
+}
 
-  return res.status(201).json(product);
-}));
-
-products.get('/:id', rescue(async (req, res, next) => {
-  const { id } = req.params;
-
-  const product = await productsService.getProductById(id);
-
-  if (product.error) {
-    return next(boom.notFound(product.message));
+async function func2(req, res, cb, cb2) {
+  try {
+    let id;
+    if (req.params) {
+      id = req.params.id;
+    }
+    const { name, quantity } = req.body;
+    const { message } = await cb(name, quantity);
+    if (message) {
+      throw new Error(message);
+    }
+    if (id) {
+      const product = await cb2(id, { name, quantity });
+      res.status(200).send(product);
+    } else {
+      const product = await cb2({ name, quantity });
+      res.status(201).send(product);
+    }
+  } catch (error) {
+    const err = {
+      err: {
+        code: 'invalid_data', message: error.message,
+      },
+    };
+    res.status(422).send(err);
   }
+}
 
-  return res.status(200).json(product);
-}));
+async function productController(req, res) {
+  await func2(req, res, Validation.validadeNewProduct, Products.createProduct);
+}
 
-products.delete('/:id', rescue(async (req, res) => {
-  const { id } = req.params;
-
-  await productsService.deleteProduct(id);
-
-  return res.status(204).end();
-}));
-
-products.put('/:id', rescue(async (req, res, next) => {
-  const { id } = req.params;
-  const { name, quantity } = req.body;
-
-  const newProduct = await productsService.updateProduct(id, { name, quantity });
-
-  if (newProduct.error) {
-    const error = newProduct.code === 'not_found'
-      ? boom.notFound(newProduct.message)
-      : boom.badData(newProduct.message);
-
-    return next(error);
+async function listProducts(req, res) {
+  try {
+    const products = await Products.listProducts();
+    res.status(200).send({ products });
+  } catch (error) {
+    res.status(404).send([]);
   }
+}
 
-  return res.status(200).json(newProduct);
-}));
+async function getProduct(req, res) {
+  await func(res, Products.getProductById, req.params.id, 200, 422);
+}
 
-module.exports = products;
+async function updateProduct(req, res) {
+  await func2(req, res, Validation.validadeUpdateProduct, Products.updateProduct);
+}
+
+async function deleteProduct(req, res) {
+  await func(res, Products.deleteProduct, req.params.id, 200, 422);
+}
+module.exports = { productController, deleteProduct, listProducts, getProduct, updateProduct };

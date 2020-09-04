@@ -1,35 +1,62 @@
-const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
 
-const { connect } = require('./connection');
+const { Schema } = mongoose;
 
-const getAllProducts = async () => connect()
-  .then((db) => db
-    .collection('products')
-    .find({})
-    .toArray());
+const productSchema = new Schema({
+  name: String,
+  quantity: Number,
+});
 
-const createProduct = async (name, quantity) => connect()
-  .then((db) => db.collection('products').insertOne({ name, quantity }))
-  .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
+const Product = mongoose.model('Product', productSchema);
 
-const getProductById = async (id) => connect()
-  .then((db) => db.collection('products').findOne(ObjectId(id)));
+/**
+ * Get a product by name
+ * @param {String} name
+ */
+async function getProductByName(name) {
+  return Product.findOne({ name });
+}
 
-const deleteProduct = async (id) => connect()
-  .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+/**
+ * Get a product by id
+ * @param {number} id
+ */
+async function getProductById(id) {
+  return Product.findById(id);
+}
+/**
+ * List all products
+ */
+async function listProducts() {
+  return Product.find();
+}
 
-const updateProduct = async (id, { name, quantity }) => connect()
-  .then((db) => db.collection('products').updateOne({
-    _id: ObjectId(id),
-  }, {
-    $set: { name, quantity },
-  }))
-  .then(() => ({ _id: id, name, quantity }));
+/**
+ * Update a product
+ * @param {String} id
+ * @param {{name:String,quantity:Number}} product
+ */
+async function updateProduct(id, { name, quantity }) {
+  return Product.findByIdAndUpdate(id, { name, quantity }, { new: true });
+}
+/**
+ * Create a new product to the database
+ */
+async function createProduct({ name, quantity }) {
+  const product = new Product({ name, quantity });
+  return product.save();
+}
+
+async function deleteProduct(id) {
+  return Product.findByIdAndDelete(id);
+}
 
 module.exports = {
-  getAllProducts,
+  Product,
   createProduct,
-  getProductById,
   deleteProduct,
-  updateProduct,
-};
+  getProductByName,
+  listProducts,
+  getProductById,
+  updateProduct };
+  

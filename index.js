@@ -1,29 +1,33 @@
-const boom = require('@hapi/boom');
 const express = require('express');
-const bodyParser = require('body-parser');
-const productsController = require('./controllers/productsController');
-const salesController = require('./controllers/salesController.js');
+const bodyparser = require('body-parser');
+const mongoose = require('mongoose');
+const productController = require('./controllers/productsController');
+const SalesControler = require('./controllers/salesController');
 
 const app = express();
-
-app.use(bodyParser.json());
-
-app.use('/products', productsController);
-app.use('/sales', salesController);
-
-app.use((err, _, res, _next) => {
-  if (boom.isBoom(err)) {
-    return res.status(err.output.statusCode).json(err.output.payload);
-  }
-
-  return res.status(500).json({ message: 'Internal error' });
+mongoose.connect('mongodb://mongodb:27017/StoreManager', { 
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
-const { PORT = 3000 } = process.env;
-
-app.listen(PORT, () => { console.log(`Escutando na porta ${PORT}`); });
-
+app.use(bodyparser.json());
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (request, response) => {
   response.send();
 });
+
+app.post('/products', productController.productController);
+app.get('/products', productController.listProducts);
+app.get('/products/:id', productController.getProduct);
+app.put('/products/:id', productController.updateProduct);
+app.delete('/products/:id', productController.deleteProduct);
+
+app.post('/sales', SalesControler.createSale);
+app.get('/sales', SalesControler.listSales);
+app.get('/sales/:id', SalesControler.getSale);
+app.put('/sales/:id', SalesControler.updateSale);
+app.delete('/sales/:id', SalesControler.deleteSale);
+
+
+app.listen(3000, () => console.log('listen on port 3000'));

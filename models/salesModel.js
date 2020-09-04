@@ -1,37 +1,52 @@
-// const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
+const { updater, updaterDelete } = require('../services/updater');
 
-// const { connect } = require('./connection');
+const { Schema } = mongoose;
 
-// const getAllSales = async () => connect()
-//   .then((db) => db
-//     .collection('sales')
-//     .find({})
-//     .toArray());
+const saleSchema = new Schema({
+  itensSold: [{
+    _id: false,
+    productId: String,
+    quantity: Number,
+  }],
+});
 
-// const createSale = async (productId, quantity) => connect()
-//   .then((db) => db.collection('sales').insertOne({ itensSold: { productId, quantity } }))
-//   .then(({ insertedId }) => ({ _id: insertedId, itensSold: { productId, quantity } }));
+const Sale = mongoose.model('Sale', saleSchema);
 
-// const getSaleById = async (id) => connect()
-//   .then((db) => db.collection('sales').findOne(ObjectId(id)));
+function mountSale(sale) {
+  return ({
+    itensSold: sale,
+  });
+}
 
-// const deleteSale = async (id) => connect()
-//   .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+async function createSale(data) {
+  const d = mountSale(data);
+  const sale = await Sale.create(d);
+  await updater(data);
+  return sale;
+}
 
-// const updateSale = async (id, { itensSold: { productId, quantity } }) => connect()
-//   .then((db) => db.collection('sales').updateOne({
-//     _id: ObjectId(id),
-//   }, {
-//     $set: {
-//       itensSold: { productId, quantity },
-//     },
-//   }))
-//   .then(() => ({ _id: id, itensSold: { productId, quantity } }));
+async function listSales() {
+  return Sale.find();
+}
 
-// module.exports = {
-//   getAllSales,
-//   createSale,
-//   getSaleById,
-//   deleteSale,
-//   updateSale,
-// };
+async function getSaleById(id) {
+  return Sale.findById(id);
+}
+async function updateSale(id, data) {
+  return Sale.findByIdAndUpdate(id, mountSale(data), { new: true });
+}
+
+async function deleteSale(id) {
+  const product = await Sale.findByIdAndRemove(id);
+  console.log('product', product);
+  await updaterDelete(product.itensSold);
+  return product;
+}
+module.exports = { Sale,
+  createSale,
+  listSales,
+  getSaleById,
+  updateSale,
+  deleteSale,
+};
