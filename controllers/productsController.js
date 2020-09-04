@@ -1,65 +1,77 @@
+const { Router } = require('express');
 const rescue = require('express-rescue');
 const { productsService } = require('../services');
 
-const createProduct = rescue(async (req, res) => {
-  const { name, quantity } = req.body;
+const products = Router();
 
-  const createdProduct = await productsService.createProduct(name, quantity);
+products.get(
+  '/',
+  rescue(async (_req, res) => {
+    const products = await productsService.getAllProducts();
 
-  if (createdProduct.err) {
-    return res.status(422).json(createdProduct);
-  }
+    return res.status(200).json(products);
+  }),
+);
 
-  return res.status(201).json(createdProduct);
-});
+products.get(
+  '/:id',
+  rescue(async (req, res) => {
+    const { id } = req.params;
 
-const getAllProducts = rescue(async (_req, res) => {
-  const products = await productsService.getAllProducts();
+    const product = await productsService.getProductById(id);
 
-  return res.status(200).json(products);
-});
+    if (product.err) {
+      return res.status(422).json(product);
+    }
 
-const getProductById = rescue(async (req, res) => {
-  const { id } = req.params;
+    return res.status(200).json(product);
+  }),
+);
 
-  const product = await productsService.getProductById(id);
+products.post(
+  '/',
+  rescue(async (req, res) => {
+    const { name, quantity } = req.body;
 
-  if (product.err) {
-    return res.status(422).json(product);
-  }
+    const createdProduct = await productsService.createProduct(name, quantity);
 
-  return res.status(200).json(product);
-});
+    if (createdProduct.err) {
+      return res.status(422).json(createdProduct);
+    }
 
-const updateProduct = rescue(async (req, res) => {
-  const { name, quantity } = req.body;
-  const { id } = req.params;
+    return res.status(201).json(createdProduct);
+  }),
+);
 
-  const updatedProduct = await productsService.updateProduct(id, name, quantity);
+products.put(
+  '/:id',
+  rescue(async (req, res) => {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
 
-  if (updatedProduct.err) {
-    return res.status(422).json(updatedProduct);
-  }
+    const updatedProduct = await productsService.updateProduct(id, name, quantity);
 
-  return res.status(200).json(updatedProduct);
-});
+    if (updatedProduct.err) {
+      return res.status(422).json(updatedProduct);
+    }
 
-const deleteProduct = rescue(async (req, res) => {
-  const { id } = req.params;
+    return res.status(200).json(updatedProduct);
+  }),
+);
 
-  const deletedProduct = await productsService.deleteProduct(id);
+products.delete(
+  '/:id',
+  rescue(async (req, res) => {
+    const { id } = req.params;
 
-  if (deletedProduct && deletedProduct.err) {
-    return res.status(422).json(deletedProduct);
-  }
+    const deletedProduct = await productsService.deleteProduct(id);
 
-  return res.status(200).end();
-});
+    if (deletedProduct && deletedProduct.err) {
+      return res.status(422).json(deletedProduct);
+    }
 
-module.exports = {
-  createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-};
+    return res.status(200).end();
+  }),
+);
+
+module.exports = products;

@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { productsController, salesController } = require('./controllers');
+const { productsRouter, salesRouter } = require('./controllers');
 
 const app = express();
+
+const PORT = 3000;
 
 app.use(bodyParser.json());
 
@@ -11,22 +13,8 @@ app.get('/', (request, response) => {
   response.send();
 });
 
-app.get('/products', productsController.getAllProducts);
-app.get('/products/:id', productsController.getProductById);
+app.use('/products', productsRouter);
 
-app.post('/products', productsController.createProduct);
+app.use('/sales', salesRouter);
 
-app.put('/products/:id', productsController.updateProduct);
-
-app.delete('/products/:id', productsController.deleteProduct);
-
-app.post('/sales', salesController.createSale);
-
-app.put('/sales/:id', salesController.updateSale);
-
-app.get('/sales', salesController.getAllSales);
-app.get('/sales/:id', salesController.getSaleById);
-
-app.delete('/sales/:id', salesController.deleteSale);
-
-app.listen(3000, () => console.log('Ouvindo na porta 3000'));
+app.listen(PORT, () => console.log(`Listen on ${PORT}`));
