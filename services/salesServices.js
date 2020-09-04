@@ -19,18 +19,18 @@ const saleDeleteUpdate = async (data) => {
     const quantUpdate = await (quantity + itensSoldQuantity[index]);
     await updateProductById(itemId, name, quantUpdate);
   });
-  return data;
+  return null;
 };
 
-const updateProductQuant = async (id) => {
+const updateProductQuantOnSaleDelete = async (id) => {
   try {
-    const deleteSale = await deleteSaleById(id);
-
-    if (!deleteSale) return;
-    const data = await saleDeleteUpdate(deleteSale);
+    const getSale = await getSaleById(id);
+    if (!getSale) throw new Error();
+    await saleDeleteUpdate(getSale);
+    const data = deleteSaleById(id);
     return data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error('Sale not found');
   }
 };
 
@@ -71,12 +71,14 @@ const readOrDeleteSaleById = async (id, operation = 'read') => {
     const func = (callback) => callback(id);
 
     const data = async () =>
-      (operation === 'delete' ? func(updateProductQuant) : func(getSaleById));
+      (operation === 'delete' ? func(updateProductQuantOnSaleDelete) : func(getSaleById));
 
     const callbackReturn = await data();
+
     return callbackReturn;
   } catch (error) {
-    throw new Error(error.message);
+    const message = operation === 'delete' ? 'Wrong sale ID format' : error.message;
+    throw new Error(message);
   }
 };
 
