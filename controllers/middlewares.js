@@ -1,7 +1,6 @@
 const Boom = require('@hapi/boom');
 const rescue = require('express-rescue');
 const { generic } = require('../services');
-const { invalid } = require('joi');
 
 function verifyIdParam(message = 'Wrong id format') {
   return (req, _res, next) => {
@@ -34,7 +33,7 @@ function notExistsByName(service) {
     const { name } = req.body || {};
     const resource = await service(name);
 
-    if (resource) next(Boom.badData('Product already exists', 'invalid_data'))
+    if (resource) next(Boom.badData('Product already exists', 'invalid_data'));
 
     return next();
   });

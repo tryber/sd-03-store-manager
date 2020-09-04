@@ -27,13 +27,11 @@ function threatBoomErr({ payload }, data) {
 
 app.use((err, _req, res, _next) => {
   if (Boom.isBoom(err)) {
-    const { data, output: { payload, statusCode } } = err;
-    console.error(`${payload.message} / ${payload.error} / ${statusCode}`);
+    const { data, output } = err;
     return res
-    .status(err.output.statusCode)
-    .json(threatBoomErr(err.output, data));
+    .status(output.statusCode)
+    .json(threatBoomErr(output, data));
   }
-  console.error(`${err.message} / ${err.stack}`)
   return res.json({ status: 500, message: err.message, data: err.stack });
 });
 

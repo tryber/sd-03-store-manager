@@ -64,6 +64,10 @@ salesRouter
   .all(mid.verifyIdParam('Wrong sale ID format'))
   .get(rescue(getById))
   .put(validateProducts, rescue(updateItens))
-  .delete(mid.findAndKeepById(salesServices.getById), mid.verifyExistence(true), rescue(deleteSale));
+  .delete(
+    mid.findAndKeepById(salesServices.getById),
+    mid.verifyExistence(true),
+    rescue(deleteSale),
+  );
 
 module.exports = salesRouter;

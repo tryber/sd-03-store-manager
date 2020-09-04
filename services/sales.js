@@ -16,7 +16,7 @@ async function getById(id) {
 
 async function updateItenById(id, itensSold) {
   const updates = itensSold.map(({ productId, quantity }) =>
-    async () => await salesModel.updateById(id, productId, { quantity }),
+    async () => salesModel.updateById(id, productId, { quantity }),
   );
   await Promise.all(updates);
   return { _id: id, itensSold };
