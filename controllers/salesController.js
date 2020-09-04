@@ -10,7 +10,7 @@ sales
 
 sales
   .route('/:id')
-  .get(routes.deleteReadSale('read'))
+  .get(routes.deleteReadSale())
   .put(routes.updateSale)
   .delete(routes.deleteReadSale('delete', 'invalid_data', 422));
 

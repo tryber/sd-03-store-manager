@@ -46,9 +46,9 @@ const deleteReadSale = (operation = 'read', code = 'not_found', status = 404) =>
 ) => {
   const { id } = req.params;
   try {
-    const deleteSale = await readOrDeleteSaleById(id, operation);
+    const saleInfo = await readOrDeleteSaleById(id, operation);
 
-    return res.status(200).json(deleteSale);
+    return res.status(200).json(saleInfo);
   } catch (error) {
     const err = generateError(status, error, code);
     return next(err);

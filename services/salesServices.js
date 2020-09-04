@@ -10,7 +10,7 @@ const { salesRegistryValidation } = require('./validation');
 
 /* Atualiza quantidade de produto caso uma venda seja deletada, tudo assincronicamente */
 
-const productDataUpdate = async (data) => {
+const saleDeleteUpdate = async (data) => {
   const { itensSold } = data;
   const itensSoldData = await itensSold.map(async (item) => getProductById(item.productId));
   const itensSoldQuantity = await itensSold.map((item) => item.quantity);
@@ -27,7 +27,7 @@ const updateProductQuant = async (id) => {
     const deleteSale = await deleteSaleById(id);
 
     if (!deleteSale) return;
-    const data = await productDataUpdate(deleteSale);
+    const data = await saleDeleteUpdate(deleteSale);
     return data;
   } catch (error) {
     throw new Error(error.message);
