@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.get('/products', controllers.productsController.showAllProducts);
 app.post('/products', controllers.productsController.createProduct);
 app.get('/products/:id', controllers.productsController.getProductById);
-app.post('/products/:id', controllers.productsController.updateProductById);
+app.put('/products/:id', controllers.productsController.updateProductById);
 app.delete('/products/:id', controllers.productsController.deleteProductById);
 
 // não remova esse endpoint, e para o avaliador funcionar
