@@ -21,16 +21,19 @@ const createSales = async (products) => {
   }
 };
 
+/* Fazendo update de itens em array usando operador
+posicional. https://docs.mongodb.com/manual/reference/operator/update/positional-all/ */
 const updateSalesById = async (id, sale = []) => {
   const [product] = sale;
   const { productId, quantity } = product;
   const connect = await connection('sales');
   const salesUpdate = await connect.findOneAndUpdate(
     { _id: ObjectID(id), 'itensSold.productId': productId },
-    { $set: { quantity } },
+    { $set: { 'itensSold.$[].quantity': quantity } },
+    { returnOriginal: false },
   );
-  const { _id } = salesUpdate.value;
-  return { _id, itensSold: [{ ...product }] };
+
+  return salesUpdate.value;
 };
 
 const deleteSaleById = async (id) => {

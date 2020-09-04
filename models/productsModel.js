@@ -27,7 +27,6 @@ const updateProductById = async (id, productName, productQuantity) => {
       { $set: { name: productName, quantity: productQuantity } },
       { returnOriginal: false },
     );
-    console.log(updateQuery);
     return updateQuery.value;
   } catch (error) {
     throw new Error(error.message || 'product update failed');
