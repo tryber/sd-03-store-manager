@@ -4,8 +4,7 @@ const validateId = (id) => {
   const regex = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
   const result = regex.test(id);
   if (!result) {
-    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
-    return res.status(422).send(response);
+    return { err: { message: 'Wrong id format', code: 'invalid_data' } };
   }
   return null;
 };
@@ -62,7 +61,11 @@ const showAllProducts = async (_req, res) => {
 const getProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
-  validateId(id);
+  const validation = validateId(id);
+
+  if (validation) {
+    return res.status(422).send(validation);
+  }
 
   const result = await services.productService.getProductById(id);
   return res.status(200).send(result);
@@ -72,7 +75,11 @@ const updateProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
   const { name, quantity } = req.body;
-  validateId(id);
+  const validation = validateId(id);
+
+  if (validation) {
+    return res.status(422).send(validation);
+  }
 
   const productExists = await services.productService.getProductById(id);
   // validações
@@ -88,7 +95,11 @@ const updateProductById = async (req, res) => {
 const deleteProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
-  validateId(id);
+  const response = validateId(id);
+
+  if (response) {
+    return res.status(422).send(response);
+  }
 
   const productExists = await services.productService.getProductById(id);
   // validações
@@ -96,9 +107,9 @@ const deleteProductById = async (req, res) => {
     const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
     return res.status(422).send(response);
   }
-  const { _id: id, name, quantity } = productExists;
+  const { _id, name, quantity } = productExists;
 
-  const result = await services.productService.deleteProductById(id, name, quantity);
+  const result = await services.productService.deleteProductById(_id, name, quantity);
   return res.status(200).send(result);
 };
 
