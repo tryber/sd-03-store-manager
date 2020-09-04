@@ -6,6 +6,13 @@ const {
 } = require('../services/salesServices');
 const { generateError } = require('../utils');
 
+const salesCreateErrorGenerator = (error) => {
+  const status = error.message === 'Such amount is not permitted to sell' ? 404 : 422;
+  const code = error.message === 'Such amount is not permitted to sell' ? 'stock_problem' : 'invalid_data';
+  const err = generateError(status, error, code);
+  return err;
+};
+
 const salesCreate = async (req, res, next) => {
   try {
     const sale = await createSale(req.body);
@@ -14,10 +21,7 @@ const salesCreate = async (req, res, next) => {
 
     return res.status(200).json(sale);
   } catch (error) {
-    const status = error.message === 'Such amount is not permitted to sell' ? 404 : 422;
-    const code = error.message === 'Such amount is not permitted to sell' ? 'stock_problem' : 'invalid_data';
-    const err = generateError(status, error, code);
-    return next(err);
+    return next(salesCreateErrorGenerator(error));
   }
 };
 
@@ -35,7 +39,11 @@ const modifySale = async (req, res, next) => {
   }
 };
 
-const deleteReadSale = (operation = 'read', code = 'not_found', status = 404) => async (req, res, next) => {
+const deleteReadSale = (operation = 'read', code = 'not_found', status = 404) => async (
+  req,
+  res,
+  next,
+) => {
   const { id } = req.params;
   try {
     const deleteSale = await readOrDeleteSaleById(id, operation);
