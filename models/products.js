@@ -1,11 +1,12 @@
 const { ObjectId } = require('mongodb');
 const connect = require('./connection');
 
-const createCollectionProducts = async (name, quantity) => {
-  const db = await connect();
-  db.collection('products').insertOne({ name, quantity })
-    .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
-};
+const createCollectionProducts = async (name, quantity) => connect()
+  .then((db) => db.collection('products').insertOne({ name, quantity }))
+  .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
+
+const verifyNameExit = async (name) => connect()
+  .then((db) => db.collection('products').findOne({ name }), { name: 1, _id: 0 });
 
 const listAllProducts = async () => connect()
   .then((db) => db.collection('products').find({}).toArray());
@@ -22,6 +23,7 @@ const deleteProductsByIdBank = async (id) => connect()
 
 module.exports = {
   createCollectionProducts,
+  verifyNameExit,
   listAllProducts,
   listProductsById,
   updateProductsByIdBank,

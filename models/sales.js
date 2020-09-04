@@ -6,4 +6,4 @@ const registerSales = async (productId, quantity) => connect()
 
 module.exports = {
   registerSales,
-}
+};

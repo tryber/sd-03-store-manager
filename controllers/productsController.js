@@ -15,16 +15,20 @@ products.post('/products', rescue(async (req, res) => {
   // const { name, quantity } = req.query;
   const registerProducts = await createProducts(name, quantity);
 
-  if (!registerProducts.err) {
-    return res.status(201).json(registerProducts);
+  if (registerProducts.err) {
+    return res.status(422).json(registerProducts);
   }
-  return res.status(422).json(registerProducts);
+  return res.status(201).json(registerProducts);
 }));
 
-products.get('/products', async (req, res) => {
+products.get('/products', rescue(async (req, res) => {
   const allProducts = await getAllProducts();
+
+  if (!allProducts) {
+    return res.status(422).json(allProducts);
+  }
   return res.status(200).json(allProducts);
-});
+}));
 
 products.get('/products/:id', async (req, res) => {
   const { id } = req.user;

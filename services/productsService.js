@@ -1,5 +1,6 @@
 const {
   createCollectionProducts,
+  verifyNameExit,
   listAllProducts,
   listProductsById,
   updateProductsByIdBank,
@@ -23,14 +24,17 @@ const validateProduct = async (name, quantity) => {
       err: { message: '"quantity" must be a number', code: 'invalid_data' },
     };
   }
-  return false;
+  const checkName = await verifyNameExit(name);
+  if (checkName) {
+    return { err: { code: 'invalid_data', message: 'Product already exists' } };
+  }
+  return true;
 };
 
 const createProducts = async (name, quantity) => {
   const validation = await validateProduct(name, quantity);
-  // console.log(validation.error, 'vali');
-  if (validation.err) return validation;
 
+  if (validation.err) return validation;
   return createCollectionProducts(name, quantity);
 };
 
