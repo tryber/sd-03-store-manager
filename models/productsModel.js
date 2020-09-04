@@ -2,7 +2,9 @@ const connect = require('./connect');
 
 const getAllProducts = async () => {
   const db = await connect();
-  return db.collection('products').find({}).toArray();
+  const products = await db.collection('products').find().toArray();
+  const response = { products };
+  return response;
 };
 
 const getProductByName = async (query) => {
