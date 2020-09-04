@@ -10,7 +10,7 @@ const productsSchema = {
     },
     quantity: {
       type: 'integer',
-      minimum: 0,
+      minimum: 1,
     },
   },
   additionalProperties: false,
@@ -21,6 +21,8 @@ const validateProduct = validate(productsSchema);
 
 const getAllProducts = () => productsModel.getAllProducts();
 
+const getProductById = (id) => productsModel.getProductById(id);
+
 const addProduct = async (name, quantity) => {
   const product = await productsModel.add(name, quantity);
   return { _id: product.insertedId, name, quantity };
@@ -30,4 +32,5 @@ module.exports = {
   getAllProducts,
   addProduct,
   validateProduct,
+  getProductById,
 };
