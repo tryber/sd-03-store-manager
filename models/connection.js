@@ -9,7 +9,7 @@ const { MongoClient } = require('mongodb');
 
 const connect = () =>
   MongoClient
-    .connect('mongodb://localhost:27017/StoreManager', {
+    .connect('mongodb://mongodb:27017/StoreManager', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
