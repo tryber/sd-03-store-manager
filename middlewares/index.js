@@ -1,5 +1,5 @@
-const error = require('./error');
+const errorMiddleware = require('./errorMiddleware');
 
 module.exports = {
-  error,
+  errorMiddleware,
 };
