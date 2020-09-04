@@ -22,18 +22,17 @@ products.post('/products', rescue(async (req, res) => {
 }));
 
 products.get('/products', rescue(async (req, res) => {
-  const allProducts = await getAllProducts();
-
-  if (!allProducts) {
-    return res.status(422).json(allProducts);
-  }
+  const allProducts = {
+    products: await getAllProducts(),
+  };
   return res.status(200).json(allProducts);
 }));
 
 products.get('/products/:id', async (req, res) => {
-  const { id } = req.user;
-  const productsId = await getAllProductsById(id);
-  return res.status(200).json(productsId);
+  const productsId = await getAllProductsById(req.params.id);
+  const { _id: idMongo } = productsId;
+  if (productsId.err) return res.status(422).json(productsId);
+  if (idMongo) return res.status(200).json(productsId);
 });
 
 products.put('/products/:id', async (req, res) => {

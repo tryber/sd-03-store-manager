@@ -51,7 +51,7 @@ describe('1 - Crie um endpoint para o cadastro de produtos', () => {
       });
   });
 
-  it.skip('Será validado que não é possível criar um produto com o mesmo nomede outro já existente', async () => {
+  it('Será validado que não é possível criar um produto com o mesmo nomede outro já existente', async () => {
     await frisby
       .post(`${url}/products/`, {
         name: 'Martelo de Thor',
@@ -119,7 +119,7 @@ describe('1 - Crie um endpoint para o cadastro de produtos', () => {
       });
   });
 
-  it.skip('Será validado que é possível criar um produto com sucesso', async () => {
+  it('Será validado que é possível criar um produto com sucesso', async () => {
     await frisby
       .post(`${url}/products`, {
         name: 'Arco do Gavião Arqueiro',

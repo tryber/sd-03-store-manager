@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const connect = require('./connection');
 
 const createCollectionProducts = async (name, quantity) => connect()
@@ -8,25 +8,25 @@ const createCollectionProducts = async (name, quantity) => connect()
 const verifyNameExit = async (name) => connect()
   .then((db) => db.collection('products').findOne({ name }), { name: 1, _id: 0 });
 
-// const listAllProducts = async () => connect()
-//   .then((db) => db.collection('products').find({}).toArray());
+const listAllProducts = async () => connect()
+  .then((db) => db.collection('products').find({}).toArray());
 
-// const listProductsById = async (id) => connect()
-//   .then((db) => db.collection('products').findOne(ObjectId(id)));
+const listProductsById = async (id) => connect()
+  .then((db) => db.collection('products').findOne(ObjectId(id)));
 
-// const updateProductsByIdBank = async (id, name, quantity) => connect()
-//   .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }, 
-// { $set: { name, quantity } })
-//     .then(() => ({ _id: id, name, quantity })));
+const updateProductsByIdBank = async (id, name, quantity) => connect()
+  .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) },
+    { $set: { name, quantity } })
+    .then(() => ({ _id: id, name, quantity })));
 
-// const deleteProductsByIdBank = async (id) => connect()
-//   .then((db) => db.collection('products').deleteOne(ObjectId(id)));
+const deleteProductsByIdBank = async (id) => connect()
+  .then((db) => db.collection('products').deleteOne(ObjectId(id)));
 
 module.exports = {
   createCollectionProducts,
   verifyNameExit,
-//   listAllProducts,
-//   listProductsById,
-//   updateProductsByIdBank,
-//   deleteProductsByIdBank,
+  listAllProducts,
+  listProductsById,
+  updateProductsByIdBank,
+  deleteProductsByIdBank,
 };

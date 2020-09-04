@@ -44,6 +44,9 @@ const getAllProducts = async () => {
 };
 
 const getAllProductsById = async (id) => {
+  if (id.length < 24) {
+    return { err: { message: 'Wrong id format', code: 'invalid_data' } };
+  }
   const productsId = await listProductsById(id);
   return productsId;
 };
