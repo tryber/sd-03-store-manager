@@ -26,11 +26,13 @@ function validateSale(req, _, next) {
   return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
-function validateProduct(req, _, next) {
+function validateProducts(req, _, next) {
   const products = [...req.body];
-  const { error } = products.map(schemas.saleProductSchema.validate)
-    .find(({ error: err }) => err);
-  console.log('error', error)
+
+  const { error } = products.map(({ productId, quantity }) => (
+    schemas.saleProductSchema.validate({ productId, quantity }))
+  ).find(({ error: err }) => err) || {};
+
   return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
 
@@ -64,10 +66,12 @@ async function getById(req, res, next) {
   res.status(200).json(sale);
 }
 
-async function updateOneItem(req, res) {
+async function updateItens(req, res) {
+  console.log('CHEGOU AQUI ONDE DEVIAS');
   const { id } = req.params;
-  const [{ productId, quantity }] = req.body;
-  const result = await salesServices.updateItenById(id, productId, quantity);
+  const products = [...req.body];
+  const result = await salesServices.updateItenById(id, products);
+  console.log('result', result)
   res.status(200).json(result);
 }
 
@@ -87,7 +91,7 @@ salesRouter
   .route('/:id')
   .all(verifyIdParam('Wrong sale ID format'))
   .get(rescue(getById))
-  .put(validateProduct, rescue(updateOneItem))
+  .put(validateProducts, rescue(updateItens))
   .delete(verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
 
 module.exports = salesRouter;

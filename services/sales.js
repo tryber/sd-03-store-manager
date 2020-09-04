@@ -20,9 +20,13 @@ async function getById(id) {
   return salesModel.getById(id);
 }
 
-async function updateItenById(id, productId, quantity) {
-  await salesModel.updateById(id, productId, { quantity });
-  return { _id: id, itensSold: [{ productId, quantity }] };
+async function updateItenById(id, itensSold) {
+  const updates = itensSold.map(({ productId, quantity }) =>
+    async () => await salesModel.updateById(id, productId, { quantity }),
+  );
+  await Promise.all(updates);
+  console.log('update', itensSold)
+  return { _id: id, itensSold };
 }
 
 async function deleteSaleById(id) {

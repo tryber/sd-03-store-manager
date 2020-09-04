@@ -21,7 +21,6 @@ app.all(/.*/, (req, res) => res.json({ message: `${req.path} não encontrado` })
 
 function threatBoomErr({ payload }, data) {
   const { message, error } = payload;
-  console.log(data)
   const code = data || error;
   return { err: { code, message } };
 }
