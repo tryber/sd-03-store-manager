@@ -59,4 +59,3 @@ module.exports = {
   listProducts,
   getProductById,
   updateProduct };
-  
