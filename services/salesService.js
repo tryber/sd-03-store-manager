@@ -1,10 +1,10 @@
-const { registerSales } = require('../models/sales');
+// const { registerSales } = require('../models/sales');
 
-const registeringSales = async (productId, quantity) => {
-  const register = await registerSales(productId, quantity);
-  return register;
-};
+// const registeringSales = async (productId, quantity) => {
+//   const register = await registerSales(productId, quantity);
+//   return register;
+// };
 
-module.exports = {
-  registeringSales,
-};
+// module.exports = {
+//   registeringSales,
+// };
