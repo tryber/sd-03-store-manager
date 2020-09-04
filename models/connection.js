@@ -52,7 +52,7 @@ const connectAndFindById = async (id, collect = '', message = '') => {
   try {
     const dbconnect = await connection(collect);
     const query = await dbconnect.findOne({ _id: ObjectID(id) });
-    if (!query.name) throw new Error();
+    if (!query['_id']) throw new Error();
 
     return query;
   } catch (error) {
