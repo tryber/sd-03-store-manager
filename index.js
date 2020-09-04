@@ -2,10 +2,10 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const productController = require('./controllers/productsController');
-const SalesControler = require('./controllers/salesController');
+const salesController = require('./controllers/salesController');
 
 const app = express();
-mongoose.connect('mongodb://mongodb:27017/StoreManager', {
+mongoose.connect('mongodb://mondodb:27017/StoreManager', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -23,11 +23,10 @@ app.get('/products/:id', productController.getProduct);
 app.put('/products/:id', productController.updateProduct);
 app.delete('/products/:id', productController.deleteProduct);
 
-app.post('/sales', SalesControler.createSale);
-app.get('/sales', SalesControler.listSales);
-app.get('/sales/:id', SalesControler.getSale);
-app.put('/sales/:id', SalesControler.updateSale);
-app.delete('/sales/:id', SalesControler.deleteSale);
+app.post('/sales', salesController.createSale);
+app.get('/sales', salesController.listSales);
+app.get('/sales/:id', salesController.getSale);
+app.put('/sales/:id', salesController.updateSale);
+app.delete('/sales/:id', salesController.deleteSale);
 
-
-app.listen(3000, () => console.log('listen on port 3000'));
+app.listen(3000, () => console.log('Listen on port 3000'));

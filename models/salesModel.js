@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { updater, updaterDelete } = require('../services/updater');
+const { updater, updaterDelete } = require('../services/updatation');
 
 const { Schema } = mongoose;
 
@@ -20,8 +20,7 @@ function mountSale(sale) {
 }
 
 async function createSale(data) {
-  const d = mountSale(data);
-  const sale = await Sale.create(d);
+  const sale = await Sale.create(mountSale(data));
   await updater(data);
   return sale;
 }
@@ -33,6 +32,7 @@ async function listSales() {
 async function getSaleById(id) {
   return Sale.findById(id);
 }
+
 async function updateSale(id, data) {
   return Sale.findByIdAndUpdate(id, mountSale(data), { new: true });
 }
@@ -43,6 +43,7 @@ async function deleteSale(id) {
   await updaterDelete(product.itensSold);
   return product;
 }
+
 module.exports = { Sale,
   createSale,
   listSales,

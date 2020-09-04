@@ -1,10 +1,10 @@
 const Products = require('../models/productsModel');
 const Validation = require('../services/validations');
 
-async function func(res, cb, req, status, status2) {
+async function promise1(res, prod, req, status1, status2) {
   try {
-    const product = await cb(req);
-    res.status(status).send(product);
+    const product = await prod(req);
+    res.status(status1).send(product);
   } catch (error) {
     res.status(status2).send({
       err: {
@@ -15,22 +15,22 @@ async function func(res, cb, req, status, status2) {
   }
 }
 
-async function func2(req, res, cb, cb2) {
+async function promise2(req, res, dest, prod) {
   try {
     let id;
     if (req.params) {
       id = req.params.id;
     }
     const { name, quantity } = req.body;
-    const { message } = await cb(name, quantity);
+    const { message } = await dest(name, quantity);
     if (message) {
       throw new Error(message);
     }
     if (id) {
-      const product = await cb2(id, { name, quantity });
+      const product = await prod(id, { name, quantity });
       res.status(200).send(product);
     } else {
-      const product = await cb2({ name, quantity });
+      const product = await prod({ name, quantity });
       res.status(201).send(product);
     }
   } catch (error) {
@@ -44,7 +44,7 @@ async function func2(req, res, cb, cb2) {
 }
 
 async function productController(req, res) {
-  await func2(req, res, Validation.validadeNewProduct, Products.createProduct);
+  await promise2(req, res, Validation.validateNewProduct, Products.createProduct);
 }
 
 async function listProducts(req, res) {
@@ -57,14 +57,21 @@ async function listProducts(req, res) {
 }
 
 async function getProduct(req, res) {
-  await func(res, Products.getProductById, req.params.id, 200, 422);
+  await promise1(res, Products.getProductById, req.params.id, 200, 422);
 }
 
 async function updateProduct(req, res) {
-  await func2(req, res, Validation.validadeUpdateProduct, Products.updateProduct);
+  await promise2(req, res, Validation.validateUpdateProduct, Products.updateProduct);
 }
 
 async function deleteProduct(req, res) {
-  await func(res, Products.deleteProduct, req.params.id, 200, 422);
+  await promise1(res, Products.deleteProduct, req.params.id, 200, 422);
 }
-module.exports = { productController, deleteProduct, listProducts, getProduct, updateProduct };
+
+module.exports = {
+  productController,
+  deleteProduct,
+  listProducts,
+  getProduct,
+  updateProduct,
+};
