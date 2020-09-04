@@ -95,10 +95,10 @@ const updateProductById = async (req, res) => {
 const deleteProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
-  const response = validateId(id);
+  const validation = validateId(id);
 
-  if (response) {
-    return res.status(422).send(response);
+  if (validation) {
+    return res.status(422).send(validation);
   }
 
   const productExists = await services.productService.getProductById(id);
