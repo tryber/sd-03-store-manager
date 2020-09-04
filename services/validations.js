@@ -54,5 +54,5 @@ module.exports = {
   validateNewProduct,
   validateUpdateProduct,
   validateSale,
-  validateStock
+  validateStock,
 };
