@@ -21,20 +21,20 @@ sales.post('/sales', async (req, res) => {
   return res.status(200).json(createRegister);
 });
 
-sales.get('/sales', async (req, res) => {
+// sales.get('/sales', async (req, res) => {
 
-});
+// });
 
-sales.get('/sales/:id', async (req, res) => {
+// sales.get('/sales/:id', async (req, res) => {
 
-});
+// });
 
-sales.put('/sales/:id', async (req, res) => {
+// sales.put('/sales/:id', async (req, res) => {
 
-});
+// });
 
-sales.delete('/sales/:id', async (req, res) => {
+// sales.delete('/sales/:id', async (req, res) => {
 
-});
+// });
 
 module.exports = { sales };

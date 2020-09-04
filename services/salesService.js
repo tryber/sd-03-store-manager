@@ -4,8 +4,8 @@ const { validateParams } = require('./libValidation');
 const registeringSales = async (productId, quantity) => {
   const validate = await validateParams(productId, quantity);
 
-  if (validate.err) return validate;
-  return registerSales(productId, quantity);
+  if (!validate.err) return registerSales(productId, quantity);
+  return validate;
 };
 
 module.exports = {
