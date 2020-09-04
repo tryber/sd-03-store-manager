@@ -14,7 +14,10 @@ app.get('/', (request, response) => {
 
 app.post('/products', controllers.productsController.productsRegister);
 app.get('/products', controllers.productsController.listProducts);
+
 app.get('/products/:id', controllers.productsController.listProductById);
+app.put('/products/:id', controllers.productsController.updateProductsById);
+app.delete('/products/:id', controllers.productsController.deleteProductsById);
 
 app.use((err, _req, res, _next) => errorMiddleware(err, res));
 

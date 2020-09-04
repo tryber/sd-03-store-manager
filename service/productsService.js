@@ -3,6 +3,8 @@ const {
   insertProduct,
   getAllProducts,
   getProductById,
+  updateProductById,
+  deleteProductsById,
 } = require('../models/productsModel');
 
 const productNameIsValid = (name) => {
@@ -36,6 +38,16 @@ const listProductsById = async (id) => {
   return product;
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const product = await updateProductById(id, name, quantity);
+  return product;
+};
+
+const deleteProduct = async (id) => {
+  const product = await deleteProductsById(id);
+  return product;
+};
+
 module.exports = {
   productNameIsValid,
   productQuantityIsValid,
@@ -43,4 +55,6 @@ module.exports = {
   addProduct,
   listAllProducts,
   listProductsById,
+  updateProduct,
+  deleteProduct,
 };

@@ -5,6 +5,8 @@ const {
   addProduct,
   listProductsById,
   listAllProducts,
+  updateProduct,
+  deleteProduct,
 } = require('../service/productsService.js');
 const { ErrorHandler } = require('../utils/ErrorHandler');
 
@@ -17,9 +19,7 @@ const productsRegister = async (req, res, next) => {
   try {
     if (nameValid || existProd || quantityValid) {
       const errorMessage = nameValid || existProd || quantityValid;
-      throw new ErrorHandler(
-        400, errorMessage, 'invalid_data',
-      );
+      throw new ErrorHandler(422, errorMessage, 'invalid_data');
     }
 
     const product = await addProduct(name, quantity);
@@ -54,8 +54,44 @@ const listProductById = async (req, res, next) => {
   }
 };
 
+const updateProductsById = async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const nameValid = productNameIsValid(name);
+    const quantityValid = productQuantityIsValid(quantity);
+
+    if (nameValid || quantityValid) {
+      const errorMessage = nameValid || quantityValid;
+      throw new ErrorHandler(422, errorMessage, 'invalid_data');
+    }
+
+    const { id } = req.params;
+    await updateProduct(id, name, quantity);
+    return res.status(200).json({ _id: id, name, quantity });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteProductsById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await deleteProduct(id);
+
+    if (!product) {
+      throw new ErrorHandler(422, 'Wrong id format', 'invalid_data');
+    }
+
+    return res.status(200).json({ product });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   productsRegister,
   listProducts,
   listProductById,
+  updateProductsById,
+  deleteProductsById,
 };
