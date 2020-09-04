@@ -2,22 +2,9 @@ const express = require('express');
 const rescue = require('express-rescue');
 const Boom = require('@hapi/boom');
 const { salesServices, schemas } = require('../services');
-const { verifyIdParam } = require('./middlewares');
-const products = require('../models/products');
+const mid = require('./middlewares');
 
 const salesRouter = express.Router();
-
-// const SHOULD_NOT_EXISTS = 'should not exists';
-const SHOULD_EXISTS = 'should exists';
-
-// async function verifyExistenceOfProducts(req, _, next) {
-//   const ids = req.body.map(({ productId }) => productId);
-//   const toSaleProducts = await productService.verifyAllExistencesById(ids);
-
-//   if (toSaleProducts.error) return next(Boom.badRequest(toSaleProducts.message, 'invalid_data'));
-
-//   return next();
-// }
 
 function validateSale(req, _, next) {
   const products = req.body;
@@ -29,9 +16,8 @@ function validateSale(req, _, next) {
 function validateProducts(req, _, next) {
   const products = [...req.body];
 
-  const { error } = products.map(({ productId, quantity }) => (
-    schemas.saleProductSchema.validate({ productId, quantity }))
-  ).find(({ error: err }) => err) || {};
+  const { error } = products.map((prod) => schemas.saleProductSchema.validate(prod))
+    .find(({ error: err }) => err) || {};
 
   return error ? next(Boom.badData(error.message, 'invalid_data')) : next();
 }
@@ -46,18 +32,6 @@ async function getAllSales(_req, res) {
   res.status(200).json(sales);
 }
 
-function verifyExistenceOfSale(shouldExists = SHOULD_EXISTS) {
-  return rescue(async (req, res, next) => {
-    const { id } = req.params;
-    const sale = await salesServices.verifyExistenceById(id, shouldExists);
-
-    if (sale.error) return next(Boom.badRequest(sale.message, 'invalid_data'));
-
-    res.saleById = sale;
-    return next();
-  });
-}
-
 async function getById(req, res, next) {
   const { id } = req.params;
   const sale = await salesServices.getById(id);
@@ -67,11 +41,9 @@ async function getById(req, res, next) {
 }
 
 async function updateItens(req, res) {
-  console.log('CHEGOU AQUI ONDE DEVIAS');
   const { id } = req.params;
   const products = [...req.body];
   const result = await salesServices.updateItenById(id, products);
-  console.log('result', result)
   res.status(200).json(result);
 }
 
@@ -89,9 +61,9 @@ salesRouter
 
 salesRouter
   .route('/:id')
-  .all(verifyIdParam('Wrong sale ID format'))
+  .all(mid.verifyIdParam('Wrong sale ID format'))
   .get(rescue(getById))
   .put(validateProducts, rescue(updateItens))
-  .delete(verifyExistenceOfSale(SHOULD_EXISTS), rescue(deleteSale));
+  .delete(mid.findAndKeepById(salesServices.getById), mid.verifyExistence(true), rescue(deleteSale));
 
 module.exports = salesRouter;

@@ -1,10 +1,4 @@
 const { salesModel } = require('../models');
-const generic = require('./generic');
-
-async function verifyExistenceById(id, shouldExists) {
-  const sale = await salesModel.getById(id);
-  return generic.handleExistence(sale, shouldExists);
-}
 
 async function addSale(itensSold) {
   const { insertedId } = await salesModel.createSale(itensSold);
@@ -25,7 +19,6 @@ async function updateItenById(id, itensSold) {
     async () => await salesModel.updateById(id, productId, { quantity }),
   );
   await Promise.all(updates);
-  console.log('update', itensSold)
   return { _id: id, itensSold };
 }
 
@@ -34,7 +27,6 @@ async function deleteSaleById(id) {
 }
 
 module.exports = {
-  verifyExistenceById,
   addSale,
   getAll,
   getById,

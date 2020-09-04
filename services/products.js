@@ -1,24 +1,9 @@
 const { productModel } = require('../models');
-const generic = require('./generic');
 
 async function verifyAllExistencesById(ids) {
   const products = await productModel.getAllById(ids);
   if (products.length !== ids.length) return { error: true, message: 'Not all products exists' };
   return products;
-}
-
-/**
- * @param {string} name já validado nome do produto a ser procurado
- * @param {string} shouldExists 'should not exists' ou 'should exists' pode gerar erro
- */
-async function verifyExistenceByName(name, shouldExists) {
-  const product = await productModel.getByName(name);
-  return generic.handleExistence(product, shouldExists);
-}
-
-async function verifyExistenceById(id, shouldExists) {
-  const product = await productModel.getById(id);
-  return generic.handleExistence(product, shouldExists);
 }
 
 async function createProduct(name, quantity) {
@@ -27,7 +12,8 @@ async function createProduct(name, quantity) {
 }
 
 async function getAll() {
-  return productModel.getAll();
+  const products = await productModel.getAll();
+  return { products };
 }
 
 async function getAllById(ids) {
@@ -55,8 +41,6 @@ async function deleteById(id) {
 
 module.exports = {
   verifyAllExistencesById,
-  verifyExistenceByName,
-  verifyExistenceById,
   createProduct,
   getAll,
   getAllById,

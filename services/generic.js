@@ -6,10 +6,10 @@ function verifyId(id) {
 }
 
 function handleExistence(resource, shouldExists) {
-  if (!resource && shouldExists === 'should exists') {
+  if (!resource && shouldExists) {
     return { error: true, message: 'Product doesn\'t exists' };
   }
-  if (resource && shouldExists === 'should not exists') {
+  if (resource && !shouldExists) {
     return { error: true, message: 'Product already exists' };
   }
   return resource;

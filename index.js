@@ -33,6 +33,7 @@ app.use((err, _req, res, _next) => {
     .status(err.output.statusCode)
     .json(threatBoomErr(err.output, data));
   }
+  console.error(`${err.message} / ${err.stack}`)
   return res.json({ status: 500, message: err.message, data: err.stack });
 });
 
