@@ -19,16 +19,16 @@ const createProducts = async (name, quantity) => {
   }
 };
 
-const updateProductById = async (id, name, quantity) => {
+const updateProductById = async (id, productName, productQuantity) => {
   try {
     const connect = await connection('products');
     const updateQuery = await connect.findOneAndUpdate(
       { _id: ObjectID(id) },
-      { $set: { name, quantity } },
+      { $set: { name: productName, quantity: productQuantity } },
+      { returnOriginal: false },
     );
-    const { _id } = updateQuery.value;
-
-    return { _id, name, quantity };
+    console.log(updateQuery);
+    return updateQuery.value;
   } catch (error) {
     throw new Error(error.message || 'product update failed');
   }
