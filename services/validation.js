@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const { getProductByName, getProductById } = require('../models/productsModel');
+const { getProductByName, getProductById, updateProductById } = require('../models/productsModel');
 
 const errorResponses = {
   invalid_data: { message: 'Product already exists' },
@@ -58,8 +58,12 @@ const checkProductsById = async (
   try {
     const idCheck = await getProductById(id);
     if (!idCheck) return message1;
-    if (idCheck.quantity - quantity < 0) return message2;
-    return false;
+    if (idCheck && idCheck.quantity - quantity < 0) return message2;
+    if (idCheck && idCheck.quantity - quantity >= 0) {
+      const newQuant = idCheck.quantity - quantity;
+      await updateProductById(id, idCheck.name, newQuant);
+      return false;
+    }
   } catch (error) {
     throw new Error(error.message);
   }
