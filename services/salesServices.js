@@ -5,7 +5,33 @@ const {
   getAllSales,
   getSaleById,
 } = require('../models/salesModel');
+const { getProductById, updateProductById } = require('../models/productsModel');
 const { salesRegistryValidation } = require('./validation');
+
+/* Atualiza quantidade de produto caso uma venda seja deletada, tudo assincronicamente */
+
+const productDataUpdate = async (data) => {
+  const { itensSold } = data;
+  const itensSoldData = await itensSold.map(async (item) => getProductById(item.productId));
+  const itensSoldQuantity = await itensSold.map((item) => item.quantity);
+  await itensSoldData.map(async (item, index) => {
+    const { _id: itemId, name, quantity } = await item;
+    const quantUpdate = await (quantity + itensSoldQuantity[index]);
+    return updateProductById(itemId, name, quantUpdate);
+  });
+  return data;
+};
+
+const updateProductQuant = async (id) => {
+  try {
+    const deleteSale = await deleteSaleById(id);
+
+    if (!deleteSale) return;
+    return productDataUpdate(deleteSale);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 /* valida se alguma mensage de erro de validação é
     retornada, caso sim retorna um erro padronizado,senão
@@ -43,7 +69,8 @@ const readOrDeleteSaleById = async (id, operation = 'read') => {
   try {
     const func = (callback) => callback(id);
 
-    const data = async () => (operation === 'delete' ? func(deleteSaleById) : func(getSaleById));
+    const data = async () =>
+      (operation === 'delete' ? func(updateProductQuant) : func(getSaleById));
 
     const callbackReturn = await data();
     return callbackReturn;
