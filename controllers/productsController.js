@@ -3,7 +3,11 @@ const services = require('../services');
 const validateId = (id) => {
   const regex = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
   const result = regex.test(id);
-  return result;
+  if (!result) {
+    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
+    return res.status(422).send(response);
+  }
+  return null;
 };
 
 const validateEntries = (name, quantity) => {
@@ -58,12 +62,7 @@ const showAllProducts = async (_req, res) => {
 const getProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
-  const checkId = validateId(id);
-
-  if (!checkId) {
-    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
-    return res.status(422).send(response);
-  }
+  validateId(id);
 
   const result = await services.productService.getProductById(id);
   return res.status(200).send(result);
@@ -73,12 +72,7 @@ const updateProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
   const { name, quantity } = req.body;
-  const checkId = validateId(id);
-
-  if (!checkId) {
-    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
-    return res.status(422).send(response);
-  }
+  validateId(id);
 
   const productExists = await services.productService.getProductById(id);
   // validações
@@ -94,20 +88,15 @@ const updateProductById = async (req, res) => {
 const deleteProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
-  const checkId = validateId(id);
-
-  if (!checkId) {
-    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
-    return res.status(422).send(response);
-  }
+  validateId(id);
 
   const productExists = await services.productService.getProductById(id);
   // validações
   if (!productExists) {
-    let response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
+    const response = { err: { message: 'Wrong id format', code: 'invalid_data' } };
     return res.status(422).send(response);
   }
-  const { id: _id, name, quantity } = productExists;
+  const { _id: id, name, quantity } = productExists;
 
   const result = await services.productService.deleteProductById(id, name, quantity);
   return res.status(200).send(result);

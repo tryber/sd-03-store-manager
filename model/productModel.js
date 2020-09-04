@@ -30,16 +30,16 @@ const getProductById = async (id) => mongoc.connect()
 const updateProductById = async (id, name, quantity) => mongoc.connect()
   .then((db) => db.collection('products')
     .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
-  .then (() => ({ _id: id, name, quantity }))
+  .then(() => ({ _id: id, name, quantity }))
   .catch((error) => error);
 
 const deleteProductById = async (id, name, quantity) => mongoc.connect()
   .then((db) => db.collection('products')
     .deleteOne({ _id: ObjectId(id) }))
-  .then (() => ({ _id: id, name, quantity }))
+  .then(() => ({ _id: id, name, quantity }))
   .catch((error) => error);
 
-  module.exports = {
+module.exports = {
   getProductByName,
   createProductInDB,
   getAllProducts,
