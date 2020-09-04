@@ -36,8 +36,9 @@ products.get('/products/:id', async (req, res) => {
 });
 
 products.put('/products/:id', async (req, res) => {
-  const { id } = req.user;
-  const updateProducts = await updateProductsById(id);
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const updateProducts = await updateProductsById(id, name, quantity);
 
   if (updateProducts.err) {
     return res.status(422).json(updateProducts);
@@ -46,14 +47,14 @@ products.put('/products/:id', async (req, res) => {
 });
 
 products.delete('/products/:id', async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.params;
   const { name, quantity } = req.body;
   const deleteProducsts = await deleteProductsById(id, name, quantity);
 
   if (deleteProducsts.err) {
     return res.status(422).json(deleteProducsts);
   }
-  return res.status(200).json(deleteProducsts);
+  if (!deleteProducsts) return res.status(200).end();
 });
 
 module.exports = { products };

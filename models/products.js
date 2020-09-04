@@ -17,10 +17,10 @@ const listProductsById = async (id) => connect()
 const updateProductsByIdBank = async (id, name, quantity) => connect()
   .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) },
     { $set: { name, quantity } })
-    .then(() => ({ _id: id, name, quantity })));
+    .then(({ insertedId }) => ({ _id: insertedId, name, quantity })));
 
-const deleteProductsByIdBank = async (id) => connect()
-  .then((db) => db.collection('products').deleteOne(ObjectId(id)));
+const deleteProductsByIdBank = async (id, name, quantity) => connect()
+  .then((db) => db.collection('products').deleteOne({ id, name, quantity }));
 
 module.exports = {
   createCollectionProducts,

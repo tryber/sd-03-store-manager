@@ -44,7 +44,8 @@ const getAllProducts = async () => {
 };
 
 const getAllProductsById = async (id) => {
-  if (id.length < 24) {
+  const regex = /^[0-9a-fA-F]{24}$/;
+  if (!regex.test(id)) {
     return { err: { message: 'Wrong id format', code: 'invalid_data' } };
   }
   const productsId = await listProductsById(id);
@@ -52,13 +53,20 @@ const getAllProductsById = async (id) => {
 };
 
 const updateProductsById = async (id, name, quantity) => {
+  const validate = await validateProduct(name, quantity);
+  if (validate.err) return validate;
+
   const update = await updateProductsByIdBank(id, name, quantity);
   return update;
 };
 
-const deleteProductsById = async (id) => {
-  const deleting = await deleteProductsByIdBank(id);
-  return deleting;
+const deleteProductsById = async (id, name, quantity) => {
+  const deleting = await deleteProductsByIdBank(id, name, quantity);
+  if (!deleting) return deleting;
+
+  return {
+    err: { message: 'Wrong id format', code: 'invalid_data' },
+  };
 };
 
 module.exports = {
