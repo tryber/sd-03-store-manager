@@ -14,7 +14,7 @@ app.get('/', (request, response) => {
 
 app.post('/products', controllers.productsController.productsRegister);
 app.get('/products', controllers.productsController.listProducts);
-// app.get('/products/:id', controllers.productsController.listProductById);
+app.get('/products/:id', controllers.productsController.listProductById);
 
 app.use((err, _req, res, _next) => errorMiddleware(err, res));
 
