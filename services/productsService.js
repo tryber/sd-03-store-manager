@@ -25,9 +25,7 @@ const validateProduct = async (name, quantity) => {
     };
   }
   const checkName = await verifyNameExit(name);
-  if (checkName) {
-    return { err: { code: 'invalid_data', message: 'Product already exists' } };
-  }
+  if (checkName) return { err: { code: 'invalid_data', message: 'Product already exists' } };
   return true;
 };
 
