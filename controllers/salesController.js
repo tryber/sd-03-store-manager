@@ -20,7 +20,7 @@ sales.get('/', rescue(async (_req, res) => {
   res.status(200).json(allSales);
 }));
 
-sales.get('/:id', rescue(async  (req, res) => {
+sales.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
   const saleById = await salesService.listSaleById(id);
   res.status(200).json(saleById);
