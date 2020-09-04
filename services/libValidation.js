@@ -16,7 +16,6 @@ const validateParams = async (productId, quantity) => {
       err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
     };
   }
-  return false;
 };
 
 module.exports = { validateParams };
