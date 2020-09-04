@@ -2,9 +2,10 @@ const { Product } = require('../models/productsModel');
 
 function update(id, qty) {
   return Product.findById(id, (err, doc) => {
+    const d = doc;
     if (err) return err;
-    doc.quantity += qty;
-    doc.save();
+    d.quantity += qty;
+    d.save();
   });
 }
 
