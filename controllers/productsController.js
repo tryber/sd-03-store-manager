@@ -7,9 +7,9 @@ const products = Router();
 products.get(
   '/',
   rescue(async (_req, res) => {
-    const products = await productsService.getAllProducts();
+    const returnedProducts = await productsService.getAllProducts();
 
-    return res.status(200).json(products);
+    return res.status(200).json(returnedProducts);
   }),
 );
 
@@ -18,13 +18,13 @@ products.get(
   rescue(async (req, res) => {
     const { id } = req.params;
 
-    const product = await productsService.getProductById(id);
+    const returnedProduct = await productsService.getProductById(id);
 
-    if (product.err) {
-      return res.status(422).json(product);
+    if (returnedProduct.err) {
+      return res.status(422).json(returnedProduct);
     }
 
-    return res.status(200).json(product);
+    return res.status(200).json(returnedProduct);
   }),
 );
 

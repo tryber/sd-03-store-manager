@@ -7,9 +7,9 @@ const sales = Router();
 sales.get(
   '/',
   rescue(async (_req, res) => {
-    const sales = await salesService.getAllSales();
+    const returnedSales = await salesService.getAllSales();
 
-    return res.status(200).json(sales);
+    return res.status(200).json(returnedSales);
   }),
 );
 
@@ -18,13 +18,13 @@ sales.get(
   rescue(async (req, res) => {
     const { id } = req.params;
 
-    const sale = await salesService.getSaleById(id);
+    const returnedSale = await salesService.getSaleById(id);
 
-    if (sale.err) {
-      return res.status(404).json(sale);
+    if (returnedSale.err) {
+      return res.status(404).json(returnedSale);
     }
 
-    return res.status(200).json(sale);
+    return res.status(200).json(returnedSale);
   }),
 );
 
