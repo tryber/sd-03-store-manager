@@ -18,6 +18,7 @@ const connection = () =>
       const db = conn.db('StoreManager');
       const products = db.collection('products');
       await createUniqueIndex(products, { name: 1 });
+      return db;
     })
     .catch((err) => {
       console.error(err);
