@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const productsController = require('./controllers/productsController');
+const salesController = require('./controllers/salesController');
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use('/products', productsController.products);
+
+app.use('/sales', salesController.sales);
 
 app.use((err, _req, res, _next) => {
   const { code, message } = err;

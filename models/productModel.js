@@ -16,6 +16,10 @@ const getProductByEq = async (name) =>
 const getAllProducts = async () =>
   connection().then((db) => db.collection('products').find({}).toArray());
 
+// Retornar todos os ids para checagem de produtos cadastrados
+const getAllProductsIds = async () =>
+  connection().then((db) => db.collection('products').find({}).project({ _id: 1 }).toArray());
+
 // Retornar produto que de 'match' com o id
 const getProductById = async (id) =>
   connection().then((db) => db.collection('products').findOne(ObjectId(id)));
@@ -38,6 +42,7 @@ module.exports = {
   createProduct,
   getProductByEq,
   getAllProducts,
+  getAllProductsIds,
   getProductById,
   updateProductById,
   deleteProductById,

@@ -28,9 +28,22 @@ const ValidarDados = async (name, quantity) => {
   return value;
 };
 
+// Verifica se existem Ids Inexistentes sendo vendidos
+const VerIdsInex = (IdsCad, IdsEnv) => IdsEnv.every(({ productId }) => IdsCad.includes(productId));
+
 module.exports = {
   schema,
   ERRORSmessage,
   ERRORScode,
   ValidarDados,
+  VerIdsInex,
 };
+
+// idsCadastrados [
+//   5f5261bf97c4383db4210b65,
+//   5f5261c697c4383db4210b66,
+//   5f5261cb97c4383db4210b67,
+//   5f5261d097c4383db4210b68,
+//   5f5261d897c4383db4210b69,
+//   5f5261e997c4383db4210b6a
+// ]
