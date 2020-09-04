@@ -1,5 +1,10 @@
 const { ObjectID } = require('mongodb');
-const { connection } = require('./connection');
+const {
+  connection,
+  connectAndFindAll,
+  connectAndDeleteById,
+  connectAndFindById,
+} = require('./connection');
 
 const createProducts = async (name, quantity) => {
   try {
@@ -31,9 +36,8 @@ const updateProductById = async (id, name, quantity) => {
 
 const deleteProductById = async (id) => {
   try {
-    const connect = await connection('products');
-    const deleteQuery = await connect.findOneAndDelete({ _id: ObjectID(id) });
-    const { _id, name, quantity } = deleteQuery.value;
+    const deleteQuery = await connectAndDeleteById(id, 'products', 'Wrong id format');
+    const { _id, name, quantity } = deleteQuery;
 
     return { _id, name, quantity };
   } catch (error) {
@@ -43,9 +47,8 @@ const deleteProductById = async (id) => {
 
 const getAllProducts = async () => {
   try {
-    const connect = await connection('products');
-    const searchAll = await connect.find().toArray();
-    return searchAll;
+    const searchAllProducts = await connectAndFindAll('products');
+    return searchAllProducts;
   } catch (error) {
     throw new Error('products search failed');
   }
@@ -63,10 +66,9 @@ const getProductByName = async (name) => {
 
 const getProductById = async (id) => {
   try {
-    const connect = await connection('products');
-    const searchQuery = await connect.findOne(ObjectID(id));
-    if (!searchQuery.name) throw new Error();
-    return searchQuery;
+    const query = connectAndFindById(id, 'products', 'Wrong id format');
+
+    return query;
   } catch (error) {
     throw new Error('Wrong id format');
   }
