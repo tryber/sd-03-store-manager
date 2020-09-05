@@ -10,7 +10,6 @@ function update(id, qty) {
 }
 
 async function updater(sale) {
-  console.log(sale);
   return sale.forEach(async (i) => {
     await update(i.productId, -i.quantity);
   });

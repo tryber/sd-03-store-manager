@@ -25,7 +25,8 @@ async function createSale(req, res) {
     const data = await validation(req);
     const sale = await Sales.createSale(data);
     res.status(200).send(sale);
-  } catch (error) {
+  }
+  catch (error) {
     let status = 422;
     let code = 'invalid_data';
     if (error.message === 'Such amount is not permitted to sell') {
@@ -42,10 +43,11 @@ async function createSale(req, res) {
   }
 }
 
-async function listSales(req, res) {
+async function listSales(_req, res) {
   try {
     await list(res, Sales.listSales);
-  } catch (error) {
+  }
+  catch (error) {
     res.status(404).send([]);
   }
 }
@@ -58,7 +60,8 @@ async function getSale(req, res) {
     }
 
     res.status(201).send(sale);
-  } catch (error) {
+  }
+  catch (error) {
     res.status(404).send({
       err: {
         code: 'not_found',
@@ -88,7 +91,8 @@ async function deleteSale(req, res) {
   try {
     const sale = await Sales.deleteSale(req.params.id);
     res.status(200).send(sale);
-  } catch (error) {
+  }
+  catch (error) {
     res.status(422).send({
       err: {
         code: 'invalid_data',

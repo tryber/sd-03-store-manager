@@ -40,7 +40,6 @@ async function validateSale(sale) {
 }
 
 async function validateStock(sale) {
-  console.log('sale', sale);
   const valid = await sale.reduce(async (acc, i) => {
     if (!acc) return acc;
     const product = await getProductById(i.productId);
