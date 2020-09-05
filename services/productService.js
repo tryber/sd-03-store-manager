@@ -4,7 +4,8 @@ const invaliddataError = (message) => ({ error: true, code: 'invalid_data', stat
 
 const validateproductName = ({ name }) => /^[a-z]+$/i.test(name);
 const isNumber = ({ quantity }) => /^[0-9]+$/.test(quantity);
-const validateAllValues = async (product) => {
+
+const createProduct = async (product) => {
   if (!validateproductName(product) || product.name.length < 5) {
     return (invaliddataError('"name" length must be at least 5 characters long'));
   }
@@ -18,10 +19,6 @@ const validateAllValues = async (product) => {
   if (!isNumber(product)) {
     return (invaliddataError('"quantity" must be a number'));
   }
-};
-
-const createProduct = async (product) => {
-  await validateAllValues(product);
   return products.createProduct(product);
 };
 
