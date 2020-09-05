@@ -1,7 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const controllers = require('./controllers');
+// const controllers = require('./controllers');
+const { productsRouter } = require('./controllers/routers/productsRouter');
+const { salesRouter } = require('./controllers/routers/salesRouter');
 const { errorMiddleware } = require('./middlewares');
 
 const app = express();
@@ -12,12 +14,8 @@ app.get('/', (request, response) => {
   response.send();
 });
 
-app.post('/products', controllers.productsController.productsRegister);
-app.get('/products', controllers.productsController.listProducts);
-
-app.get('/products/:id', controllers.productsController.listProductById);
-app.put('/products/:id', controllers.productsController.updateProductsById);
-app.delete('/products/:id', controllers.productsController.deleteProductsById);
+app.use('/products', productsRouter);
+app.use('/sales', salesRouter);
 
 app.use((err, _req, res, _next) => errorMiddleware(err, res));
 
