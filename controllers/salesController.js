@@ -29,7 +29,8 @@ const updateSales = rescue(async (req, res, next) => {
   if (sales.error) {
     return next(sales);
   }
-  res.status(200).json({ sales });
+  const { _id, itensSold } = sales;
+  res.status(200).json({ _id, itensSold });
 });
 
 module.exports = {
