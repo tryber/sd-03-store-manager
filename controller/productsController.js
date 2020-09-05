@@ -44,7 +44,7 @@ async function func2(req, res, cb, cb2) {
 }
 
 async function productController(req, res) {
-  await func2(req, res, Validation.validadeNewProduct, Products.createProduct);
+  await func2(req, res, Validation.validateNewProduct, Products.createProduct);
 }
 
 async function listProducts(req, res) {
@@ -61,7 +61,7 @@ async function getProduct(req, res) {
 }
 
 async function updateProduct(req, res) {
-  await func2(req, res, Validation.validadeUpdateProduct, Products.updateProduct);
+  await func2(req, res, Validation.validateUpdateProduct, Products.updateProduct);
 }
 
 async function deleteProduct(req, res) {

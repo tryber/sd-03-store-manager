@@ -3,8 +3,8 @@ const Validation = require('../services/validations');
 
 async function validation(req) {
   const data = req.body;
-  const { message } = await Validation.validadeSale(data);
-  const stock = await Validation.validadeStock(data);
+  const { message } = await Validation.validateSale(data);
+  const stock = await Validation.validateStock(data);
 
   if (message) {
     throw new Error(message);
@@ -45,8 +45,6 @@ async function createSale(req, res) {
 async function listSales(req, res) {
   try {
     await list(res, Sales.listSales);
-    // const sales = await Sales.listSales();
-    // res.status(200).send({ sales });
   } catch (error) {
     res.status(404).send([]);
   }
@@ -73,7 +71,7 @@ async function getSale(req, res) {
 async function updateSale(req, res) {
   const { id } = req.params;
   const sale = req.body;
-  const { message } = await Validation.validadeSale(sale);
+  const { message } = await Validation.validateSale(sale);
   if (message) {
     const err = {
       err: {
