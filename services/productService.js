@@ -1,6 +1,5 @@
 const products = require('../models/products');
-
-const invaliddataError = (message) => ({ error: true, code: 'invalid_data', status: 422, message });
+const { invaliddataError } = require('../errors');
 
 const isNumber = ({ quantity }) => /^[0-9]+$/.test(quantity);
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);

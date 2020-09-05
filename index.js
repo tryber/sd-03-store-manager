@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const product = require('./routes/productRouter');
+const sales = require('./routes/salesRouter');
 
 const app = express();
 app.use(bodyParser.json());
 app.use('/products', product);
+app.use('/sales', sales);
 
 app.get('/', (request, response) => {
   response.send();
