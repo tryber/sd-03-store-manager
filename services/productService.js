@@ -5,21 +5,25 @@ const invaliddataError = (message) => ({ error: true, code: 'invalid_data', stat
 const validateproductName = ({ name }) => /^[a-z]+$/i.test(name);
 const isNumber = ({ quantity }) => /^[0-9]+$/.test(quantity);
 
+const testProduct = async (product) => {
+  if (!isNumber(product)) {
+    return invaliddataError('"quantity" must be a number');
+  }
+  return products.createProduct(product);
+};
+
 const createProduct = async (product) => {
   if (!validateproductName(product) || product.name.length < 5) {
-    return (invaliddataError('"name" length must be at least 5 characters long'));
+    return invaliddataError('"name" length must be at least 5 characters long');
   }
   const equalName = await products.validateEqualName(product);
   if (equalName !== null) {
-    return (invaliddataError('Product already exists'));
+    return invaliddataError('Product already exists');
   }
   if (product.quantity <= 0) {
-    return (invaliddataError('"quantity" must be larger than or equal to 1'));
+    return invaliddataError('"quantity" must be larger than or equal to 1');
   }
-  if (!isNumber(product)) {
-    return (invaliddataError('"quantity" must be a number'));
-  }
-  return products.createProduct(product);
+  return testProduct(product);
 };
 
 module.exports = {
