@@ -89,7 +89,7 @@ const updateProductById = async (req, res) => {
   }
 
   const result = await services.productService.updateProductById(id, name, quantity);
-  return res.status(201).send(result);
+  return res.status(200).send(result);
 };
 
 const deleteProductById = async (req, res) => {
