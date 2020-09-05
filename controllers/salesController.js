@@ -24,16 +24,16 @@ const insertSale = async (req, res, next) => {
   }
 };
 
-const getAllSales = (req, res, next) => {
+// const getAllSales = (req, res, next) => {
 
-};
+// };
 
-const getSalesById = (req, res, next) => {
+// const getSalesById = (req, res, next) => {
 
-};
+// };
 
 module.exports = {
   insertSale,
-  getAllSales,
-  getSalesById,
+  // getAllSales,
+  // getSalesById,
 };
