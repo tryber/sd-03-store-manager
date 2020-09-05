@@ -3,54 +3,46 @@ const connect = require('./connect.js');
 
 const insertProduct = async (name, quantity) => {
   const db = await connect();
-  const product = await db.collection('products')
-    .insertOne({ name, quantity });
+  const product = await db.collection('products').insertOne({ name, quantity });
   return product;
 };
 
 const getProductByName = async (name) => {
   const db = await connect();
-  const product = await db.collection('products')
-    .findOne({ name });
+  const product = await db.collection('products').findOne({ name });
 
   return product;
 };
 
 const getProductById = async (id) => {
   const db = await connect();
-  const product = await db.collection('products')
-    .findOne(ObjectId(id));
+  const product = await db.collection('products').findOne(ObjectId(id));
 
   return product;
 };
 
 const getAllProducts = async () => {
   const db = await connect();
-  const products = await db.collection('products')
-    .find({}).toArray();
+  const products = await db.collection('products').find({}).toArray();
 
   return products;
 };
 
 const updateProductById = async (id, name, quantity) => {
   const db = await connect();
-  const product = await db.collection('products')
-    .updateOne(
-      { _id: ObjectId(id) },
-      {
-        $set: { name, quantity },
-      },
-    );
+  const product = await db.collection('products').updateOne(
+    { _id: ObjectId(id) },
+    {
+      $set: { name, quantity },
+    },
+  );
 
   return product;
 };
 
 const deleteProductsById = async (id) => {
   const db = await connect();
-  const product = await db.collection('products')
-    .findOneAndDelete(
-      { _id: ObjectId(id) },
-    );
+  const product = await db.collection('products').findOneAndDelete({ _id: ObjectId(id) });
 
   if (!product.value) return false;
 

@@ -13,20 +13,16 @@ const connect = require('./connect');
 
 const insertSales = async (itensSold) => {
   const db = await connect();
-  const sales = await db.collection('sales')
-    .insertOne(
-      {
-        itensSold,
-      },
-    );
+  const sales = await db.collection('sales').insertOne({
+    itensSold,
+  });
 
   return sales.ops;
 };
 
 const getCollectionDb = async (name) => {
   const db = await connect();
-  const collection = await db.collection(name)
-    .find({}).toArray();
+  const collection = await db.collection(name).find({}).toArray();
   return collection;
 };
 
