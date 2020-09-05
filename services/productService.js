@@ -2,7 +2,6 @@ const products = require('../models/products');
 
 const invaliddataError = (message) => ({ error: true, code: 'invalid_data', status: 422, message });
 
-const validateproductName = ({ name }) => /^[a-z]+$/i.test(name);
 const isNumber = ({ quantity }) => /^[0-9]+$/.test(quantity);
 
 const testProduct = async (product) => {
@@ -13,7 +12,7 @@ const testProduct = async (product) => {
 };
 
 const createProduct = async (product) => {
-  if (!validateproductName(product) || product.name.length < 5) {
+  if (product.name.length < 5) {
     return invaliddataError('"name" length must be at least 5 characters long');
   }
   const equalName = await products.validateEqualName(product);
