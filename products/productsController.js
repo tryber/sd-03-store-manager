@@ -1,20 +1,20 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
-const { errorHandler } = require('./errorService');
+const { errorHandler, verifyId } = require('./errorHandler');
 const productsService = require('./productsService');
 
 const productsRouter = Router();
 
 const listProducts = rescue(async (_req, res) => {
-  const cats = await productsService.getAllProducts();
-  res.status(200).json(cats);
+  const products = await productsService.getAllProducts();
+  res.status(200).json(products);
 });
 
 const getProductById = async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const result = await productsService.getProductById(id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (error) {
     next(error);
   }
@@ -35,7 +35,7 @@ productsRouter
   .get(listProducts)
   .post(productsService.validateProduct, newProduct, errorHandler);
 
-productsRouter.route('/:id').get(getProductById);
+productsRouter.route('/:id').get(verifyId, getProductById, errorHandler);
 
 module.exports = {
   productsRouter,

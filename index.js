@@ -1,7 +1,7 @@
 // não remova esse endpoint, e para o avaliador funcionar
 const express = require('express');
 const bodyParser = require('body-parser');
-const salesController = require('./sales/salesController');
+// const salesController = require('./sales/salesController');
 const { productsRouter } = require('./products/productsController');
 
 const app = express();
@@ -18,11 +18,6 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productsRouter);
-
-// app.get('/products', productsController.listProducts);
-// app.post('/products', productsController.newProduct);
-
-// app.get('/sales', salesController.listSales);
 
 app.use((error, _req, res, _next) =>
   res.status(500).json({ message: error.message, stack: error.stack }));

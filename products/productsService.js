@@ -19,7 +19,9 @@ const productsSchema = {
 
 const validateProduct = validate(productsSchema);
 
-const getAllProducts = () => productsModel.getAllProducts();
+const validateId = (id) => id && id.length === 24;
+
+const getAllProducts = async () => ({ products: await productsModel.getAllProducts() });
 
 const getProductById = (id) => productsModel.getProductById(id);
 
@@ -33,4 +35,5 @@ module.exports = {
   addProduct,
   validateProduct,
   getProductById,
+  validateId,
 };
