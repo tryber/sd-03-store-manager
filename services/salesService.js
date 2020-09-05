@@ -15,6 +15,18 @@ const insertSales = async (saleInsert) => {
   return t;
 };
 
+const getAllSales = async () => {
+  const allSales = await sales.getAllSales();
+  return allSales;
+};
+
+const getSalesById = async (id) => {
+  const allSales = await sales.getSalesById(id);
+  return allSales;
+};
+
 module.exports = {
   insertSales,
+  getAllSales,
+  getSalesById,
 };
