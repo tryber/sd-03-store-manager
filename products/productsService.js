@@ -26,14 +26,16 @@ const getAllProducts = async () => ({ products: await productsModel.getAllProduc
 const getProductById = (id) => productsModel.getProductById(id);
 
 const addProduct = async (name, quantity) => {
-  const product = await productsModel.add(name, quantity);
+  const product = await productsModel.addProduct(name, quantity);
   return { _id: product.insertedId, name, quantity };
 };
 
 const updateProduct = async (id, name, quantity) => {
-  await productsModel.update(id, name, quantity);
+  await productsModel.updateProduct(id, name, quantity);
   return { _id: id, name, quantity };
 };
+
+const deleteProduct = (id) => productsModel.deleteProduct(id);
 
 module.exports = {
   getAllProducts,
@@ -42,4 +44,5 @@ module.exports = {
   getProductById,
   validateId,
   updateProduct,
+  deleteProduct,
 };

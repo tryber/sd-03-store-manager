@@ -41,6 +41,16 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const deleteProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await productsService.deleteProduct(id);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 productsRouter
   .route('/')
   .get(listProducts)
@@ -49,7 +59,8 @@ productsRouter
 productsRouter
   .route('/:id')
   .get(verifyId, getProductById, errorHandler)
-  .put(verifyId, productsService.validateProduct, updateProduct, errorHandler);
+  .put(verifyId, productsService.validateProduct, updateProduct, errorHandler)
+  .delete(verifyId, deleteProduct, errorHandler);
 
 module.exports = {
   productsRouter,
