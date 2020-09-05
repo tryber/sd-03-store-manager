@@ -31,7 +31,6 @@ const getProductById = async (id) => {
   if (!checkForHexRegExp(id)) {
     return invaliddataError('Wrong id format');
   }
-
   const product = await products.getProductById(id);
   if (!product) {
     return invaliddataError('Wrong id format');
