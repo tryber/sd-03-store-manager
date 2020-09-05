@@ -5,7 +5,8 @@ const product = Router();
 
 product.get('/', productController.getAllProducts);
 product.post('/', productController.createProduct);
-product.get('/:id', productController.getProductById);
-product.put('/:id', productController.updateProduct);
+product.get('/:id', productController.getProductById)
+  .put('/:id', productController.updateProduct)
+  .delete('/:id', productController.deleteProduct);
 
 module.exports = product;

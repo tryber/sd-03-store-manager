@@ -56,9 +56,19 @@ const updateProduct = async (id, values) => {
   return product;
 };
 
+const deleteProduct = async (id) => {
+  if (!checkForHexRegExp(id)) {
+    return invaliddataError('Wrong id format');
+  }
+  const product = await getProductById(id);
+  await products.deleteProduct(id);
+  return product;
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
   updateProduct,
+  deleteProduct,
 };
