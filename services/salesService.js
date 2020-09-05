@@ -1,5 +1,5 @@
 const sales = require('../models/sales');
-const { invaliddataError } = require('../errors');
+const { invaliddataError, notFound } = require('../errors');
 
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);
 const checkNumberTwo = (el) => /^[0-9]+$/.test(el);
@@ -40,6 +40,9 @@ const deleteSales = async (id) => {
     return invaliddataError('Wrong sale ID format');
   }
   const sale = await sales.getSalesById(id);
+  if (!sale) {
+    return notFound('Sale not found');
+  }
   await sales.deleteSales(id);
   return sale;
 };
