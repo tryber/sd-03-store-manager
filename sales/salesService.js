@@ -17,6 +17,11 @@ const getSalesById = async (req, res, next) => {
   }
 };
 
+const update = async (id, itensSold) => {
+  await salesModel.updateSales(id, itensSold);
+  return { _id: id, itensSold };
+};
+
 const arrayIsValid = (itensSold) => {
   let isValid = true;
   itensSold.forEach(({ quantity }) => {
@@ -25,4 +30,4 @@ const arrayIsValid = (itensSold) => {
   return isValid;
 };
 
-module.exports = { addSale, arrayIsValid, getAllSales, getSalesById };
+module.exports = { addSale, arrayIsValid, getAllSales, getSalesById, update };
