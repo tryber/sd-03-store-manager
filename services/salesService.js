@@ -8,7 +8,7 @@ const insertSales = async (saleInsert) => {
   const checkNumber = saleInsert.map((el) => el.quantity);
   const checkNumberTwo = (el) => /^[0-9]+$/.test(el);
   if (checkId.some((el) => el === true) || checkNumber.some((el) => el <= 0)
-  || checkNumber.some((el) => checkNumberTwo(el))) {
+  || checkNumber.some((el) => !checkNumberTwo(el))) {
     return invaliddataError('Wrong product ID or invalid quantity');
   }
   const t = await sales.insertSales(saleInsert);
