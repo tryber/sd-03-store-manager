@@ -21,7 +21,7 @@ const validateAllValues = async (product) => {
 };
 
 const createProduct = async (product) => {
-  validateAllValues(product);
+  await validateAllValues(product);
   return products.createProduct(product);
 };
 
