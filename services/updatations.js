@@ -1,4 +1,4 @@
-const { Product } = require('../models/produtos');
+const { Product } = require('../models/products');
 
 function update(id, qty) {
   return Product.findById(id, (err, doc) => {
@@ -21,4 +21,7 @@ async function updaterDelete(sale) {
     await update(i.productId, +i.quantity);
   });
 }
-module.exports = { updater, updaterDelete };
+module.exports = {
+  updater,
+  updaterDelete,
+};

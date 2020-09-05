@@ -1,4 +1,4 @@
-const Products = require('../models/produtos');
+const Products = require('../models/products');
 const Validation = require('../services/validations');
 
 async function func(res, cb, req, status, status2) {
@@ -67,4 +67,10 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
   await func(res, Products.deleteProduct, req.params.id, 200, 422);
 }
-module.exports = { productController, deleteProduct, listProducts, getProduct, updateProduct };
+module.exports = {
+  productController,
+  deleteProduct,
+  listProducts,
+  getProduct,
+  updateProduct,
+};

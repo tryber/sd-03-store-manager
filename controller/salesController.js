@@ -98,4 +98,10 @@ async function deleteSale(req, res) {
   }
 }
 
-module.exports = { createSale, listSales, getSale, updateSale, deleteSale };
+module.exports = {
+  createSale,
+  listSales,
+  getSale,
+  updateSale,
+  deleteSale,
+};

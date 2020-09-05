@@ -1,4 +1,4 @@
-const { getProductById, getProductByName } = require('../models/produtos');
+const { getProductById, getProductByName } = require('../models/products');
 
 async function validateNewProduct(name, quantity) {
   let message = {};
@@ -50,4 +50,9 @@ async function validateStock(sale) {
   return valid;
 }
 
-module.exports = { validateNewProduct, validateUpdateProduct, validateSale, validateStock };
+module.exports = {
+  validateNewProduct,
+  validateUpdateProduct,
+  validateSale,
+  validateStock,
+};
