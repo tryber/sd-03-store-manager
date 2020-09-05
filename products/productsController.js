@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
-const { errorHandler, verifyId } = require('./errorHandler');
+const { errorHandler, verifyId } = require('../controllers/errorHandler');
 const productsService = require('./productsService');
 
 const productsRouter = Router();
@@ -62,8 +62,4 @@ productsRouter
   .put(verifyId, productsService.validateProduct, updateProduct, errorHandler)
   .delete(verifyId, deleteProduct, errorHandler);
 
-module.exports = {
-  productsRouter,
-  listProducts,
-  newProduct,
-};
+module.exports = productsRouter;

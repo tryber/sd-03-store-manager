@@ -1,5 +1,5 @@
 const Boom = require('@hapi/boom');
-const productsService = require('./productsService');
+const productsService = require('../products/productsService');
 
 const errorMessages = {
   nameminLength: '"name" length must be at least 5 characters long',

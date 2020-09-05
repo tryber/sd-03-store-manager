@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const salesController = require('./sales/salesController');
-const { productsRouter } = require('./products/productsController');
+const salesRouter = require('./sales/salesController');
+const productsRouter = require('./products/productsController');
 
 const app = express();
 
@@ -17,6 +17,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productsRouter);
+
+app.use('/sales', salesRouter);
 
 app.use((error, _req, res, _next) =>
   res.status(500).json({ message: error.message, stack: error.stack }));
