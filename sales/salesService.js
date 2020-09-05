@@ -5,6 +5,18 @@ const addSale = async (itensSold) => {
   return { _id: sale.insertedId, itensSold };
 };
 
+const getAllSales = async () => ({ sales: await salesModel.getAllSales() });
+
+const getSalesById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await salesModel.getSalesById(id);
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const arrayIsValid = (itensSold) => {
   let isValid = true;
   itensSold.forEach(({ quantity }) => {
@@ -13,4 +25,4 @@ const arrayIsValid = (itensSold) => {
   return isValid;
 };
 
-module.exports = { addSale, arrayIsValid };
+module.exports = { addSale, arrayIsValid, getAllSales, getSalesById };

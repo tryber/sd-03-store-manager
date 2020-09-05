@@ -1,14 +1,13 @@
 const { Router } = require('express');
-const rescue = require('express-rescue');
 const { errorHandler, verifyId } = require('../controllers/errorHandler');
 const productsService = require('./productsService');
 
 const productsRouter = Router();
 
-const listProducts = rescue(async (_req, res) => {
+const listProducts = async (_req, res) => {
   const products = await productsService.getAllProducts();
   res.status(200).json(products);
-});
+};
 
 const getProductById = async (req, res, next) => {
   try {
