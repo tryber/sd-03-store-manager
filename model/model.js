@@ -39,6 +39,13 @@ const deleteProductById = async (id, name, quantity) => mongoc.connect()
   .then(() => ({ _id: id, name, quantity }))
   .catch((error) => error);
 
+const createSaletInDB = async (products) =>
+  mongoc.connect()
+  .then((db) => db
+    .collection('sales')
+    .insertOne({ itensSold: [...products] }))
+    .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...products] }));
+
 module.exports = {
   getProductByName,
   createProductInDB,
@@ -46,4 +53,5 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
+  createSaletInDB,
 };
