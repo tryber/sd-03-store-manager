@@ -1,13 +1,13 @@
 const services = require('../services');
-const controller = require('./productsController');
+const productsController = require('./productsController');
 
 const validateSales = (id, quantity) => {
   let response;
 
-  if (controller.validateId(id)) {
+  if (productsController.validateId(id)) {
     response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
   }
-  if (controller.validateEntries('Sales request', quantity)) {
+  if (productsController.validateEntries('Sales request', quantity)) {
     response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
   }
 
@@ -35,6 +35,26 @@ const createSale = async (req, res) => {
   return res.status(200).send(result);
 };
 
+const showAllSales = async (_req, res) => {
+  const result = await services.saleService.showAllSales();
+  return res.status(200).send({ sales: result });
+};
+
+const showSaleById = async (req, res) => {
+  const { params } = req;
+  const { id } = params;
+  const validation = productsController.validateId(id);
+
+  if (validation) {
+    return res.status(422).send(validation);
+  }
+
+  const result = await services.saleService.getSaleById(id);
+  return res.status(200).send(result);
+};
+
 module.exports = {
   createSale,
+  showAllSales,
+  showSaleById,
 };

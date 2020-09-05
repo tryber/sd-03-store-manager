@@ -5,6 +5,18 @@ const createSale = async (products) => {
   return result;
 };
 
+const showAllSales = async () => {
+  const result = await model.getAllSales();
+  return result;
+};
+
+const getSaleById = async (id) => {
+  const result = await model.getSaleById(id);
+  return result;
+};
+
 module.exports = {
   createSale,
+  showAllSales,
+  getSaleById,
 };

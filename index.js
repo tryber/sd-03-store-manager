@@ -5,8 +5,9 @@ const controllers = require('./controllers');
 const app = express();
 
 app.use(bodyParser.json());
-
+app.get('/sales', controllers.salesController.showAllSales);
 app.post('/sales', controllers.salesController.createSale);
+app.get('/sales/:id', controllers.salesController.showSaleById);
 
 app.get('/products', controllers.productsController.showAllProducts);
 app.post('/products', controllers.productsController.createProduct);

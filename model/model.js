@@ -46,6 +46,18 @@ const createSaletInDB = async (products) =>
     .insertOne({ itensSold: [...products] }))
     .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...products] }));
 
+const getAllSales = async () =>
+  mongoc.connect()
+    .then((db) => db
+      .collection('sales')
+      .find({})
+      .toArray(),
+    );
+
+const getSaleById = async (id) => mongoc.connect()
+  .then((db) => db.collection('sales').findOne(ObjectId(id)))
+  .catch((error) => error);
+
 module.exports = {
   getProductByName,
   createProductInDB,
@@ -54,4 +66,6 @@ module.exports = {
   updateProductById,
   deleteProductById,
   createSaletInDB,
+  getAllSales,
+  getSaleById,
 };
