@@ -22,6 +22,9 @@ const getAllSales = async () => {
 
 const getSalesById = async (id) => {
   const allSales = await sales.getSalesById(id);
+  if (!allSales) {
+    return notFound('Sale not found');
+  }
   return allSales;
 };
 
