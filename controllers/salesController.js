@@ -6,7 +6,7 @@ const validateSales = (id, quantity) => {
 
   if (controller.validateId(id)) {
     response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
-  } 
+  }
   if (controller.validateEntries('Sales request', quantity)) {
     response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
   }

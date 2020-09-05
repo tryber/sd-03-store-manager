@@ -58,7 +58,7 @@ const showAllProducts = async (_req, res) => {
   return res.status(200).send({ products: result });
 };
 
-const getProductById = async (req, res) => {
+const showProductById = async (req, res) => {
   const { params } = req;
   const { id } = params;
   const validation = validateId(id);
@@ -116,7 +116,7 @@ const deleteProductById = async (req, res) => {
 module.exports = {
   createProduct,
   showAllProducts,
-  getProductById,
+  showProductById,
   updateProductById,
   deleteProductById,
   validateId,
