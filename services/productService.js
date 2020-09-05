@@ -6,24 +6,27 @@ const isNumber = ({ quantity }) => /^[0-9]+$/.test(quantity);
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);
 
 const testProduct = async (product) => {
+  if (product.name.length < 5) {
+    return invaliddataError('"name" length must be at least 5 characters long');
+  }
+  if (product.quantity <= 0) {
+    return invaliddataError('"quantity" must be larger than or equal to 1');
+  }
   if (!isNumber(product)) {
     return invaliddataError('"quantity" must be a number');
   }
-  return products.createProduct(product);
 };
 
 const createProduct = async (product) => {
-  if (product.name.length < 5) {
-    return invaliddataError('"name" length must be at least 5 characters long');
+  const validate = await testProduct(product);
+  if (validate !== undefined) {
+    return validate;
   }
   const equalName = await products.validateEqualName(product);
   if (equalName !== null) {
     return invaliddataError('Product already exists');
   }
-  if (product.quantity <= 0) {
-    return invaliddataError('"quantity" must be larger than or equal to 1');
-  }
-  return testProduct(product);
+  return products.createProduct(product);
 };
 
 const getAllProducts = async () => products.getAllProducts();
@@ -38,8 +41,24 @@ const getProductById = async (id) => {
   return product;
 };
 
+const updateProduct = async (id, values) => {
+  if (!checkForHexRegExp(id)) {
+    return invaliddataError('Wrong id format');
+  }
+  const validate = await testProduct(values);
+  if (validate !== undefined) {
+    return validate;
+  }
+  const product = await products.updateProduct(id, values);
+  if (!product) {
+    return invaliddataError('Wrong id format');
+  }
+  return product;
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
+  updateProduct,
 };
