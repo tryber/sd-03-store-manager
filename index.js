@@ -1,16 +1,11 @@
 const express = require('express');
-const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
-const productController = require('./controllers/productsController');
-const salesController = require('./controllers/salesController');
+const bodyparser = require('body-parser');
+const ProductController = require('./controller/productsController');
+const SalesControler = require('./controller/salesController');
 
 const app = express();
-
-mongoose.connect('mongodb://mongodb:27017/StoreManager', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-});
+mongoose.connect('mongodb://mongodb:27017/StoreManager', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 app.use(bodyparser.json());
 // não remova esse endpoint, e para o avaliador funcionar
@@ -18,16 +13,22 @@ app.get('/', (request, response) => {
   response.send();
 });
 
-app.post('/products', productController.productController);
-app.get('/products', productController.listProducts);
-app.get('/products/:id', productController.getProduct);
-app.put('/products/:id', productController.updateProduct);
-app.delete('/products/:id', productController.deleteProduct);
+app.post('/products', ProductController.productController);
 
-app.post('/sales', salesController.createSale);
-app.get('/sales', salesController.listSales);
-app.get('/sales/:id', salesController.getSale);
-app.put('/sales/:id', salesController.updateSale);
-app.delete('/sales/:id', salesController.deleteSale);
+app.get('/products', ProductController.listProducts);
 
-app.listen(3000, () => console.log('Listen on port 3000'));
+app.get('/products/:id', ProductController.getProduct);
+
+app.put('/products/:id', ProductController.updateProduct);
+
+app.delete('/products/:id', ProductController.deleteProduct);
+
+app.post('/sales', SalesControler.createSale);
+
+app.get('/sales', SalesControler.listSales);
+
+app.get('/sales/:id', SalesControler.getSale);
+app.put('/sales/:id', SalesControler.updateSale);
+app.delete('/sales/:id', SalesControler.deleteSale);
+
+app.listen(3000, () => console.log('listen to port 3000'));

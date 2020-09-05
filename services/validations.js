@@ -1,6 +1,11 @@
-const { getProductById, getProductByName } = require('../models/productsModel');
+const { getProductById, getProductByName } = require('../models/produtos');
 
-async function validateNewProduct(name, quantity) {
+/**
+ *
+ * @param {String} name
+ * @param {Number} quantity
+ */
+async function validadeNewProduct(name, quantity) {
   let message = {};
   const product = await getProductByName(name);
   if (product) message = { message: 'Product already exists' };
@@ -10,7 +15,9 @@ async function validateNewProduct(name, quantity) {
   return message;
 }
 
-async function validateUpdateProduct(name, quantity) {
+async function validadeUpdateProduct(name, quantity) {
+  // const product = await getProductByName(name);
+  // if (product) return { message: 'Product already exists' };
   if (typeof name !== 'string' || name.length <= 5) return { message: '"name" length must be at least 5 characters long' };
   if (typeof quantity !== 'number') return { message: '"quantity" must be a number' };
   if (quantity <= 0) return { message: '"quantity" must be larger than or equal to 1' };
@@ -30,7 +37,7 @@ async function saleReducer(sale) {
   }, true);
 }
 
-async function validateSale(sale) {
+async function validadeSale(sale) {
   const isvalid = await saleReducer(sale);
 
   if (isvalid) {
@@ -39,7 +46,7 @@ async function validateSale(sale) {
   return { message: 'Wrong product ID or invalid quantity' };
 }
 
-async function validateStock(sale) {
+async function validadeStock(sale) {
   console.log('sale', sale);
   const valid = await sale.reduce(async (acc, i) => {
     if (!acc) return acc;
@@ -50,9 +57,4 @@ async function validateStock(sale) {
   return valid;
 }
 
-module.exports = {
-  validateNewProduct,
-  validateUpdateProduct,
-  validateSale,
-  validateStock,
-};
+module.exports = { validadeNewProduct, validadeUpdateProduct, validadeSale, validadeStock };
