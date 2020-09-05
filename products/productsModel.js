@@ -12,8 +12,14 @@ const add = async (name, quantity) => {
   return db.collection('products').insertOne({ name, quantity });
 };
 
+const update = async (id, name, quantity) => {
+  const db = await connection();
+  return db.collection('products').updateOne({ _id: ObjectID(id) }, { $set: { name, quantity } });
+};
+
 module.exports = {
   getAllProducts,
   add,
   getProductById,
+  update,
 };

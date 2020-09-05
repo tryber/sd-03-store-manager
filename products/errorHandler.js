@@ -31,4 +31,4 @@ const verifyId = (req, _res, next) => {
   return next();
 };
 
-module.exports = { errorHandler, verifyId};
+module.exports = { errorHandler, verifyId };

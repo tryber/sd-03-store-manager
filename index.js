@@ -1,4 +1,3 @@
-// não remova esse endpoint, e para o avaliador funcionar
 const express = require('express');
 const bodyParser = require('body-parser');
 // const salesController = require('./sales/salesController');

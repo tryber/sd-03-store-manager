@@ -30,12 +30,26 @@ const newProduct = async (req, res, next) => {
   }
 };
 
+const updateProduct = async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+    const result = await productsService.updateProduct(id, name, quantity);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 productsRouter
   .route('/')
   .get(listProducts)
   .post(productsService.validateProduct, newProduct, errorHandler);
 
-productsRouter.route('/:id').get(verifyId, getProductById, errorHandler);
+productsRouter
+  .route('/:id')
+  .get(verifyId, getProductById, errorHandler)
+  .put(verifyId, productsService.validateProduct, updateProduct, errorHandler);
 
 module.exports = {
   productsRouter,
