@@ -35,9 +35,19 @@ const updateSales = async (id, values) => {
   return allSales;
 };
 
+const deleteSales = async (id) => {
+  if (!checkForHexRegExp(id)) {
+    return invaliddataError('Wrong sale ID format');
+  }
+  const sale = await sales.getSalesById(id);
+  await sales.deleteSales(id);
+  return sale;
+};
+
 module.exports = {
   insertSales,
   getAllSales,
   getSalesById,
   updateSales,
+  deleteSales,
 };

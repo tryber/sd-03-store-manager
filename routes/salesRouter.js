@@ -7,5 +7,6 @@ sales.post('/', salesController.insertSales);
 sales.get('/', salesController.getAllSales);
 sales.get('/:id', salesController.getSalesById);
 sales.put('/:id', salesController.updateSales);
+sales.delete('/:id', salesController.deleteSales);
 
 module.exports = sales;

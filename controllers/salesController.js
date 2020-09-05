@@ -33,9 +33,19 @@ const updateSales = rescue(async (req, res, next) => {
   res.status(200).json({ _id, itensSold });
 });
 
+const deleteSales = rescue(async (req, res, next) => {
+  const { id } = req.params;
+  const sales = await salesService.deleteSales(id);
+  if (sales.error) {
+    return next(sales);
+  }
+  res.status(200).json(sales);
+});
+
 module.exports = {
   insertSales,
   getAllSales,
   getSalesById,
   updateSales,
+  deleteSales,
 };
