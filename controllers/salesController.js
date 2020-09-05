@@ -1,14 +1,13 @@
 const services = require('../services');
 const controller = require('./productsController');
 
-const validateEntries = (id, quantity) => {
+const validateSales = (id, quantity) => {
   let response;
 
   if (controller.validateId(id)) {
     response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
-  } else if (quantity <= 0) {
-    response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
-  } else if (typeof quantity !== 'number') {
+  } 
+  if (controller.validateEntries('Sales request', quantity)) {
     response = { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
   }
 
@@ -20,11 +19,12 @@ const createSale = async (req, res) => {
 
   // validações
   let finalResponse;
-  const response = products.map((e) => validateEntries(e.productId, e.quantity));
+  const response = products.map((e) => validateSales(e.productId, e.quantity));
   response.map((e) => {
     if (typeof e !== 'undefined') {
-        finalResponse = e;
-      }
+      finalResponse = e;
+    }
+    return null;
   });
 
   if (finalResponse) {

@@ -120,4 +120,5 @@ module.exports = {
   updateProductById,
   deleteProductById,
   validateId,
+  validateEntries,
 };
