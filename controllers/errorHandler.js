@@ -17,8 +17,10 @@ const errorHandler = (error, _req, res, next) => {
       .json({ err: { code: 'invalid_data', message: 'Product already exists' } });
   }
   if (error.isBoom) {
+    let code = 'invalid_data';
+    if (typeof error.data === 'string') code = error.data;
     return res.status(error.output.statusCode).json({
-      err: { code: 'invalid_data', message: boomReformat(error) || error.output.payload.message },
+      err: { code, message: boomReformat(error) || error.output.payload.message },
     });
   }
   next(error);
@@ -31,4 +33,11 @@ const verifyId = (req, _res, next) => {
   return next();
 };
 
-module.exports = { errorHandler, verifyId };
+const verifySaleId = (req, _res, next) => {
+  const { id } = req.params;
+  const isValid = productsService.validateId(id);
+  if (!isValid) return next(Boom.badData('Wrong sale ID format', 'invalid_data'));
+  return next();
+};
+
+module.exports = { errorHandler, verifyId, verifySaleId };

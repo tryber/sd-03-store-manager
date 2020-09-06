@@ -1,26 +1,20 @@
 const salesModel = require('./salesModel');
 
-const addSale = async (itensSold) => {
+const addSales = async (itensSold) => {
   const sale = await salesModel.addSale(itensSold);
   return { _id: sale.insertedId, itensSold };
 };
 
 const getAllSales = async () => ({ sales: await salesModel.getAllSales() });
 
-const getSalesById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await salesModel.getSalesById(id);
-    return res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+const getSalesById = (id) => salesModel.getSalesById(id);
 
-const update = async (id, itensSold) => {
+const updateSales = async (id, itensSold) => {
   await salesModel.updateSales(id, itensSold);
   return { _id: id, itensSold };
 };
+
+const deleteSales = (id) => salesModel.deleteSales(id);
 
 const arrayIsValid = (itensSold) => {
   let isValid = true;
@@ -30,4 +24,4 @@ const arrayIsValid = (itensSold) => {
   return isValid;
 };
 
-module.exports = { addSale, arrayIsValid, getAllSales, getSalesById, update };
+module.exports = { addSales, arrayIsValid, getAllSales, getSalesById, updateSales, deleteSales };
