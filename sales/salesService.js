@@ -16,12 +16,14 @@ const updateSales = async (id, itensSold) => {
 
 const deleteSales = (id) => salesModel.deleteSales(id);
 
-const arrayIsValid = (itensSold) => {
+const arrayIsValid = (itensSold, products) => {
   let isValid = true;
-  itensSold.forEach(({ quantity }) => {
+  let stockIsAvailable = true;
+  itensSold.forEach(({ quantity }, index) => {
     if (quantity <= 0 || typeof quantity !== 'number') isValid = false;
+    if (products[index].quantity < quantity) stockIsAvailable = false;
   });
-  return isValid;
+  return { isValid, stockIsAvailable };
 };
 
 module.exports = { addSales, arrayIsValid, getAllSales, getSalesById, updateSales, deleteSales };

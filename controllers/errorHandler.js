@@ -10,7 +10,6 @@ const errorMessages = {
 const boomReformat = (error) => errorMessages[`${error.data[0].path}${error.data[0].reason}`];
 
 const errorHandler = (error, _req, res, next) => {
-  console.log(error);
   if (error.code === 11000) {
     return res
       .status(422)
