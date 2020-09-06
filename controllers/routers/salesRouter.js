@@ -5,8 +5,10 @@ const salesRouter = express.Router();
 
 salesRouter
   .post('/', controllers.salesController.insertSale)
+  .get('/:id', controllers.salesController.getSalesById)
   .get('/', controllers.salesController.getAllSales)
-  .get('/:id', controllers.salesController.getSalesById);
+  .put('/:id', controllers.salesController.updateSale)
+  .delete('/:id', controllers.salesController.deleteSale);
 
 module.exports = {
   salesRouter,

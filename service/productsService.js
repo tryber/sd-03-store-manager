@@ -8,18 +8,25 @@ const {
 } = require('../models/productsModel');
 
 const productNameIsValid = (name) => {
-  if (typeof name !== 'string' || name.length <= 5) return 'name length must be at least 5 characters long';
+  if (typeof name !== 'string' || name.length <= 5) return '"name" length must be at least 5 characters long';
 };
 
 const productAlredyExists = async (name) => {
   const productCheck = await getProductByName(name);
-  if (productCheck) return 'Product alredy exists';
+  if (productCheck) return 'Product already exists';
   return false;
 };
 
 const productQuantityIsValid = (quantity) => {
   const validation = quantity <= 0;
-  if (typeof quantity !== 'number' || validation) return 'quantity must be larger than or equal to 1';
+  if (validation) return '"quantity" must be larger than or equal to 1';
+  if (typeof quantity !== 'number') return '"quantity" must be a number';
+  return false;
+};
+
+const validateId = (id) => {
+  const hexadecimalRegex = /^(0x|0X)?[a-fA-F0-9]+$/;
+  if (id.length < 16 || !hexadecimalRegex.test(id)) return 'Wrong id format';
   return false;
 };
 
@@ -57,4 +64,5 @@ module.exports = {
   listProductsById,
   updateProduct,
   deleteProduct,
+  validateId,
 };

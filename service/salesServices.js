@@ -1,6 +1,9 @@
 const {
   insertSales,
   getCollectionDb,
+  getSpecificSale,
+  updateSale,
+  deleteSale,
 } = require('../models/salesModel');
 
 const salesQuantityIsValid = (quantity) => {
@@ -14,13 +17,38 @@ const addSale = async (sales) => {
   return response;
 };
 
-const collectionExists = async (name) => {
+const allDatacollection = async (name) => {
   const collection = await getCollectionDb(name);
   return collection;
+};
+
+const getSaleWithId = async (id) => {
+  const sale = await getSpecificSale(id);
+  return sale;
+};
+
+const updateSaleById = async (id, newSale) => {
+  const saleUpdated = await updateSale(id, newSale);
+  return saleUpdated;
+};
+
+const validateId = (id) => {
+  const hexadecimalRegex = /^(0x|0X)?[a-fA-F0-9]+$/;
+  if (id.length < 16 || !hexadecimalRegex.test(id)) return 'Wrong sale ID format';
+  return false;
+};
+
+const deleteSaleById = async (id) => {
+  const sale = await deleteSale(id);
+  return sale;
 };
 
 module.exports = {
   salesQuantityIsValid,
   addSale,
-  collectionExists,
+  allDatacollection,
+  getSaleWithId,
+  updateSaleById,
+  validateId,
+  deleteSaleById,
 };

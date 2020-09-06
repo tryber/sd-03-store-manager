@@ -7,6 +7,7 @@ const {
   listAllProducts,
   updateProduct,
   deleteProduct,
+  validateId,
 } = require('../service/productsService.js');
 const { ErrorHandler } = require('../utils/ErrorHandler');
 
@@ -29,7 +30,7 @@ const productsRegister = async (req, res, next) => {
   }
 };
 
-const listProducts = async (req, res, next) => {
+const listProducts = async (_req, res, next) => {
   const allProducts = await listAllProducts();
   try {
     if (!allProducts) {
@@ -44,11 +45,12 @@ const listProducts = async (req, res, next) => {
 const listProductById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const productById = await listProductsById(id);
-    if (!productById) {
-      throw new ErrorHandler(422, 'Product not found', 'invalid_data');
+    const idIsValid = validateId(id);
+    if (idIsValid) {
+      throw new ErrorHandler(422, idIsValid, 'invalid_data');
     }
-    return res.status(200).json({ productById });
+    const productById = await listProductsById(id);
+    return res.status(200).json(productById);
   } catch (error) {
     next(error);
   }
@@ -76,12 +78,13 @@ const updateProductsById = async (req, res, next) => {
 const deleteProductsById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await deleteProduct(id);
+    const idIsValid = validateId(id);
 
-    if (!product) {
-      throw new ErrorHandler(422, 'Wrong id format', 'invalid_data');
+    if (idIsValid) {
+      throw new ErrorHandler(422, idIsValid, 'invalid_data');
     }
 
+    const product = await deleteProduct(id);
     return res.status(200).json({ product });
   } catch (error) {
     next(error);
