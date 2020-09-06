@@ -1,7 +1,6 @@
 const productsModel = require('../models/Products');
 
 const invalid = 'invalid_data';
-const wrongId = 'Wrong id format';
 let code;
 let message;
 
@@ -81,11 +80,10 @@ const ProductDelete = async (id) => {
 
     const Product = await productsModel.ProductDelete(id);
     return Product;
-  } else {
-    code = invalid;
-    message = 'Wrong id format';
-    return { err: { code, message } };
   }
+  code = invalid;
+  message = 'Wrong id format';
+  return { err: { code, message } };
 };
 module.exports = {
   createProduct,
