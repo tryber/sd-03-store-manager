@@ -21,8 +21,16 @@ const getSaleById = rescue(async (req, res) => {
   return res.status(200).json(result);
 });
 
+const deleteSale = rescue(async (req, res) => {
+  const { id } = req.params;
+  const result = await salesService.deleteSale(id);
+  if (result.err) return res.status(422).json(result);
+  return res.status(200).json(result);
+});
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
+  deleteSale,
 };
