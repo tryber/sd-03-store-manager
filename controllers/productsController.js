@@ -18,14 +18,18 @@ const getAllProducts = rescue(async (req, res) => {
 });
 
 const getProductById = rescue(async (req, res) => {
-  const { id } = req.body;
-  try {
-    const result = await productsService.getProductById(id);
-    if (result.err) { return res.status(422).json(result); }
-    if (!result.err) return res.status(200).json(result);
-  } catch (err) {
-    res.status(500).send(err);
-  }
+  const { id } = req.params;
+  const result = await productsService.getProductById(id);
+  if (result.err) return res.status(422).json(result);
+  return res.status(200).json(result);
 });
 
-module.exports = { createProduct, getAllProducts, getProductById };
+const updateProduct = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const result = await productsService.updateProduct(id, name, quantity);
+  if (result.err) return res.status(422).json(result);
+  return res.status(200).json(result);
+});
+
+module.exports = { createProduct, getAllProducts, getProductById, updateProduct };

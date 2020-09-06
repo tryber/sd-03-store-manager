@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const connect = require('./connect');
 
 const getAllProducts = async () => {
@@ -14,7 +15,8 @@ const getProductByName = async (query) => {
 
 const getProductById = async (productId) => {
   const db = await connect();
-  return db.collection('products').findOne({ id: productId });
+  const product = await db.collection('products').findOne(ObjectId(productId));
+  return product;
 };
 
 const addProduct = async (name, quantity) => {
@@ -25,9 +27,18 @@ const addProduct = async (name, quantity) => {
   return product;
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const db = await connect();
+  const coll = db.collection('products');
+  let product = await coll.updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } });
+  product = { _id: id, name, quantity };
+  return product;
+};
+
 module.exports = {
   addProduct,
   getAllProducts,
   getProductByName,
   getProductById,
+  updateProduct,
 };

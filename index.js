@@ -17,4 +17,6 @@ app.get('/products', productsController.getAllProducts);
 
 app.get('/products/:id', productsController.getProductById);
 
+app.put('/products/:id', productsController.updateProduct);
+
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
