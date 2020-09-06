@@ -39,6 +39,23 @@ const addSale = async (soldItensArray) => {
   return salesModel.addSale(soldItensArray);
 };
 
+const getAllSales = async () => {
+  const result = await salesModel.getAllSales();
+  return result;
+};
+
+const getSaleById = async (id) => {
+  if (id.length < 24) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+
+  const sale = await salesModel.getSaleById(id);
+
+  if (sale === null) return { err: { code: 'invalid_data', message: 'Sale not Found' } };
+
+  return sale;
+};
+
 module.exports = {
   addSale,
+  getAllSales,
+  getSaleById,
 };
