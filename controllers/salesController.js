@@ -17,14 +17,16 @@ const getAllSales = rescue(async (req, res) => {
 const getSaleById = rescue(async (req, res) => {
   const { id } = req.params;
   const result = await salesService.getSaleById(id);
-  if (result.err) return res.status(422).json(result);
+  if (result.err && result.err.code === 'not_found') return res.status(404).json(result);
+  if (result.err && result.err.code === 'invalid_data') return res.status(422).json(result);
   return res.status(200).json(result);
 });
 
 const deleteSale = rescue(async (req, res) => {
   const { id } = req.params;
   const result = await salesService.deleteSale(id);
-  if (result.err) return res.status(422).json(result);
+  if (result.err && result.err.code === 'not_found') return res.status(404).json(result);
+  if (result.err && result.err.code === 'invalid_data') return res.status(422).json(result);
   return res.status(200).json(result);
 });
 

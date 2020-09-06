@@ -24,7 +24,7 @@ const getSaleById = async (id) => {
 
 const deleteSale = async (id) => {
   const db = await connect();
-  const deletedSale = await db.collection('sales').deleteOne({ _id: ObjectId(id) });
+  const deletedSale = await db.collection('sales').findOneAndDelete({ _id: ObjectId(id) });
   return deletedSale;
 };
 
