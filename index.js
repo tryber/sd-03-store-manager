@@ -13,4 +13,4 @@ app.get('/', (request, response) => {
 
 app.use('/products', productsController);
 
-app.listen(3000, () => console.log('Listen on 3000' ));
+app.listen(3000, () => console.log('Listen on 3000'));
