@@ -1,9 +1,10 @@
 const productsModel = require('../models/Products');
 const products = require('../controller/ProductsController');
 const invalid = 'invalid_data';
+let code;
 let message;
 
-const createProduct = async (name, quantity) => {
+const validateProduct = async (name, quantity) => {
   if (name && name.length < 5) {
     message = '"name" length must be at least 5 characters long';
     code = invalid;
@@ -27,6 +28,14 @@ const createProduct = async (name, quantity) => {
     message = '"quantity" must be a number';
     code = invalid;
     return { err: { code, message } };
+  }
+};
+
+const createProduct = async (name, quantity) => {
+  const validation = await validateProduct(name, quantity);
+
+  if (validation) {
+    return validation;
   }
   const createdProduct = await productsModel.ProductCreate(name, quantity);
   return createdProduct;
