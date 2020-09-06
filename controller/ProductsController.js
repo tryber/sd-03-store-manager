@@ -54,4 +54,19 @@ products.put(
   }),
 );
 
+products.delete(
+  '/:id',
+  resc(async (req, res) => {
+    const { id } = req.params;
+
+    const Product = await ProductsService.ProductDelete(id);
+
+    if (Product && Product.err) {
+      return res.status(422).json(Product);
+    }
+
+    return res.status(200).json(Product);
+  }),
+);
+
 module.exports = products;

@@ -1,6 +1,7 @@
 const productsModel = require('../models/Products');
 
 const invalid = 'invalid_data';
+const wrongId = 'Wrong id format';
 let code;
 let message;
 
@@ -68,9 +69,28 @@ const ProductUpdate = async (id, name, quantity) => {
 
   return Product;
 };
+
+const ProductDelete = async (id) => {
+  if (id.length === 24) {
+    const checkProductExist = await productsModel.ProductById(id);
+    if (!checkProductExist) {
+      code = invalid;
+      message = 'Wrong id format';
+      return { err: { code, message } };
+    }
+
+    const Product = await productsModel.ProductDelete(id);
+    return Product;
+  } else {
+    code = invalid;
+    message = 'Wrong id format';
+    return { err: { code, message } };
+  }
+};
 module.exports = {
   createProduct,
   ProductAll,
   ProductById,
   ProductUpdate,
+  ProductDelete,
 };
