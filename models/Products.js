@@ -9,8 +9,8 @@ const ProductAll = async () =>
   connect()
     .then((db) => db.collection('products').find({}).toArray())
     .then((products) => ({ products }));
-  
+
 module.exports = {
   ProductCreate,
   ProductAll,
-}
+};

@@ -14,15 +14,14 @@ products.get(
 );
 
 products.post(
-    '/',
-    resc(async (req, res) => {
-      const { name, quantity } = req.body;
-  
-      const createdProduct = await ProductsService.createProduct(name, quantity);
-  
-      return res.status(201).json(createdProduct);
-    }),
-  );
+  '/',
+  resc(async (req, res) => {
+    const { name, quantity } = req.body;
 
+    const createdProduct = await ProductsService.createProduct(name, quantity);
 
-  module.exports = products;
+    return res.status(201).json(createdProduct);
+  }),
+);
+
+module.exports = products;
