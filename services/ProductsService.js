@@ -1,14 +1,18 @@
 const productsModel = require('../models/Products');
 
 const createProduct = async (name, quantity) => {   
-    if (name >= 5) { 
-    const createdProduct = await productsModel.createProduct(name, quantity);  
+    
+    const createdProduct = await productsModel.ProductCreate(name, quantity);  
     return createdProduct;
-    }
   };
 
+  const ProductAll = async (name, quantity) => {    
+    const createdProduct = await productsModel.ProductAll();  
+    return createdProduct;
+  };
 
   module.exports = {
     createProduct,
+    ProductAll,
   };
   

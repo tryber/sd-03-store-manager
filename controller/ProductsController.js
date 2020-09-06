@@ -2,7 +2,6 @@ const { Router } = require('express');
 const resc = require('express-rescue');
 const ProductsService = require('../services/ProductsService');
 
-
 const products = Router();
 
 products.get(
@@ -19,11 +18,7 @@ products.post(
     resc(async (req, res) => {
       const { name, quantity } = req.body;
   
-      const createdProduct = await ProductsModel.ProductCreate(name, quantity);
-  
-      if (createdProduct.err) {
-        return res.status(422).json(createdProduct);
-      }
+      const createdProduct = await ProductsService.createProduct(name, quantity);
   
       return res.status(201).json(createdProduct);
     }),
