@@ -10,7 +10,11 @@ const ProductAll = async () =>
     .then((db) => db.collection('products').find({}).toArray())
     .then((products) => ({ products }));
 
+const ProductByName = async (nameQuery) =>
+  connect().then((db) => db.collection('products').findOne({ name: nameQuery }));
+
 module.exports = {
   ProductCreate,
   ProductAll,
+  ProductByName,
 };

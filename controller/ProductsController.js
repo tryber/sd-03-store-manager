@@ -19,7 +19,9 @@ products.post(
     const { name, quantity } = req.body;
 
     const createdProduct = await ProductsService.createProduct(name, quantity);
-
+    if (createdProduct.err) {
+      return res.status(422).json(createdProduct);
+    }
     return res.status(201).json(createdProduct);
   }),
 );
