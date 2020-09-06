@@ -10,13 +10,6 @@ const validateProductCreate = async (name, quantity) => {
     code = invalid;
     return { err: { code, message } };
   }
-  const checkProductExist = await productsModel.ProductByName(name);
-
-  if (checkProductExist) {
-    message = 'Product already exists';
-    code = invalid;
-    return { err: { code, message } };
-  }
 
   if (quantity <= 0) {
     message = '"quantity" must be larger than or equal to 1';
@@ -26,6 +19,14 @@ const validateProductCreate = async (name, quantity) => {
 
   if (typeof quantity !== 'number') {
     message = '"quantity" must be a number';
+    code = invalid;
+    return { err: { code, message } };
+  }
+
+  const checkProductExist = await productsModel.ProductByName(name);
+
+  if (checkProductExist) {
+    message = 'Product already exists';
     code = invalid;
     return { err: { code, message } };
   }
