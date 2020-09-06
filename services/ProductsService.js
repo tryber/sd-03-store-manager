@@ -56,8 +56,20 @@ const ProductById = async (id) => {
   return Product;
 };
 
+const ProductUpdate = async (id, name, quantity) => {
+  const validation = await validateProductCreate(name, quantity);
+
+  if (validation) {
+    return validation;
+  }
+
+  const Product = await productsModel.ProductUpdate(id, name, quantity);
+
+  return Product;
+};
 module.exports = {
   createProduct,
   ProductAll,
   ProductById,
+  ProductUpdate,
 };

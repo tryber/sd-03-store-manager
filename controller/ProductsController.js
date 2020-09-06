@@ -38,4 +38,20 @@ products.get(
     return res.status(200).json(Product);
   }),
 );
+products.put(
+  '/:id',
+  resc(async (req, res) => {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+
+    const Product = await ProductsService.ProductUpdate(id, name, quantity);
+
+    if (Product.err) {
+      return res.status(422).json(Product);
+    }
+
+    return res.status(200).json(Product);
+  }),
+);
+
 module.exports = products;
