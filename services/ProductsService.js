@@ -4,7 +4,7 @@ const invalid = 'invalid_data';
 let code;
 let message;
 
-const validateProduct = async (name, quantity) => {
+const validateProductCreate = async (name, quantity) => {
   if (name && name.length < 5) {
     message = '"name" length must be at least 5 characters long';
     code = invalid;
@@ -32,7 +32,7 @@ const validateProduct = async (name, quantity) => {
 };
 
 const createProduct = async (name, quantity) => {
-  const validation = await validateProduct(name, quantity);
+  const validation = await validateProductCreate(name, quantity);
 
   if (validation) {
     return validation;
@@ -46,7 +46,19 @@ const ProductAll = async () => {
   return createdProduct;
 };
 
+const ProductById = async (id) => { 
+  if(id.length < 24) {
+    message = 'Wrong id format';
+    code = invalid;
+    return { err: { code, message } };
+  } else {
+  const Product = await productsModel.ProductById(id);
+  return Product;
+  }
+};
+
 module.exports = {
   createProduct,
   ProductAll,
+  ProductById,
 };
