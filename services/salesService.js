@@ -7,12 +7,9 @@ const {
 
 const { validateParams } = require('./libValidation');
 
-const registeringSales = async (productId, quantity) => {
-  console.log('aqui', quantity, 'then', productId);
-  const validate = await validateParams(productId, quantity);
-
-  if (validate.err) return validate;
-  return registerSales(productId, quantity);
+const registeringSales = async (products) => {
+  const result = await registerSales(products);
+  return result;
 };
 
 const listSales = async () => {
@@ -27,9 +24,7 @@ const listSalesById = async (id) => {
 
 const updateSales = async (id, quantity) => {
   const validate = await validateParams(id, quantity);
-
-  if (validate.err) return validate;
-  return updateSalesInBank(id, quantity);
+  return validate;
 };
 
 module.exports = {

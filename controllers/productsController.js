@@ -8,6 +8,8 @@ const {
   deleteProductsById,
 } = require('../services/productsService');
 
+const { validateId } = require('../services/libValidation');
+
 const products = Router();
 
 products.post('/products', rescue(async (req, res) => {
@@ -48,13 +50,20 @@ products.put('/products/:id', async (req, res) => {
 
 products.delete('/products/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, quantity } = req.body;
+  const productExist = await getAllProductsById(id);
+  const idIsInvalid = validateId(id);
+
+  if (idIsInvalid) {
+    return res.status(422).send(idIsInvalid);
+  }
+
+  const { name, quantity } = productExist;
   const deleteProducsts = await deleteProductsById(id, name, quantity);
 
-  if (deleteProducsts.err) {
-    return res.status(422).json(deleteProducsts);
+  if (!productExist) {
+    return res.status(422).json(idIsInvalid);
   }
-  if (!deleteProducsts) return res.status(200).end();
+  return res.status(200).json(deleteProducsts);
 });
 
 module.exports = { products };

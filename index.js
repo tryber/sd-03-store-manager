@@ -16,9 +16,9 @@ app.put('/products/:id', products); // 3
 app.delete('/products/:id', products); // 4
 
 app.post('/sales', sales); // 5
-app.get('sales', sales); // 6
-app.get('sales/:id', sales); // 6
-app.put('sales/:id', sales); // 7
+app.get('/sales', sales); // 6
+app.get('/sales/:id', sales); // 6
+app.put('/sales/:id', sales); // 7
 app.delete('/sales/:id', sales); // 8
 
 // app.use((err, _req, res, _next) => {

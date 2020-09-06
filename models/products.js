@@ -20,7 +20,7 @@ const updateProductsByIdBank = async (id, name, quantity) => connect()
     .then(({ insertedId }) => ({ _id: insertedId, name, quantity })));
 
 const deleteProductsByIdBank = async (id, name, quantity) => connect()
-  .then((db) => db.collection('products').deleteOne({ id, name, quantity }));
+  .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id), name, quantity }));
 
 module.exports = {
   createCollectionProducts,

@@ -8,43 +8,49 @@ const {
 
 const sales = Router();
 
-sales.post('/sales', async (req, res) => {
-  const [{ productId, quantity }] = req.body;
-  // console.log('limpo1,', productId, quantity);
+const { validateParams } = require('../services/libValidation');
 
-  const register = await registeringSales(productId, quantity);
-  const { _id: id } = register;
-  const createRegister = {
-    _id: id,
-    itensSold: [register],
-  };
-
-  if (register.err) {
-    return res.status(422).json(register);
+const validateSales = (id, quantity) => {
+  const regex = /^[0-9a-fA-F]{24}$/;
+  if (!regex.test(id)) {
+    return { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
   }
-  return res.status(201).json(createRegister);
+  if (validateParams(quantity)) {
+    return { err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' } };
+  }
+};
+// inspirate by MarcoBarbosa
+// https://github.com/tryber/sd-03-store-manager/blob/marco-barbosa-sd-03-store-manager/controllers/salesController.js
+sales.post('/sales', async (req, res) => {
+  const products = req.body;
+
+  let result;
+  products.map((e) => validateSales(e.productId, e.quantity)).forEach((e) => {
+    if (e !== 'undefined') result = e;
+    return null;
+  });
+
+  if (result) {
+    return res.status(422).json(result);
+  }
+  const register = await registeringSales(products);
+  return res.status(200).json(register);
 });
 
-sales.get('/sales', async (req, res) => {
+sales.get('/sales', async (_req, res) => {
   const resultSales = await listSales();
-  const { _id: id } = resultSales;
-
-  const salesObj = {
-    _id: id,
-    itensSold: [resultSales],
-  };
-  return res.status(200).json(salesObj);
+  return res.status(200).send({ sales: resultSales });
 });
 
 sales.get('/sales/:id', async (req, res) => {
   const { id } = req.params;
-  const resulstById = await listSalesById(id);
+  const idIsValid = validateSales(id);
 
-  const salesObj = {
-    _id: id,
-    itensSold: [resulstById],
-  };
-  return res.status(200).json(salesObj);
+  if (idIsValid) {
+    return res.status(422).send(idIsValid);
+  }
+  const resulstById = await listSalesById(id);
+  return res.status(200).json(resulstById);
 });
 
 sales.put('/sales/:id', async (req, res) => {
@@ -56,8 +62,8 @@ sales.put('/sales/:id', async (req, res) => {
   return res.status(200).json(update);
 });
 
-sales.delete('/sales/:id', async (req, res) => {
+// sales.delete('/sales/:id', async (req, res) => {
 
-});
+// });
 
 module.exports = { sales };

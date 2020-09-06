@@ -1,5 +1,12 @@
-const validateParams = async (productId, quantity) => {
-  // name = name || productsById;
+const validateId = (id) => {
+  const regex = /^[0-9a-fA-F]{24}$/;
+  if (!regex.test(id)) {
+    return { err: { message: 'Wrong id format', code: 'invalid_data' } };
+  }
+  return null;
+};
+
+const validateParams = (quantity) => {
   if (quantity < 1) {
     return {
       err:
@@ -16,6 +23,7 @@ const validateParams = async (productId, quantity) => {
       err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
     };
   }
+  return null;
 };
 
-module.exports = { validateParams };
+module.exports = { validateParams, validateId };

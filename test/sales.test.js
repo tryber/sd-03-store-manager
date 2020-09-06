@@ -325,228 +325,228 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
   });
 });
 
-// describe('7 - Crie um endpoint para atualizar uma venda', () => {
-//   let connection;
-//   let db;
+describe('7 - Crie um endpoint para atualizar uma venda', () => {
+  let connection;
+  let db;
 
-//   beforeAll(async () => {
-//     connection = await MongoClient.connect(mongoDbUrl, {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//     });
-//     db = connection.db('StoreManager');
-//     await db.collection('products').deleteMany({});
-//     await db.collection('sales').deleteMany({});
-//   });
+  beforeAll(async () => {
+    connection = await MongoClient.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = connection.db('StoreManager');
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+  });
 
-//   beforeEach(async () => {
-//     await db.collection('products').deleteMany({});
-//     await db.collection('sales').deleteMany({});
-//     const products = [{ name: 'Martelo de Thor', quantity: 10 },
-//       { name: 'Traje de encolhimento', quantity: 20 },
-//       { name: 'Escudo do Capitão América', quantity: 30 }];
-//     await db.collection('products').insertMany(products);
-//   });
+  beforeEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
+      { name: 'Traje de encolhimento', quantity: 20 },
+      { name: 'Escudo do Capitão América', quantity: 30 }];
+    await db.collection('products').insertMany(products);
+  });
 
-//   afterEach(async () => {
-//     await db.collection('products').deleteMany({});
-//     await db.collection('sales').deleteMany({});
-//   });
+  afterEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+  });
 
-//   afterAll(async () => {
-//     await connection.close();
-//   });
+  afterAll(async () => {
+    await connection.close();
+  });
 
-//   it('Será validado que não é possível atualizar vendas com quantidade menor que zero', async () => {
-//     let result;
-//     let resultProductId;
-//     let resultSales;
-//     let resultSalesId;
+  it('Será validado que não é possível atualizar vendas com quantidade menor que zero', async () => {
+    let result;
+    let resultProductId;
+    let resultSales;
+    let resultSalesId;
 
-//     await frisby
-//       .get(`${url}/products/`)
-//       .expect('status', 200)
-//       .then((response) => {
-//         const { body } = response;
-//         result = JSON.parse(body);
-//         resultProductId = result.products[0]._id;
-//       });
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        resultProductId = result.products[0]._id;
+      });
 
-//     await frisby.post(`${url}/sales/`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 2,
-//         },
-//       ])
-//       .expect('status', 200)
-//       .then((responseSales) => {
-//         const { body } = responseSales;
-//         resultSales = JSON.parse(body);
-//         resultSalesId = resultSales._id;
-//       });
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseSales) => {
+        const { body } = responseSales;
+        resultSales = JSON.parse(body);
+        resultSalesId = resultSales._id;
+      });
 
-//     await frisby.put(`${url}/sales/${resultSales._id}`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: -1,
-//         },
-//       ])
-//       .expect('status', 422)
-//       .then((responseEdit) => {
-//         const { body } = responseEdit;
-//         const responseEditBody = JSON.parse(body);
-//         const error = responseEditBody.err.code;
-//         const { message } = responseEditBody.err;
-//         expect(error).toBe('invalid_data');
-//         expect(message).toBe('Wrong product ID or invalid quantity');
-//       });
-//   });
+    await frisby.put(`${url}/sales/${resultSales._id}`,
+      [
+        {
+          productId: resultProductId,
+          quantity: -1,
+        },
+      ])
+      .expect('status', 422)
+      .then((responseEdit) => {
+        const { body } = responseEdit;
+        const responseEditBody = JSON.parse(body);
+        const error = responseEditBody.err.code;
+        const { message } = responseEditBody.err;
+        expect(error).toBe('invalid_data');
+        expect(message).toBe('Wrong product ID or invalid quantity');
+      });
+  });
 
-//   it('Será validado que não é possível atualizar vendas com quantidade igual a zero', async () => {
-//     let result;
-//     let resultProductId;
-//     let resultSales;
-//     let resultSalesId;
+  it('Será validado que não é possível atualizar vendas com quantidade igual a zero', async () => {
+    let result;
+    let resultProductId;
+    let resultSales;
+    let resultSalesId;
 
-//     await frisby
-//       .get(`${url}/products/`)
-//       .expect('status', 200)
-//       .then((response) => {
-//         const { body } = response;
-//         result = JSON.parse(body);
-//         resultProductId = result.products[0]._id;
-//       });
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        resultProductId = result.products[0]._id;
+      });
 
-//     await frisby.post(`${url}/sales/`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 2,
-//         },
-//       ])
-//       .expect('status', 200)
-//       .then((responseSales) => {
-//         const { body } = responseSales;
-//         resultSales = JSON.parse(body);
-//         resultSalesId = resultSales._id;
-//       });
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseSales) => {
+        const { body } = responseSales;
+        resultSales = JSON.parse(body);
+        resultSalesId = resultSales._id;
+      });
 
-//     await frisby.put(`${url}/sales/${resultSalesId}`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 0,
-//         },
-//       ])
-//       .expect('status', 422)
-//       .then((responseEdit) => {
-//         const { body } = responseEdit;
-//         const responseEditBody = JSON.parse(body);
-//         const error = responseEditBody.err.code;
-//         const { message } = responseEditBody.err;
-//         expect(error).toBe('invalid_data');
-//         expect(message).toBe('Wrong product ID or invalid quantity');
-//       });
-//   });
+    await frisby.put(`${url}/sales/${resultSalesId}`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 0,
+        },
+      ])
+      .expect('status', 422)
+      .then((responseEdit) => {
+        const { body } = responseEdit;
+        const responseEditBody = JSON.parse(body);
+        const error = responseEditBody.err.code;
+        const { message } = responseEditBody.err;
+        expect(error).toBe('invalid_data');
+        expect(message).toBe('Wrong product ID or invalid quantity');
+      });
+  });
 
-//   it('Será validado que não é possível atualizar vendas com uma string no campo quantidade', async () => {
-//     let result;
-//     let resultProductId;
-//     let resultSales;
-//     let resultSalesId;
+  it('Será validado que não é possível atualizar vendas com uma string no campo quantidade', async () => {
+    let result;
+    let resultProductId;
+    let resultSales;
+    let resultSalesId;
 
-//     await frisby
-//       .get(`${url}/products/`)
-//       .expect('status', 200)
-//       .then((response) => {
-//         const { body } = response;
-//         result = JSON.parse(body);
-//         resultProductId = result.products[0]._id;
-//       });
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        resultProductId = result.products[0]._id;
+      });
 
-//     await frisby.post(`${url}/sales/`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 2,
-//         },
-//       ])
-//       .expect('status', 200)
-//       .then((responseSales) => {
-//         const { body } = responseSales;
-//         resultSales = JSON.parse(body);
-//         resultSalesId = resultSales._id;
-//       });
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseSales) => {
+        const { body } = responseSales;
+        resultSales = JSON.parse(body);
+        resultSalesId = resultSales._id;
+      });
 
-//     await frisby.put(`${url}/sales/${resultSalesId}`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 'String',
-//         },
-//       ])
-//       .expect('status', 422)
-//       .then((responseEdit) => {
-//         const { body } = responseEdit;
-//         const responseEditBody = JSON.parse(body);
-//         const error = responseEditBody.err.code;
-//         const { message } = responseEditBody.err;
-//         expect(error).toBe('invalid_data');
-//         expect(message).toBe('Wrong product ID or invalid quantity');
-//       });
-//   });
+    await frisby.put(`${url}/sales/${resultSalesId}`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 'String',
+        },
+      ])
+      .expect('status', 422)
+      .then((responseEdit) => {
+        const { body } = responseEdit;
+        const responseEditBody = JSON.parse(body);
+        const error = responseEditBody.err.code;
+        const { message } = responseEditBody.err;
+        expect(error).toBe('invalid_data');
+        expect(message).toBe('Wrong product ID or invalid quantity');
+      });
+  });
 
-//   it('Será validado que é possível atualizar uma venda com sucesso', async () => {
-//     let result;
-//     let resultProductId;
-//     let resultSales;
-//     let resultSalesId;
+  it('Será validado que é possível atualizar uma venda com sucesso', async () => {
+    let result;
+    let resultProductId;
+    let resultSales;
+    let resultSalesId;
 
-//     await frisby
-//       .get(`${url}/products/`)
-//       .expect('status', 200)
-//       .then((response) => {
-//         const { body } = response;
-//         result = JSON.parse(body);
-//         resultProductId = result.products[0]._id;
-//       });
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        resultProductId = result.products[0]._id;
+      });
 
-//     await frisby.post(`${url}/sales/`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 2,
-//         },
-//       ])
-//       .expect('status', 200)
-//       .then((responseSales) => {
-//         const { body } = responseSales;
-//         resultSales = JSON.parse(body);
-//         resultSalesId = resultSales._id;
-//       });
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseSales) => {
+        const { body } = responseSales;
+        resultSales = JSON.parse(body);
+        resultSalesId = resultSales._id;
+      });
 
-//     await frisby.put(`${url}/sales/${resultSalesId}`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 5,
-//         },
-//       ])
-//       .expect('status', 200)
-//       .then((responseEdit) => {
-//         const { body } = responseEdit;
-//         const responseEditBody = JSON.parse(body);
-//         const salesId = responseEditBody._id;
-//         const idProductSales = responseEditBody.itensSold[0].productId;
-//         const quantityProductSales = responseEditBody.itensSold[0].quantity;
-//         expect(salesId).toBe(resultSalesId);
-//         expect(idProductSales).toBe(resultSales.itensSold[0].productId);
-//         expect(quantityProductSales).toBe(5);
-//       });
-//   });
-// });
+    await frisby.put(`${url}/sales/${resultSalesId}`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 5,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseEdit) => {
+        const { body } = responseEdit;
+        const responseEditBody = JSON.parse(body);
+        const salesId = responseEditBody._id;
+        const idProductSales = responseEditBody.itensSold[0].productId;
+        const quantityProductSales = responseEditBody.itensSold[0].quantity;
+        expect(salesId).toBe(resultSalesId);
+        expect(idProductSales).toBe(resultSales.itensSold[0].productId);
+        expect(quantityProductSales).toBe(5);
+      });
+  });
+});
 
 // describe('8 - Crie um endpoint para deletar uma venda', () => {
 //   let connection;

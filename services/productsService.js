@@ -60,11 +60,7 @@ const updateProductsById = async (id, name, quantity) => {
 
 const deleteProductsById = async (id, name, quantity) => {
   const deleting = await deleteProductsByIdBank(id, name, quantity);
-  if (!deleting) return deleting;
-
-  return {
-    err: { message: 'Wrong id format', code: 'invalid_data' },
-  };
+  return deleting;
 };
 
 module.exports = {
