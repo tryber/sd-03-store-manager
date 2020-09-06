@@ -31,8 +31,8 @@ products.get(
   resc(async (req, res) => {
     const { id } = req.params;
     const Product = await ProductsService.ProductById(id);
-      
-  if(Product.err) {
+
+    if (Product.err) {
       return res.status(422).json(Product);
     }
     return res.status(200).json(Product);

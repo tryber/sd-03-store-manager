@@ -46,15 +46,14 @@ const ProductAll = async () => {
   return createdProduct;
 };
 
-const ProductById = async (id) => { 
-  if(id.length < 24) {
+const ProductById = async (id) => {
+  if (id.length < 24) {
     message = 'Wrong id format';
     code = invalid;
     return { err: { code, message } };
-  } else {
+  }
   const Product = await productsModel.ProductById(id);
   return Product;
-  }
 };
 
 module.exports = {

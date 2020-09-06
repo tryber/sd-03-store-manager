@@ -14,7 +14,7 @@ const ProductAll = async () =>
 const ProductByName = async (nameQuery) =>
   connect().then((db) => db.collection('products').findOne({ name: nameQuery }));
 
-  const ProductById = async (id) =>
+const ProductById = async (id) =>
   connect().then((db) => db.collection('products').findOne(ObjectId(id)));
 
 module.exports = {
