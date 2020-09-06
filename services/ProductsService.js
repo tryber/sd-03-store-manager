@@ -1,4 +1,5 @@
 const productsModel = require('../models/Products');
+
 const invalid = 'invalid_data';
 let code;
 let message;
