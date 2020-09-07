@@ -1,13 +1,15 @@
 const { MongoClient } = require('mongodb');
-// require('dotenv/config');
+require('dotenv/config');
 
-const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
-const DB_NAME = 'StoreManager';
+const { MONGO_DB_URL, DB_NAME } = process.env;
+const dbUrl = MONGO_DB_URL || 'mongodb://localhost:27017/StoreManager';
+const dbName = DB_NAME || 'StoreManager';
+
 const connect = () =>
-  MongoClient.connect(MONGO_DB_URL, {
+  MongoClient.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  }).then((connection) => connection.db(DB_NAME));
+  }).then((connection) => connection.db(dbName));
 
 module.exports = {
   connect,
