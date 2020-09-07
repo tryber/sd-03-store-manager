@@ -1,6 +1,6 @@
 const productsModel = require('../models/productsModel');
 
-const add = async (name, quantity) => {
+const verifyNameQuantity = (name, quantity) => {
   if(typeof(quantity) !== 'number') {
     return { code: 'invalid_data', message:'"quantity" must be a number' };
   }
@@ -10,6 +10,14 @@ const add = async (name, quantity) => {
   if (name.length < 5) {
     return { code: 'invalid_data', message:'"name" length must be at least 5 characters long' };
   }
+  return null;
+}
+
+const add = async (name, quantity) => {
+  const verify = verifyNameQuantity(name, quantity)
+  
+  if(verify) return verify;
+
   if(await productsModel.findByName(name)) {
     return { code: 'invalid_data', message:'Product already exists' };
   }
