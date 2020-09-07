@@ -27,12 +27,12 @@
     "frisby": "^2.1.2",
     "jest": "^26.4.1",
     "mongodb": "^3.5.9",
-    "nodemon": "^2.0.4",
     "faker": "^4.1.0"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
     "eslint-config-airbnb": "^18.2.0",
-    "eslint-plugin-import": "^2.22.0"
+    "eslint-plugin-import": "^2.22.0",
+    "nodemon": "^2.0.4"
   }
 }
