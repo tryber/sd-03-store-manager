@@ -1,6 +1,6 @@
 const productModel = require('../models/productModel');
 
-const addProduct = async ({ name, quantity }) => {
+const validateProduct = async ({ name, quantity }) => {
   if (name.length < 5) {
     return ({ error: true, message: '"name" length must be at least 5 characters long' });
   }
@@ -16,6 +16,14 @@ const addProduct = async ({ name, quantity }) => {
 
   if (typeof quantity !== 'number') {
     return ({ error: true, message: '"quantity" must be a number' });
+  }
+};
+
+const addProduct = async ({ name, quantity }) => {
+  const validate = await validateProduct({ name, quantity });
+
+  if (validate.error) {
+    return validate;
   }
 
   const result = await productModel.add(name, quantity);
