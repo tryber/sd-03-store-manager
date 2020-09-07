@@ -6,18 +6,50 @@ const {
   updateSaleById,
   validateId,
   deleteSaleById,
+  stockVerification,
 } = require('../service/salesServices');
+const { updateProductQuantity } = require('../service/productsService');
 const { ErrorHandler } = require('../utils/ErrorHandler');
 
 const insertSale = async (req, res, next) => {
   try {
     const userSale = req.body;
-    userSale.forEach(({ quantity }) => {
-      const salesQnty = salesQuantityIsValid(quantity);
+    console.log('1');
 
+    for (const { quantity, productId } of userSale) {
+      const salesQnty = salesQuantityIsValid(quantity);
+      const productQnty = await stockVerification(productId, quantity);
+      console.log(productQnty);
+      console.log('2');
       if (salesQnty) {
         throw new ErrorHandler(422, salesQnty, 'invalid_data');
       }
+      console.log('3');
+      if (productQnty) {
+        throw new ErrorHandler(404, productQnty, 'stock_problem');
+      }
+      console.log('4');
+    }
+
+    // await userSale.forEach(async ({ productId, quantity }) => {
+    //   const salesQnty = salesQuantityIsValid(quantity);
+    //   const productQnty = await stockVerification(productId, quantity);
+    //   console.log(productQnty);
+    //   console.log('2');
+    //   if (salesQnty) {
+    //     throw new ErrorHandler(422, salesQnty, 'invalid_data');
+    //   }
+    //   console.log('3');
+    //   if (productQnty) {
+    //     throw new ErrorHandler(400, productQnty, 'invalid_data');
+    //   }
+    //   console.log('4');
+    // });
+
+    console.log('5');
+
+    userSale.forEach(async ({ productId, quantity }) => {
+      await updateProductQuantity(productId, quantity);
     });
 
     const sales = await addSale(userSale);

@@ -13,7 +13,7 @@ const connect = require('./connect');
 // ]
 
 const insertSales = async (itensSold) => {
-  console.log(itensSold)
+  // console.log(itensSold)
   const db = await connect();
   const sales = await db.collection('sales').insertOne({
     itensSold,

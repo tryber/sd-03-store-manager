@@ -5,10 +5,18 @@ const {
   updateSale,
   deleteSale,
 } = require('../models/salesModel');
+const { getProductById } = require('../models/productsModel');
 
 const salesQuantityIsValid = (quantity) => {
   const validation = quantity <= 0;
   if (typeof quantity !== 'number' || validation) return 'Wrong product ID or invalid quantity';
+  return false;
+};
+
+const stockVerification = async (productId, soldQuantity) => {
+  const { quantity } = await getProductById(productId);
+
+  if (soldQuantity > quantity) return 'Such amount is not permitted to sell';
   return false;
 };
 
@@ -51,4 +59,5 @@ module.exports = {
   updateSaleById,
   validateId,
   deleteSaleById,
+  stockVerification,
 };
