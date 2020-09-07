@@ -2,12 +2,17 @@ const productsModel = require('../models/productsModel');
 const salesModel = require('../models/salesModel');
 const { validateID, validateSaleData } = require('./helpers');
 
-const createSale = (products) => {
+const createSale = async (products) => {
   const isDataValid = validateSaleData(products);
 
   if (isDataValid) {
-    products.forEach(({ productId }) => {
-      const product = productsModel.getProductById(productId);
+    await products.forEach(async ({ productId }, index) => {
+      const product = await productsModel.getProductById(productId);
+      if (product && products[index].quantity > product.quantity) {
+        return {
+          err: { code: 'stock_problem', message: 'Such amount is not permitted to sell' },
+        };
+      }
       if (!product) {
         return {
           err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
@@ -21,6 +26,10 @@ const createSale = (products) => {
   }
 
   const sale = salesModel.createSale(products);
+
+  await products.forEach(async ({ productId, quantity }) => {
+    await productsModel.updateQuantity(productId, -quantity);
+  });
 
   return sale;
 };
@@ -58,13 +67,19 @@ const deleteSale = async (id) => {
 
   if (typeof isIdValid === 'object') return isIdValid;
 
-  const sale = salesModel.getSaleById(id);
+  const sale = await salesModel.deleteSale(id);
+
   if (!sale) {
     return {
       err: { code: 'invalid_data', message: 'Wrong sale ID format' },
     };
   }
-  await salesModel.deleteSale(id);
+
+  sale.itensSold.forEach(async ({ productId, quantity }) => {
+    await productsModel.updateQuantity(productId, quantity);
+  });
+  // await salesModel.deleteSale(id);
+  return sale;
 };
 
 module.exports = {

@@ -9,8 +9,11 @@ sale.post(
   rescue(async (req, res) => {
     const products = req.body;
     const createdSales = await salesService.createSale(products);
-    if (createdSales.err) {
+    if (createdSales.err && createdSales.err.code === 'invalid_data') {
       return res.status(422).json(createdSales);
+    }
+    if (createdSales.err) {
+      return res.status(404).json(createdSales);
     }
     return res.status(200).json(createdSales);
   }),
@@ -58,7 +61,7 @@ sale.delete(
     if (deletedSale && deletedSale.err) {
       return res.status(422).json(deletedSale);
     }
-    return res.status(200).end();
+    return res.status(200).json(deletedSale);
   }),
 );
 

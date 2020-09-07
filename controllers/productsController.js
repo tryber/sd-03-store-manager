@@ -30,7 +30,7 @@ products.get(
   rescue(async (req, res) => {
     const { id } = req.params;
     const returnedProduct = await productsService.getProductById(id);
-    if (returnedProduct.err) {
+    if (returnedProduct && returnedProduct.err) {
       return res.status(422).json(returnedProduct);
     }
     return res.status(200).json(returnedProduct);
