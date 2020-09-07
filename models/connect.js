@@ -2,7 +2,7 @@ require('dotenv/config');
 
 const { MongoClient } = require('mongodb');
 
-const DB_URI = 'mongodb://localhost:27017/StoreManager';
+const DB_URI = 'mongodb://mongodb:27017/StoreManager';
 const DB_DBNAME = 'StoreManager';
 
 const connect = async () => (
