@@ -7,6 +7,12 @@ const {
   deleteProductsByIdBank,
 } = require('../models/products');
 
+const checkNameValidation = async (name) => {
+  const checkName = await verifyNameExit(name);
+  if (checkName) return { err: { code: 'invalid_data', message: 'Product already exists' } };
+  return true;
+};
+
 const validateProduct = async (name, quantity) => {
   if (name.length < 5 && typeof (name !== 'string')) {
     return {
@@ -24,9 +30,7 @@ const validateProduct = async (name, quantity) => {
       err: { message: '"quantity" must be a number', code: 'invalid_data' },
     };
   }
-  const checkName = await verifyNameExit(name);
-  if (checkName) return { err: { code: 'invalid_data', message: 'Product already exists' } };
-  // return true;
+  return checkNameValidation(name);
 };
 
 const createProducts = async (name, quantity) => {
