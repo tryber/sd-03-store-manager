@@ -4,6 +4,7 @@ const {
   listSales,
   listSalesById,
   updateSales,
+  deleteSales,
 } = require('../services/salesService');
 
 const sales = Router();
@@ -65,8 +66,15 @@ sales.put('/sales/:id', async (req, res) => {
   return res.status(200).json(update);
 });
 
-// sales.delete('/sales/:id', async (req, res) => {
+sales.delete('/sales/:id', async (req, res) => {
+  const { id } = req.params;
 
-// });
+  const deleting = await deleteSales(id);
+
+  if (deleting.err) {
+    return res.status(422).json(deleting);
+  }
+  return res.status(200).end();
+});
 
 module.exports = { sales };

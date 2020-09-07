@@ -21,9 +21,13 @@ const updateSalesInBank = async (id, products) => connect()
     .updateOne({ _id: ObjectId(id) }, { $set: { itensSold: products } }))
   .then(({ insertedId }) => ({ insertedId, itensSold: products }));
 
+const deleteSaleBank = async (id) => connect()
+  .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+
 module.exports = {
   registerSales,
   getSales,
   getSalesById,
   updateSalesInBank,
+  deleteSaleBank,
 };

@@ -548,92 +548,92 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
   });
 });
 
-// describe('8 - Crie um endpoint para deletar uma venda', () => {
-//   let connection;
-//   let db;
+describe('8 - Crie um endpoint para deletar uma venda', () => {
+  let connection;
+  let db;
 
-//   beforeAll(async () => {
-//     connection = await MongoClient.connect(mongoDbUrl, {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//     });
-//     db = connection.db('StoreManager');
-//     await db.collection('products').deleteMany({});
-//     await db.collection('sales').deleteMany({});
-//   });
+  beforeAll(async () => {
+    connection = await MongoClient.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = connection.db('StoreManager');
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+  });
 
-//   beforeEach(async () => {
-//     await db.collection('products').deleteMany({});
-//     await db.collection('sales').deleteMany({});
-//     const products = [{ name: 'Martelo de Thor', quantity: 10 },
-//       { name: 'Traje de encolhimento', quantity: 20 },
-//       { name: 'Escudo do Capitão América', quantity: 30 }];
-//     await db.collection('products').insertMany(products);
-//   });
+  beforeEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
+      { name: 'Traje de encolhimento', quantity: 20 },
+      { name: 'Escudo do Capitão América', quantity: 30 }];
+    await db.collection('products').insertMany(products);
+  });
 
-//   afterEach(async () => {
-//     await db.collection('products').deleteMany({});
-//     await db.collection('sales').deleteMany({});
-//   });
+  afterEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+  });
 
-//   afterAll(async () => {
-//     await connection.close();
-//   });
+  afterAll(async () => {
+    await connection.close();
+  });
 
-//   it('Será validado que é possível deletar uma venda com sucesso', async () => {
-//     let result;
-//     let resultSales;
-//     let resultProductId;
-//     let resultSalesId;
+  it('Será validado que é possível deletar uma venda com sucesso', async () => {
+    let result;
+    let resultSales;
+    let resultProductId;
+    let resultSalesId;
 
-//     await frisby
-//       .get(`${url}/products/`)
-//       .expect('status', 200)
-//       .then((response) => {
-//         const { body } = response;
-//         result = JSON.parse(body);
-//         resultProductId = result.products[0]._id;
-//       });
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        resultProductId = result.products[0]._id;
+      });
 
-//     await frisby.post(`${url}/sales/`,
-//       [
-//         {
-//           productId: resultProductId,
-//           quantity: 2,
-//         },
-//       ])
-//       .expect('status', 200)
-//       .then((responseSales) => {
-//         const { body } = responseSales;
-//         resultSales = JSON.parse(body);
-//         resultSalesId = resultSales._id;
-//       });
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: resultProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseSales) => {
+        const { body } = responseSales;
+        resultSales = JSON.parse(body);
+        resultSalesId = resultSales._id;
+      });
 
-//     await frisby.delete(`${url}/sales/${resultSalesId}`)
-//       .expect('status', 200);
+    await frisby.delete(`${url}/sales/${resultSalesId}`)
+      .expect('status', 200);
 
-//     await frisby.get(`${url}/sales/${resultSalesId}`)
-//       .expect('status', 404)
-//       .expect((resultGet) => {
-//         const { body } = resultGet;
-//         const resultGetBody = JSON.parse(body);
-//         const error = resultGetBody.err.code;
-//         const { message } = resultGetBody.err;
-//         expect(error).toBe('not_found');
-//         expect(message).toBe('Sale not found');
-//       });
-//   });
+    await frisby.get(`${url}/sales/${resultSalesId}`)
+      .expect('status', 404)
+      .expect((resultGet) => {
+        const { body } = resultGet;
+        const resultGetBody = JSON.parse(body);
+        const error = resultGetBody.err.code;
+        const { message } = resultGetBody.err;
+        expect(error).toBe('not_found');
+        expect(message).toBe('Sale not found');
+      });
+  });
 
-//   it('Será validado que não é possível deletar uma venda que não existe', async () => {
-//     await frisby.delete(`${url}/sales/${invalidId}`)
-//       .expect('status', 422)
-//       .expect((resultDelete) => {
-//         const { body } = resultDelete;
-//         const resultDeleteBody = JSON.parse(body);
-//         const error = resultDeleteBody.err.code;
-//         const { message } = resultDeleteBody.err;
-//         expect(error).toBe('invalid_data');
-//         expect(message).toBe('Wrong sale ID format');
-//       });
-//   });
-// });
+  it('Será validado que não é possível deletar uma venda que não existe', async () => {
+    await frisby.delete(`${url}/sales/${invalidId}`)
+      .expect('status', 422)
+      .expect((resultDelete) => {
+        const { body } = resultDelete;
+        const resultDeleteBody = JSON.parse(body);
+        const error = resultDeleteBody.err.code;
+        const { message } = resultDeleteBody.err;
+        expect(error).toBe('invalid_data');
+        expect(message).toBe('Wrong sale ID format');
+      });
+  });
+});

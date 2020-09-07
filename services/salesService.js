@@ -3,6 +3,7 @@ const {
   getSales,
   getSalesById,
   updateSalesInBank,
+  deleteSaleBank,
 } = require('../models/sales');
 
 const { validateParams, validateId } = require('./libValidation');
@@ -48,9 +49,14 @@ const updateSales = async (id, products) => {
   return result;
 };
 
+const deleteSales = async (id) => {
+//  await deleteSaleBank(id);
+};
+
 module.exports = {
   registeringSales,
   listSales,
   listSalesById,
   updateSales,
+  deleteSales,
 };
