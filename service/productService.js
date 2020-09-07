@@ -15,7 +15,7 @@ const validateProducts = async (name, quantity) => {
   if (quantity < 1) {
     return {
       error: true,
-      message: '\"quantity\" must be larger than or equal to 1',
+      message: '"quantity" must be larger than or equal to 1',
     };
   }
   if (typeof quantity !== 'number') {
@@ -53,9 +53,9 @@ const getProductById = async (id) => {
 
   if (!product) {
     return {
-      error:true,
+      error: true,
       message: 'Wrong id format',
-    }
+    };
   }
 
   return product;

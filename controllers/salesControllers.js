@@ -51,7 +51,7 @@ sales.put('/:id', rescue(async (req, res) => {
   return res.status(200).json(newSale);
 }));
 
-sales.get('/:id', rescue(async (req, res, next) => {
+sales.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
 
   const sale = await saleService.getSaleById(id);

@@ -2,11 +2,8 @@ const { ObjectId } = require('mongodb');
 
 const { connect } = require('./connect');
 
-const getAllProducts = async () => connect()
-  .then(db => db
-    .collection('products')
-    .find({})
-    .toArray(),
+const getAllProducts = async () => (
+  connect().then((db) => (db).collection('products').find({}).toArray())
 );
 
 const createProduct = async (name, quantity) => (

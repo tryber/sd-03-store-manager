@@ -44,7 +44,7 @@ const getSaleById = async (id) => {
 
   if (id.length !== 24) {
     return {
-      error:true,
+      error: true,
       message: 'Wrong sale ID format',
     };
   }

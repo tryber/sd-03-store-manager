@@ -10,7 +10,8 @@ const connect = async () => (
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(connection => connection.db(DB_DBNAME))
+  .then((connection) => (
+    connection.db(DB_DBNAME)))
 );
 
 module.exports = {
