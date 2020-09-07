@@ -54,8 +54,9 @@ sales.get('/sales/:id', async (req, res) => {
 });
 
 sales.put('/sales/:id', async (req, res) => {
-  const { productId, quantity } = req.body;
-  const update = await updateSales(productId, quantity);
+  const products = req.body;
+  const { id } = req.params;
+  const update = await updateSales(id, products);
   if (update.err) {
     return res.status(422).json(update);
   }

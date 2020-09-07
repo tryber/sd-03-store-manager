@@ -5,7 +5,7 @@ const {
   updateSalesInBank,
 } = require('../models/sales');
 
-const { validateParams } = require('./libValidation');
+const { validateParams, validateId } = require('./libValidation');
 
 const registeringSales = async (products) => {
   const result = await registerSales(products);
@@ -22,9 +22,30 @@ const listSalesById = async (id) => {
   return salesById;
 };
 
-const updateSales = async (id, quantity) => {
-  const validate = await validateParams(id, quantity);
-  return validate;
+const validateUpdate = (id, quantity) => {
+  if (validateId(id)) {
+    return {
+      err: { message: 'id invalid', code: 'invalid_data' },
+    };
+  }
+  if (validateParams(quantity)) {
+    return {
+      err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
+    };
+  }
+  if (typeof id === 'string') return id;
+};
+
+const updateSales = async (id, products) => {
+  let dataValid;
+  // let dataUndefined;
+  products.map((e) => validateUpdate(e.productId, e.quantity)).forEach((e) => {
+    if (e !== 'undefined') dataValid = e;
+    return null;
+  });
+  if (dataValid) return dataValid;
+  const result = await updateSalesInBank(id, products);
+  return result;
 };
 
 module.exports = {

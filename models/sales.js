@@ -6,14 +6,18 @@ const registerSales = async (products) => connect()
   .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...products] }));
 
 const getSales = async () => connect()
-  .then((db) => db.collection('sales').find({}).toArray());
+  .then((db) => db.collection('sales')
+    .find({})
+    .toArray());
 
 const getSalesById = async (id) => connect()
-  .then((db) => db.collection('sales').findOne(ObjectId(id)));
+  .then((db) => db.collection('sales')
+    .findOne(ObjectId(id)));
 
-const updateSalesInBank = async (id, quantity) => connect()
-  .then((db) => db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { id, quantity } }))
-  .then(({ insertedId }) => ({ insertedId, quantity }));
+const updateSalesInBank = async (id, products) => connect()
+  .then((db) => db.collection('sales')
+    .updateOne({ _id: ObjectId(id) }, { $set: { itensSold: products } }))
+  .then(({ insertedId }) => ({ insertedId, itensSold: products }));
 
 module.exports = {
   registerSales,
