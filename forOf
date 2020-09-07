@@ -1,0 +1,14 @@
+    for (const { quantity, productId } of userSale) {
+      const salesQnty = salesQuantityIsValid(quantity);
+      const productQnty = await stockVerification(productId, quantity);
+      console.log(productQnty);
+      console.log('2');
+      if (salesQnty) {
+        throw new ErrorHandler(422, salesQnty, 'invalid_data');
+      }
+      console.log('3');
+      if (productQnty) {
+        throw new ErrorHandler(404, productQnty, 'stock_problem');
+      }
+      console.log('4');
+    }
