@@ -7,23 +7,24 @@ const validateId = (id) => {
 };
 
 const validateParams = (quantity) => {
+  let response;
   if (quantity < 1) {
-    return {
+    response = {
       err:
         { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
     };
   }
   if (quantity === 0) {
-    return {
+    response = {
       err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
     };
   }
   if (typeof quantity !== 'number') {
-    return {
+    response = {
       err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
     };
   }
-  return null;
+  return response;
 };
 
 module.exports = { validateParams, validateId };
