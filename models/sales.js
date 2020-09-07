@@ -12,17 +12,19 @@ const getSales = async () => connect()
       .toArray());
 
 const getSalesById = async (id) => connect()
-  .then((db) =>
-    db.collection('sales')
-      .findOne(ObjectId(id)));
+  .then((db) => db.collection('sales').findOne(ObjectId(id)))
+  .catch((error) => error);
 
 const updateSalesInBank = async (id, products) => connect()
   .then((db) => db.collection('sales')
     .updateOne({ _id: ObjectId(id) }, { $set: { itensSold: products } }))
   .then(({ insertedId }) => ({ insertedId, itensSold: products }));
 
-const deleteSaleBank = async (id, product, quantity) => connect()
-  .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id), product, quantity }));
+const deleteSaleBank = async (id) => {
+  const db = await connect();
+  db.collection('sales').deleteOne({ _id: ObjectId(id) })
+    .catch((error) => error);
+};
 
 module.exports = {
   registerSales,

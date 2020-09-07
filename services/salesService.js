@@ -49,8 +49,8 @@ const updateSales = async (id, products) => {
   return result;
 };
 
-const deleteSales = async (id, product, quantity) => {
-  const deleteIn = await deleteSaleBank(id, product, quantity);
+const deleteSales = async (id) => {
+  const deleteIn = await deleteSaleBank(id);
   return deleteIn;
 };
 

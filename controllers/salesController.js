@@ -29,8 +29,10 @@ sales.post('/sales', async (req, res) => {
   let result;
   products
     .map((e) => validateSales(e.productId, e.quantity))
-    .forEach((e) => {
-      if (e !== 'undefined') result = e;
+    .map((e) => {
+      if (e !== 'undefined') {
+        result = e;
+      }
       return null;
     });
 
@@ -68,39 +70,41 @@ sales.put('/sales/:id', async (req, res) => {
 });
 
 const validDeleteId = (id) => {
-  const newId = parseInt(id, 10);
-  const regex = /^[0-9a-fA-F]{24}$/;
-  if (!regex.test(newId)) {
+  // const newId = parseInt(id, 10);
+  const regex = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
+  const result = regex.test(id);
+  if (!result) {
     return { err: { message: 'Wrong id format', code: 'invalid_data' } };
   }
-  return false;
+  return null;
 };
 
-sales.delete('/sales/:id', rescue(async (req, res) => {
+sales.delete('/sales/:id', async (req, res) => {
   const errMessage = { err: { message: 'Wrong sale ID format', code: 'invalid_data' } };
-  const { id } = req.params;
-  const productExits = await listSalesById(id);
-  const idIsvalid = validDeleteId(req.params.id);
-  const { itensSold } = productExits;
+  const { params } = req;
+  const { id } = params;
+  const idIsvalid = validDeleteId(id);
+  // const { itensSold } = productExits;
 
-  let productTodelete;
-  let quantityTodelete;
-  await itensSold.forEach((e) => {
-    quantityTodelete = e.quantity;
-    productTodelete = e.productId;
-    return null;
-  });
-
-  const deleting = await deleteSales(id, productTodelete, quantityTodelete);
-
+  // let productTodelete;
+  // let quantityTodelete;
+  // await itensSold.forEach((e) => {
+  //   quantityTodelete = e.quantity;
+  //   productTodelete = e.productId;
+  //   return null;
+  // });
   if (idIsvalid) {
     return res.status(422).json(errMessage);
   }
 
-  if (!deleting) {
-    return res.status(404).json(errMessage);
+  const saleExits = await listSalesById(id);
+
+  if (!saleExits) {
+    return res.status(422).json(errMessage);
   }
-  return res.status(200).json(deleting);
-}));
+  await deleteSales(id);
+  console.log('sera que foi chamado', deleteSales(id));
+  return res.status(200).json(errMessage);
+});
 
 module.exports = { sales };
