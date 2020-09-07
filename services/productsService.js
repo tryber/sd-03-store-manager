@@ -8,7 +8,6 @@ const {
 } = require('../models/products');
 
 const validateProduct = async (name, quantity) => {
-  const response = true;
   if (name.length < 5 && typeof (name !== 'string')) {
     return {
       err:
@@ -27,7 +26,7 @@ const validateProduct = async (name, quantity) => {
   }
   const checkName = await verifyNameExit(name);
   if (checkName) return { err: { code: 'invalid_data', message: 'Product already exists' } };
-  return response;
+  // return true;
 };
 
 const createProducts = async (name, quantity) => {
