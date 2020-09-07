@@ -50,6 +50,9 @@ const showSaleById = async (req, res) => {
   }
 
   const result = await services.saleService.getSaleById(id);
+  if (!result) {
+    return res.status(404).send({ err: { message: 'Sale not found', code: 'not_found' } });
+  }
   return res.status(200).send(result);
 };
 
@@ -76,9 +79,32 @@ const updateSaleById = async (req, res) => {
   return res.status(200).send(result);
 };
 
+const deleteSaleById = async (req, res) => {
+  const { params } = req;
+  const { id } = params;
+  const validation = productsController.validateId(id);
+
+  if (validation) {
+    const response = { err: { message: 'Wrong sale ID format', code: 'invalid_data' } };
+    return res.status(422).send(response);
+  }
+
+  const saleExists = await services.saleService.getSaleById(id);
+  // validações
+  if (!saleExists) {
+    const response = { err: { message: 'Wrong sale ID format', code: 'invalid_data' } };
+    return res.status(422).send(response);
+  }
+
+  // const result = await services.saleService.deleteSaleById(id);
+  await services.saleService.deleteSaleById(id);
+  return res.status(200).send(saleExists);
+};
+
 module.exports = {
   createSale,
   showAllSales,
   showSaleById,
   updateSaleById,
+  deleteSaleById,
 };

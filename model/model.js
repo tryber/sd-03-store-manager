@@ -6,7 +6,8 @@ const createProductInDB = async (name, quantity) =>
   .then((db) => db
     .collection('products')
     .insertOne({ name, quantity }))
-    .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
+    .then(({ insertedId }) => ({ _id: insertedId, name, quantity }))
+    .catch((error) => error);
 
 const getAllProducts = async () =>
   mongoc.connect()
@@ -14,14 +15,16 @@ const getAllProducts = async () =>
     .collection('products')
     .find({})
     .toArray(),
-  );
+  )
+  .catch((error) => error);
 
 const getProductByName = async (name) =>
   mongoc.connect()
   .then((db) => db
     .collection('products')
     .findOne({ name }),
-  );
+  )
+  .catch((error) => error);
 
 const getProductById = async (id) => mongoc.connect()
   .then((db) => db.collection('products').findOne(ObjectId(id)))
@@ -44,7 +47,8 @@ const createSaletInDB = async (products) =>
   .then((db) => db
     .collection('sales')
     .insertOne({ itensSold: [...products] }))
-    .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...products] }));
+    .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...products] }))
+    .catch((error) => error);
 
 const getAllSales = async () =>
   mongoc.connect()
@@ -52,7 +56,8 @@ const getAllSales = async () =>
       .collection('sales')
       .find({})
       .toArray(),
-    );
+    )
+    .catch((error) => error);
 
 const getSaleById = async (id) => mongoc.connect()
   .then((db) => db.collection('sales').findOne(ObjectId(id)))
@@ -66,8 +71,14 @@ const updateSaleById = async (id, productId, quantity) => {
       { _id: ObjectId(id) },
       { $set: { itensSold } },
   ))
-  .then(() => ({ _id: id, itensSold }));
+  .then(() => ({ _id: id, itensSold }))
+  .catch((error) => error);
 };
+
+const deleteSaleById = async (id) => mongoc.connect()
+  .then((db) => db.collection('sales')
+    .deleteOne({ _id: ObjectId(id) }))
+  .catch((error) => error);
 
 module.exports = {
   getProductByName,
@@ -80,4 +91,5 @@ module.exports = {
   getAllSales,
   getSaleById,
   updateSaleById,
+  deleteSaleById,
 };

@@ -9,6 +9,7 @@ app.get('/sales', controllers.salesController.showAllSales);
 app.post('/sales', controllers.salesController.createSale);
 app.get('/sales/:id', controllers.salesController.showSaleById);
 app.put('/sales/:id', controllers.salesController.updateSaleById);
+app.delete('/sales/:id', controllers.salesController.deleteSaleById);
 
 app.get('/products', controllers.productsController.showAllProducts);
 app.post('/products', controllers.productsController.createProduct);
