@@ -2,20 +2,29 @@ const { salesModel, productsModel } = require('../models');
 const { validateId, validateSaleData, getErrorObject } = require('./helpers');
 const { invalidData, wrongFormatOrQuantity, wrondFormatSaleId } = require('./errorLibrary');
 
-const createSale = (products) => {
+const createSale = async (products) => {
   const isDataValid = validateSaleData(products);
-
-  if (isDataValid) {
-    products.forEach(({ productId }) => {
-      const product = productsModel.getProductById(productId);
-
-      if (!product) getErrorObject(invalidData, wrongFormatOrQuantity);
-    });
-  }
 
   if (!isDataValid) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
+  if (isDataValid) {
+    await products.forEach(async ({ productId, quantity }) => {
+      const product = await productsModel.getProductById(productId);
+      const limit = product.quantity;
+
+      if (!product) return getErrorObject(invalidData, wrongFormatOrQuantity);
+
+      if (quantity > limit) {
+        return getErrorObject('stock_problem', 'Such amount is not permitted to sell');
+      }
+    });
+  }
+
   const sale = salesModel.createSale(products);
+
+  await products.forEach(async ({ productId, quantity }) => {
+    await productsModel.updateQuantity(productId, -quantity);
+  });
 
   return sale;
 };
@@ -49,11 +58,15 @@ const deleteSale = async (id) => {
 
   if (typeof isIdValid === 'object') return isIdValid;
 
-  const sale = await salesModel.getSaleById(id);
+  const sale = await salesModel.deleteSale(id);
 
   if (!sale) return getErrorObject(invalidData, wrondFormatSaleId);
 
-  await salesModel.deleteSale(id);
+  await sale.itensSold.forEach(async ({ productId, quantity }) => {
+    await productsModel.updateQuantity(productId, quantity);
+  });
+
+  return sale;
 };
 
 module.exports = {

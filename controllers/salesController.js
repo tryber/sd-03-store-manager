@@ -35,6 +35,10 @@ sales.post(
 
     const createdSale = await salesService.createSale(products);
 
+    if (createdSale.err && createdSale.err.code === 'stock_problem') {
+      return res.status(404).json(createdSale);
+    }
+
     if (createdSale.err) {
       return res.status(422).json(createdSale);
     }
@@ -70,7 +74,7 @@ sales.delete(
       return res.status(422).json(deletedSale);
     }
 
-    return res.status(200).end();
+    return res.status(200).json(deletedSale);
   }),
 );
 
