@@ -3,25 +3,25 @@ const productsModel = require('../models/products');
 const getAllProducts = async () => {
   const list = await productsModel.getAllProducts();
   return list;
-}
+};
 
 const validateProducts = async (name, quantity) => {
   if (name.length < 5) {
     return {
-      error:true,
-      message: '\"name\" length must be at least 5 characters long',
-    } 
+      error: true,
+      message: '"name" length must be at least 5 characters long',
+    };
   }
   if (quantity < 1) {
     return {
-      error:true,
+      error: true,
       message: '\"quantity\" must be larger than or equal to 1',
-    }
+    };
   }
   if (typeof quantity !== 'number') {
     return {
       error: true,
-      message: '\"quantity\" must be a number',
+      message: '"quantity" must be a number',
     };
   }
   return { error: false };

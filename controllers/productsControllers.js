@@ -6,12 +6,13 @@ const productsService = require('../service/productService');
 const products = Router();
 
 const xablau = 'err';
+const StringProd = 'products';
 
 products.get('/', rescue(async (_, res) => {
   const product = await productsService.getAllProducts();
 
   return res.status(200).json({
-    'products': product
+    [StringProd]: product,
   });
 }));
 
@@ -20,7 +21,7 @@ products.post('/', rescue(async (req, res) => {
 
   const product = await productsService.createProduct(name, quantity);
 
-  if(product.error) {
+  if (product.error) {
     return res.status(422).json({
       [xablau]: {
         code: 'invalid_data',
@@ -29,10 +30,10 @@ products.post('/', rescue(async (req, res) => {
     });
   }
 
-  return res.status(201).json(product)
+  return res.status(201).json(product);
 }));
 
-products.get('/:id', rescue(async (req, res, next) => {
+products.get('/:id', rescue(async (req, res) => {
   const { id } = req.params;
 
   const product = await productsService.getProductById(id);
@@ -60,8 +61,8 @@ products.put('/:id', rescue(async (req, res) => {
       [xablau]: {
         code: 'invalid_data',
         message: newProduct.message,
-      }
-    })
+      },
+    });
   }
 
   return res.status(200).json(newProduct);
@@ -77,8 +78,8 @@ products.delete('/:id', rescue(async (req, res) => {
       [xablau]: {
         code: 'invalid_data',
         message: deleted.message,
-      }
-    })
+      },
+    });
   }
 
   return res.status(200).json(deleted);

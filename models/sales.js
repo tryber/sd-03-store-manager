@@ -6,30 +6,33 @@ const getAllSales = async () => connect()
   .then(db => db
     .collection('sales')
     .find({})
-    .toArray()
+    .toArray(),
 );
 
 const createSale = async (itensSold) => (
   connect()
-    .then(db => db.collection('sales').insertOne({ itensSold })))
-    .then(({ insertedId }) => ({ _id: insertedId, itensSold })
+    .then((db) => (
+      db.collection('sales').insertOne({ itensSold }))))
+      .then(({ insertedId }) => ({ _id: insertedId, itensSold })
 );
 
 const updateSale = async (id, itensSold) => (
   connect()
-    .then(db => db.collection('sales')
-      .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }))
-    .then(() => ({ _id: id, itensSold }))
+    .then((db) => (
+      db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { itensSold } })))
+      .then(() => ({ _id: id, itensSold }))
 );
 
 const getSaleById = async (id) => (
   connect()
-    .then(db => db.collection('sales').findOne(ObjectId(id)))
+    .then((db) => (
+      db.collection('sales').findOne(ObjectId(id))))
 );
 
 const deleteSale = async (id) => (
   connect()
-    .then(db => db.collection('sales').deleteOne({ _id: ObjectId(id) }))
+    .then((db) => (
+      db.collection('sales').deleteOne({ _id: ObjectId(id) })))
 );
 
 module.exports = {

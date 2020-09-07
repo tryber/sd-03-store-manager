@@ -3,15 +3,15 @@ const salesModel = require('../models/sales');
 const getAllSales = async () => {
   const list = await salesModel.getAllSales();
   return list;
-}
+};
 
 const validateSale = async (itensSold) => {
-  const testQuantity = itensSold.some((elem) => elem.quantity <1);
+  const testQuantity = itensSold.some((elem) => elem.quantity < 1);
   if (testQuantity) {
     return {
-      error:true,
+      error: true,
       message: 'Wrong product ID or invalid quantity',
-    }
+    };
   }
   const testQuantityNumber = itensSold.some((elem) => typeof elem.quantity !== 'number');
   if (testQuantityNumber) {
@@ -44,8 +44,8 @@ const getSaleById = async (id) => {
 
   if (id.length !== 24) {
     return {
-        error:true,
-        message: 'Wrong sale ID format',
+      error:true,
+      message: 'Wrong sale ID format',
     };
   }
 
@@ -53,7 +53,7 @@ const getSaleById = async (id) => {
 
   if (sale === null) {
     return {
-      error:true,
+      error: true,
       message: 'Sale not found',
     };
   }
@@ -63,12 +63,11 @@ const getSaleById = async (id) => {
 
 const deleteSale = async (id) => {
   const testId = await getSaleById(id);
-  
+
   if (testId.error) return testId;
 
   return salesModel.deleteSale(id);
 };
-  
 
 module.exports = {
   getAllSales,

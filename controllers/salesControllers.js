@@ -6,12 +6,13 @@ const saleService = require('../service/saleService');
 const sales = Router();
 
 const xablau = 'err';
+const StringSale = 'sales';
 
 sales.get('/', rescue(async (_, res) => {
   const sale = await saleService.getAllSales();
 
   return res.status(200).json({
-    'sales': sale
+    [StringSale]: sale,
   });
 }));
 
@@ -20,7 +21,7 @@ sales.post('/', rescue(async (req, res) => {
 
   const sale = await saleService.createSale(itensSold);
 
-  if(sale.error) {
+  if (sale.error) {
     return res.status(422).json({
       [xablau]: {
         code: 'invalid_data',
@@ -29,7 +30,7 @@ sales.post('/', rescue(async (req, res) => {
     });
   }
 
-  return res.status(200).json(sale)
+  return res.status(200).json(sale);
 }));
 
 sales.put('/:id', rescue(async (req, res) => {
@@ -43,8 +44,8 @@ sales.put('/:id', rescue(async (req, res) => {
       [xablau]: {
         code: 'invalid_data',
         message: newSale.message,
-      }
-    })
+      },
+    });
   }
 
   return res.status(200).json(newSale);
@@ -54,14 +55,14 @@ sales.get('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const sale = await saleService.getSaleById(id);
-    
-  if(sale.message === 'Sale not found') {
+
+  if (sale.message === 'Sale not found') {
     return res.status(404).json({
       [xablau]: {
         code: 'not_found',
         message: sale.message,
-      }
-    })
+      },
+    });
   }
 
   if (sale.error) {
@@ -86,8 +87,8 @@ sales.delete('/:id', rescue(async (req, res) => {
       [xablau]: {
         code: 'invalid_data',
         message: deletedSale.message,
-      }
-    })
+      },
+    });
   }
 
   return res.status(200).json(deletedSale);
