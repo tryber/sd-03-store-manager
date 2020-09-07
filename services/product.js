@@ -33,11 +33,12 @@ const addProduct = async (name, quantity) => {
 const findProduct = async (id) => {
   const product = await Products.findById(id);
   if (!product) {
-    return { err: {
-      code: 'invalid_data',
-      message: 'Wrong id format',
-    },
-    error: true };
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+      error: true };
   }
   return product;
 };
@@ -52,11 +53,12 @@ const updateProduct = async (id, name, quantity) => {
 const deleteProduct = async (id) => {
   const found = await Products.findById(id);
   if (!found) {
-    return { err: {
-      code: 'invalid_data',
-      message: 'Wrong id format',
-    },
-    error: true };
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+      error: true };
   }
   await Products.exclude(id);
   return found;
