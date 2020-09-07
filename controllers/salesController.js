@@ -53,8 +53,32 @@ const showSaleById = async (req, res) => {
   return res.status(200).send(result);
 };
 
+const updateSaleById = async (req, res) => {
+  const { params } = req;
+  const { id } = params;
+  const { productId, quantity } = req.body[0]; 
+
+  //validacoes
+  const saleToUpdate = await services.saleService.getSaleById(id);
+  const productIdToUpdate = saleToUpdate.itensSold.filter((e) => e.productId === productId);
+
+  if (!productIdToUpdate) {
+    const idValidation = validateSales('mismatch', quantity);
+    return res.status(422).send(idValidation);
+  }
+  const validation = validateSales(productId, quantity);
+
+  if (validation) {
+    return res.status(422).send(validation);
+  }
+
+  const result = await services.saleService.updateSaleById(id, productId, quantity);
+  return res.status(200).send(result);
+};
+
 module.exports = {
   createSale,
   showAllSales,
   showSaleById,
+  updateSaleById,
 };

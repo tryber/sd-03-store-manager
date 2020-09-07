@@ -58,6 +58,17 @@ const getSaleById = async (id) => mongoc.connect()
   .then((db) => db.collection('sales').findOne(ObjectId(id)))
   .catch((error) => error);
 
+const updateSaleById = async (id, productId, quantity) => { 
+  const itensSold = [{ productId, quantity }];
+  return mongoc.connect()
+  .then((db) => db.collection('sales')
+    .updateOne(
+      { _id: ObjectId(id)},
+      { $set: {itensSold} },
+  ))
+  .then(() => ({ _id: id, itensSold}));
+};
+
 module.exports = {
   getProductByName,
   createProductInDB,
@@ -68,4 +79,5 @@ module.exports = {
   createSaletInDB,
   getAllSales,
   getSaleById,
+  updateSaleById,
 };
