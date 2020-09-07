@@ -1,12 +1,12 @@
 const { connect } = require('./connect');
-const { ObjectId }= require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const add = async (itensSold) => {
   const db = await connect();
 
   const { insertedId } = await db.collection('sales').insertOne({ itensSold });
 
-  return { _id: insertedId, itensSold};
+  return { _id: insertedId, itensSold };
 };
 
 const listAll = async () => {
@@ -28,15 +28,15 @@ const findById = async (id) => {
 const updateById = async (id, itensSold) => {
   const db = await connect();
 
-  await db.collection('sales').findOneAndUpdate({ _id: ObjectId(id)}, { $set: { itensSold }});
-  
+  await db.collection('sales').findOneAndUpdate({ _id: ObjectId(id) }, { $set: { itensSold } });
+
   return { _id: id, itensSold };
 };
 
 const removeById = async (id) => {
   const db = await connect();
-  await db.collection('sales').deleteOne({ _id: ObjectId(id)});
-}
+  await db.collection('sales').deleteOne({ _id: ObjectId(id) });
+};
 
 module.exports = {
   add,
@@ -44,4 +44,4 @@ module.exports = {
   findById,
   updateById,
   removeById,
-}
+};

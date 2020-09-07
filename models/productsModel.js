@@ -1,5 +1,5 @@
 const { connect } = require('./connect');
-const { ObjectId }= require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const add = async (name, quantity) => {
   const db = await connect();
@@ -36,15 +36,15 @@ const findById = async (id) => {
 const updateById = async (id, name, quantity) => {
   const db = await connect();
 
-  await db.collection('products').findOneAndUpdate({ _id: ObjectId(id)}, { $set: { name, quantity }});
-  
+  await db.collection('products').findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } });
+
   return { _id: id, name, quantity };
 };
 
 const removeById = async (id) => {
   const db = await connect();
-  await db.collection('products').deleteOne({ _id: ObjectId(id)});
-}
+  await db.collection('products').deleteOne({ _id: ObjectId(id) });
+};
 
 module.exports = {
   add,

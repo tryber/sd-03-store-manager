@@ -24,4 +24,4 @@ app.get('/sales/:id', controllers.salesController.findSaleById);
 app.put('/sales/:id', controllers.salesController.updateSaleById);
 app.delete('/sales/:id', controllers.salesController.deleteSale);
 
-app.listen(3000, () => console.log('Listening on 3000'))
+app.listen(3000, () => console.log('Listening on 3000'));

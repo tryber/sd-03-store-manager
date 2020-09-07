@@ -2,16 +2,17 @@ const rescue = require('express-rescue');
 const productsService = require('../services/productsService');
 const productsModel = require('../models/productsModel');
 
+const errorKey = 'err';
+
 const addProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
 
   const newProduct = await productsService.add(name, quantity);
-  
+
   if (newProduct.code) {
-    return res.status(422).json({ 'err': newProduct })
+    return res.status(422).json({ [errorKey]: newProduct });
   }
-  
-  
+ 
   return res.status(201).json(newProduct);
 });
 
@@ -25,7 +26,7 @@ const findProductById = rescue(async (req, res) => {
 
   const product = await productsService.listById(id);
 
-  if(product.code) return res.status(422).json( { 'err': product });
+  if (product.code) return res.status(422).json({ [errorKey]: product });
 
   return res.status(200).json(product);
 });
@@ -35,9 +36,9 @@ const updateProductById = rescue(async (req, res) => {
   const { id } = req.params;
 
   const newProduct = await productsService.updateProduct(id, name, quantity);
-  
+
   if (newProduct.code) {
-    return res.status(422).json({ 'err': newProduct })
+    return res.status(422).json({ [errorKey]: newProduct });
   }
 
   return res.status(200).json(newProduct);
@@ -46,9 +47,9 @@ const updateProductById = rescue(async (req, res) => {
 const deleteProduct = rescue(async (req, res) => {
   const { id } = req.params;
   const result = await productsService.deleteById(id);
-  
+
   if (result) {
-    return res.status(422).json({ 'err': result })
+    return res.status(422).json({[errorKey]: result})
   }
 
   return res.status(200).end();
