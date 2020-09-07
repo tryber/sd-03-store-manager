@@ -1,7 +1,7 @@
 const productsModel = require('../models/productsModel');
 
 const verifyNameQuantity = (name, quantity) => {
-  if(typeof (quantity) !== 'number') {
+  if (typeof (quantity) !== 'number') {
     return { code: 'invalid_data', message: '"quantity" must be a number' };
   }
   if (quantity <= 0) {
@@ -14,7 +14,7 @@ const verifyNameQuantity = (name, quantity) => {
 };
 
 const add = async (name, quantity) => {
-  const verify = verifyNameQuantity(name, quantity)
+  const verify = verifyNameQuantity(name, quantity);
 
   if (verify) return verify;
 
@@ -41,7 +41,7 @@ const updateProduct = async (id, name, quantity) => {
     return { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' };
   }
   if (name.length < 5) {
-    return { code: 'invalid_data', message:'"name" length must be at least 5 characters long' };
+    return { code: 'invalid_data', message: '"name" length must be at least 5 characters long' };
   }
   return productsModel.updateById(id, name, quantity);
 };

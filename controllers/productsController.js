@@ -12,7 +12,7 @@ const addProduct = rescue(async (req, res) => {
   if (newProduct.code) {
     return res.status(422).json({ [errorKey]: newProduct });
   }
- 
+
   return res.status(201).json(newProduct);
 });
 
@@ -49,7 +49,7 @@ const deleteProduct = rescue(async (req, res) => {
   const result = await productsService.deleteById(id);
 
   if (result) {
-    return res.status(422).json({[errorKey]: result})
+    return res.status(422).json({ [errorKey]: result });
   }
 
   return res.status(200).end();
