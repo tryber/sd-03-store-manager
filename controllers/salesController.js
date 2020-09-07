@@ -25,10 +25,12 @@ sales.post('/sales', async (req, res) => {
   const products = req.body;
 
   let result;
-  products.map((e) => validateSales(e.productId, e.quantity)).forEach((e) => {
-    if (e !== 'undefined') result = e;
-    return null;
-  });
+  products
+    .map((e) => validateSales(e.productId, e.quantity))
+    .forEach((e) => {
+      if (e !== 'undefined') result = e;
+      return null;
+    });
 
   if (result) {
     return res.status(422).json(result);
