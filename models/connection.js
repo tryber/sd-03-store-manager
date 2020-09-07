@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 
 // const { DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
-// para rodar localmente
+// para rodar localmente teste
 /* const user = encodeURIComponent(DB_USER);
 const password = encodeURIComponent(DB_PASSWORD);
 const authMechanism = 'DEFAULT';
