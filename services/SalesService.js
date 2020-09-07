@@ -11,33 +11,37 @@ const validateSaleCreate = async ({productId, quantity} ) => {
 };
 
 const saleCreate = async (products) => {
-    const validation = validateSaleCreate(products);
-    console.log(validation);
-    if(validation === false ) {
-    code = invalid;
-    message = 'Wrong product ID or invalid quantity';
-    return { err: { code, message } };
-    }
-
-    if (validation === true) {
-        await products.forEach(async (productId, quantity ) => {
-          const product = await productsModel.productId(productId);
-          const stock = product.quantity;
-    
-    if (!product) 
-        { 
-         code = invalid;
-         message = 'Wrong product ID or invalid quantity';
-         return { err: { code, message } };
-     }
-    
-    if (quantity > stock) {
-        code = stock_error;
+    let validation ;
+    products.forEach((product) => {    
+    validation = validateSaleCreate(product);
+    if(!validation) {
+        code = invalid;
         message = 'Wrong product ID or invalid quantity';
         return { err: { code, message } };
         }
-    });
- }
+    
+        if (validation) {
+              products.forEach(async ({productId, quantity }) => {
+               if(productId !== undefined ) {
+                const product = await productsModel.productId(productId);
+              const stock = product.quantity;
+               }
+
+        if (!product) 
+            { 
+             code = invalid;
+             message = 'Wrong product ID or invalid quantity';
+             return { err: { code, message } };
+         }
+        
+        if (quantity > stock) {
+            code = stock_error;
+            message = 'Wrong product ID or invalid quantity';
+            return { err: { code, message } };
+            }
+        });
+     }
+    })    
 }
 
 

@@ -12,11 +12,11 @@ sales.post(
   
       const sale = await salesService.saleCreate(products);
   
-      if (sale && sale.err && sale.err.code === 'stock_problem') {
+      if (sale.err && sale.err.code === 'stock_problem') {
         return res.status(404).json(sale);
       }
   
-      if (sale &&  sale.err) {
+      if (sale.err) {
         return res.status(422).json(sale);
       }
   
