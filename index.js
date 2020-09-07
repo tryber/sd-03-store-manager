@@ -7,6 +7,10 @@ const productsRouter = require('./controllers/products');
 
 const app = express();
 
+app.get('/', (_req, res) => {
+  res.send();
+});
+
 app.use(bodyParser.json());
 
 app.use((request, _, next) => {
@@ -14,8 +18,4 @@ app.use((request, _, next) => {
   next();
 });
 
-app.get('/', rescue((_req, res) => {
-  res.send();
-}));
-
-app.use('/products', productsRouter);
+app.use('/products', rescue(productsRouter));

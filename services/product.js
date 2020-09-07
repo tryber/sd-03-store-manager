@@ -12,7 +12,7 @@ const validadeProduct = (name, quantity) => {
     case typeof quantity === 'string':
       err.message = '"quantity" must be a number';
       break;
-    case !Object.keys(Products.findByName(name)).length:
+    case !Object.keys(Products.findByName(name)).length || !Products.findByName(name):
       err.message = 'Product already exists';
       break;
     default:
@@ -30,4 +30,36 @@ const addProduct = async (name, quantity) => {
   return { _id: product.insertedId, name, quantity };
 };
 
-module.exports = { listProducts, addProduct };
+const findProduct = async (id) => {
+  const product = await Products.findById(id);
+  if (!product) {
+    return { err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    },
+    error: true };
+  }
+  return product;
+};
+
+const updateProduct = async (id, name, quantity) => {
+  const err = validadeProduct(name, quantity);
+  if (err.message) return { err, error: true };
+  const product = await Products.update(id, name, quantity);
+  return { _id: product.insertedId, name, quantity };
+};
+
+const deleteProduct = async (id) => {
+  const found = await Products.findById(id);
+  if (!found) {
+    return { err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    },
+    error: true };
+  }
+  await Products.exclude(id);
+  return found;
+};
+
+module.exports = { listProducts, addProduct, findProduct, updateProduct, deleteProduct };
