@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const rescue = require('express-rescue');
 const {
   registeringSales,
   listSales,
@@ -9,7 +10,7 @@ const {
 
 const sales = Router();
 
-const { validateParams } = require('../services/libValidation');
+const { validateParams, validateId } = require('../services/libValidation');
 
 const validateSales = (id, quantity) => {
   const regex = /^[0-9a-fA-F]{24}$/;
@@ -66,15 +67,40 @@ sales.put('/sales/:id', async (req, res) => {
   return res.status(200).json(update);
 });
 
-sales.delete('/sales/:id', async (req, res) => {
-  const { id } = req.params;
-
-  const deleting = await deleteSales(id);
-
-  if (deleting.err) {
-    return res.status(422).json(deleting);
+const validDeleteId = (id) => {
+  const newId = parseInt(id, 10);
+  const regex = /^[0-9a-fA-F]{24}$/;
+  if (!regex.test(newId)) {
+    return { err: { message: 'Wrong id format', code: 'invalid_data' } };
   }
-  return res.status(200).end();
-});
+  return false;
+};
+
+sales.delete('/sales/:id', rescue(async (req, res) => {
+  const errMessage = { err: { message: 'Wrong sale ID format', code: 'invalid_data' } };
+  const { id } = req.params;
+  const productExits = await listSalesById(id);
+  const idIsvalid = validDeleteId(req.params.id);
+  const { itensSold } = productExits;
+
+  let productTodelete;
+  let quantityTodelete;
+  await itensSold.forEach((e) => {
+    quantityTodelete = e.quantity;
+    productTodelete = e.productId;
+    return null;
+  });
+
+  const deleting = await deleteSales(id, productTodelete, quantityTodelete);
+
+  if (idIsvalid) {
+    return res.status(422).json(errMessage);
+  }
+
+  if (!deleting) {
+    return res.status(404).json(errMessage);
+  }
+  return res.status(200).json(deleting);
+}));
 
 module.exports = { sales };
