@@ -19,8 +19,8 @@ sale.post(
 sale.get(
   '/',
   rescue(async (_req, res) => {
-    const returnSales = await salesService.getAllSales();
-    return res.status(200).json(returnSales);
+    const returnedSales = await salesService.getAllSales();
+    return res.status(200).json(returnedSales);
   }),
 );
 
@@ -28,12 +28,12 @@ sale.get(
   '/:id',
   rescue(async (req, res) => {
     const { id } = req.params;
-    const sale = await salesService.getSaleById(id);
+    const Returnedsale = await salesService.getSaleById(id);
 
-    if (sale && sale.err) {
-      return res.status(404).json(sale);
+    if (Returnedsale && Returnedsale.err) {
+      return res.status(404).json(Returnedsale);
     }
-    return res.status(200).json(sale);
+    return res.status(200).json(Returnedsale);
   }),
 );
 
