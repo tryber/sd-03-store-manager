@@ -14,42 +14,22 @@ const { ErrorHandler } = require('../utils/ErrorHandler');
 const insertSale = async (req, res, next) => {
   try {
     const userSale = req.body;
-    console.log('1');
 
-    for (const { quantity, productId } of userSale) {
-      const salesQnty = salesQuantityIsValid(quantity);
-      const productQnty = await stockVerification(productId, quantity);
-      console.log(productQnty);
-      console.log('2');
-      if (salesQnty) {
-        throw new ErrorHandler(422, salesQnty, 'invalid_data');
-      }
-      console.log('3');
-      if (productQnty) {
-        throw new ErrorHandler(404, productQnty, 'stock_problem');
-      }
-      console.log('4');
-    }
-
-    // await userSale.forEach(async ({ productId, quantity }) => {
-    //   const salesQnty = salesQuantityIsValid(quantity);
-    //   const productQnty = await stockVerification(productId, quantity);
-    //   console.log(productQnty);
-    //   console.log('2');
-    //   if (salesQnty) {
-    //     throw new ErrorHandler(422, salesQnty, 'invalid_data');
-    //   }
-    //   console.log('3');
-    //   if (productQnty) {
-    //     throw new ErrorHandler(400, productQnty, 'invalid_data');
-    //   }
-    //   console.log('4');
-    // });
-
-    console.log('5');
+    await Promise.all(
+      userSale.map(async ({ productId, quantity }) => {
+        const salesQnty = salesQuantityIsValid(quantity);
+        const productQnty = await stockVerification(productId, quantity);
+        if (salesQnty) {
+          throw new ErrorHandler(422, salesQnty, 'invalid_data');
+        }
+        if (productQnty) {
+          throw new ErrorHandler(404, productQnty, 'stock_problem');
+        }
+      }),
+    );
 
     userSale.forEach(async ({ productId, quantity }) => {
-      await updateProductQuantity(productId, quantity);
+      await updateProductQuantity(productId, quantity, '-');
     });
 
     const sales = await addSale(userSale);
@@ -120,6 +100,10 @@ const deleteSale = async (req, res, next) => {
     if (sale === null) {
       throw new ErrorHandler(404, 'Sale not Found', 'invalid_data');
     }
+
+    sale.itensSold.forEach(async ({ productId, quantity }) => {
+      await updateProductQuantity(productId, quantity, '+');
+    });
 
     return res.status(200).json(sale);
   } catch (error) {

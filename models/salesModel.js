@@ -55,7 +55,6 @@ const deleteSale = async (id) => {
       { _id: ObjectId(id) },
       { returnOriginal: true },
     );
-
   return saleDeleted.value;
 };
 

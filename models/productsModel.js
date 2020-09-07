@@ -40,12 +40,12 @@ const updateProductById = async (id, name, quantity) => {
   return product;
 };
 
-const updateProductStock = async (id, soldQuantity) => {
+const updateProductStock = async (id, soldQuantity, operator) => {
   const db = await connect();
   const product = await db.collection('products')
     .findOneAndUpdate(
       { _id: ObjectId(id) },
-      { $inc: { quantity: -soldQuantity } },
+      { $inc: { quantity: parseInt(operator + soldQuantity, 10) } },
       { returnOriginal: false },
     );
 

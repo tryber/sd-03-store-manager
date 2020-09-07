@@ -51,8 +51,8 @@ const updateProduct = async (id, name, quantity) => {
   return product;
 };
 
-const updateProductQuantity = async (id, soldQuantity) => {
-  const product = await updateProductStock(id, soldQuantity);
+const updateProductQuantity = async (id, soldQuantity, operator) => {
+  const product = await updateProductStock(id, soldQuantity, operator);
   return product;
 };
 
