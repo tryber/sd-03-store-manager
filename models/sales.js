@@ -10,7 +10,7 @@ const createSale = async (itensSold) => (
   connect()
     .then((db) => (
       db.collection('sales').insertOne({ itensSold }))))
-        .then(({ insertedId }) => ({ _id: insertedId, itensSold })
+        .then(({ insertedId }) => ({ _id: insertedId, itensSold }),
 );
 
 const updateSale = async (id, itensSold) => (
