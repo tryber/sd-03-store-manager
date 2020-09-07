@@ -56,9 +56,9 @@ const showSaleById = async (req, res) => {
 const updateSaleById = async (req, res) => {
   const { params } = req;
   const { id } = params;
-  const { productId, quantity } = req.body[0]; 
+  const { productId, quantity } = req.body[0];
 
-  //validacoes
+  // validacoes
   const saleToUpdate = await services.saleService.getSaleById(id);
   const productIdToUpdate = saleToUpdate.itensSold.filter((e) => e.productId === productId);
 
