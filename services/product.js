@@ -4,13 +4,13 @@ const validadeProduct = (name, quantity) => {
   const err = { code: 'invalid_data' };
   switch (true) {
     case quantity < 1:
-      err.message = '\"name\" length must be at least 5 characters long';
+      err.message = '"name" length must be at least 5 characters long';
       break;
     case !Number.isInteger(quantity):
-      err.message = '\"name\" length must be at least 5 characters long';
+      err.message = '"name" length must be at least 5 characters long';
       break;
     case typeof quantity === 'string':
-      err.message = '\"quantity\" must be a number';
+      err.message = '"quantity" must be a number';
       break;
     case !Object.keys(Products.findByName(name)).length:
       err.message = 'Product already exists';
