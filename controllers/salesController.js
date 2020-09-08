@@ -34,7 +34,6 @@ sales.post(
     const products = req.body;
 
     const createdSale = await salesService.createSale(products);
-    console.log('createdSale', createdSale);
 
     if (createdSale.err && createdSale.err.code === 'stock_problem') {
       return res.status(404).json(createdSale);

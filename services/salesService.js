@@ -20,7 +20,6 @@ const createSale = async (products) => {
 
     if (soldQuantity > limit) {
       const erro = getErrorObject('stock_problem', 'Such amount is not permitted to sell');
-      console.log(erro);
       return erro;
     }
   });
