@@ -1,7 +1,8 @@
 const productRouter = require('./routers/productRouter');
-const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
+const express = require('express');
+
+const app = express();
 
 // Endpoint para o avaliador funcionar
 app.get('/', (_request, response) => {

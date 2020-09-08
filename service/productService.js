@@ -10,44 +10,44 @@ const insertOne = async (name, quantity) => {
     case name.length < 5:
       return {
         code: 'invalid_data',
-        message: '\"\name\" length must be at least 5 characters long'
+        message: '"name" length must be at least 5 characters long',
       };
     case quantity < 1:
       return {
         code: 'invalid_data',
-        message: '\"\quantity\" must be larger than or equal to 1'
+        message: '"quantity" must be larger than or equal to 1',
       };
     case isNaN(quantity):
       return {
         code: 'invalid_data',
-        message: '\"\quantity\" must be a number'
+        message: '"quantity" must be a number',
       };
     default:
       return productModel.create(name, quantity);
   }
-}
+};
 
 const upsertOne = async (id, name, quantity) => {
   switch (true) {
     case name.length < 5:
       return {
         code: 'invalid_data',
-        message: '\"\name\" length must be at least 5 characters long'
+        message: '"name" length must be at least 5 characters long',
       };
     case quantity < 1:
       return {
         code: 'invalid_data',
-        message: '\"\quantity\" must be larger than or equal to 1'
+        message: '"quantity" must be larger than or equal to 1',
       };
     case isNaN(quantity):
       return {
         code: 'invalid_data',
-        message: '\"\quantity\" must be a number'
+        message: '"quantity" must be a number',
       };
     default:
       return productModel.update(id, name, quantity);
   }
-}
+};
 
 module.exports = {
   getAll,

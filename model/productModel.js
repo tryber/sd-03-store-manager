@@ -2,23 +2,23 @@ const connect = require('./connect');
 const { ObjectId } = require('mongodb');
 
 const listAll = async () => connect()
-  .then( db =>
+  .then((db) =>
     db
     .collection('products')
     .find({})
-    .toArray()
+    .toArray(),
   );
 
 const selectById = async (id) => connect()
-  .then( db =>
+  .then((db) =>
     db
     .collection('products')
     .find(ObjectId(id))
-    .toArray()
+    .toArray(),
   );
 
 const create = async (name, quantity) => connect()
-.then( db =>
+.then((db) =>
   db
   .collection('products')
   .insertOne({ name, quantity }))
@@ -31,7 +31,7 @@ const update = async (id, name, quantity) => connect()
   .updateOne(
     { _id: ObjectId(id) },
     { $set: { name, quantity } }))
-  .then(result => ({ _id: id, name, quantity }));
+  .then(() => ({ _id: id, name, quantity }));
 
 
 module.exports = {
