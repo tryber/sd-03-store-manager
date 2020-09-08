@@ -1,0 +1,11 @@
+1* connection : conexão ao banco de dados;
+
+2* models de products : cria efetivamente o banco e a tabela
+
+3* controllers: O recepicionista intermediador, se torna a saida em MSC;
+  - ele chama o service e a suas funcoes e retorna uma saida com a resposta para o index
+
+4* service: camada que faz a mediação entre a models e os controllers;
+  - disponibiliza as funções do banco(models) e registra as regras de negócios(validações)
+
+0* cria as rotas no index;
