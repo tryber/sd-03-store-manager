@@ -4,7 +4,6 @@ const { invaliddataError, notFound, stockProblem } = require('../errors');
 
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);
 const checkNumberTwo = (el) => /^[0-9]+$/.test(el);
-
 const deleteSales = async (id) => {
   if (!checkForHexRegExp(id)) {
     return invaliddataError('Wrong sale ID format');
