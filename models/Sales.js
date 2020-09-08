@@ -5,8 +5,6 @@ const saleCreate = async (products) =>
     .then((db) => db.collection('sales').insertOne({ itensSold: products }))
     .then(({ insertedId }) => ({ _id: insertedId, itensSold: products }));
 
-
-
-    module.exports = {
-        saleCreate,
-    };
+module.exports = {
+  saleCreate,
+};
