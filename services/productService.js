@@ -48,7 +48,7 @@ const updateProduct = async (id, values) => {
   if (validate !== undefined) {
     return validate;
   }
-  const product = await products.updateProduct(id, values);
+  const product = await products.updateProduct(id, values.name, values.quantity);
   if (!product) {
     return invaliddataError('Wrong id format');
   }

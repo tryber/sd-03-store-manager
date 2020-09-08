@@ -1,4 +1,5 @@
 const sales = require('../models/sales');
+const products = require('../models/products');
 const { invaliddataError, notFound } = require('../errors');
 
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);
@@ -11,6 +12,11 @@ const insertSales = async (saleInsert) => {
   || checkNumber.some((el) => !checkNumberTwo(el))) {
     return invaliddataError('Wrong product ID or invalid quantity');
   }
+  Promise.all(
+    await saleInsert.map((el) => products.getProductById(el.productId)),
+  ).then((e) => e.map((el, index) => products
+    .updateProduct(saleInsert[index].productId,
+      el.name, el.quantity - saleInsert[index].quantity)));
   const t = await sales.insertSales(saleInsert);
   return t;
 };
@@ -46,6 +52,11 @@ const deleteSales = async (id) => {
   if (!sale) {
     return notFound('Sale not found');
   }
+  Promise.all(
+    await sale.itensSold.map((el) => products.getProductById(el.productId)),
+  ).then((e) => e.map((el, index) => products
+    .updateProduct(sale.itensSold[index].productId,
+      el.name, el.quantity + sale.itensSold[index].quantity)));
   await sales.deleteSales(id);
   return sale;
 };
