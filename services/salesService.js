@@ -6,8 +6,6 @@ const {
   deleteSaleBank,
 } = require('../models/sales');
 
-const { validateParams, validateId } = require('./libValidation');
-
 const registeringSales = async (products) => {
   const result = await registerSales(products);
   return result;
@@ -21,20 +19,6 @@ const listSales = async () => {
 const listSalesById = async (id) => {
   const salesById = await getSalesById(id);
   return salesById;
-};
-
-const validateUpdate = (id, quantity) => {
-  if (validateId(id)) {
-    return {
-      err: { message: 'id invalid', code: 'invalid_data' },
-    };
-  }
-  if (validateParams(quantity)) {
-    return {
-      err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
-    };
-  }
-  if (typeof id === 'string') return id;
 };
 
 const updateSales = async (id, productsId, quantity) => {

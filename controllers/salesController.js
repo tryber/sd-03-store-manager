@@ -1,5 +1,4 @@
 const { Router } = require('express');
-// const rescue = require('express-rescue');
 const {
   registeringSales,
   listSales,
@@ -94,7 +93,6 @@ sales.delete('/sales/:id', async (req, res) => {
   if (!saleExits) {
     return res.status(422).json(errMessage);
   }
-  console.log('boa noite', itensSold);
 
   await deleteSales(id);
   return res.status(200).send(saleExits);

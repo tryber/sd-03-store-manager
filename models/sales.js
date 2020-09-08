@@ -26,7 +26,8 @@ const updateSalesInBank = async (id, productId, quantity) => {
 
 const deleteSaleBank = async (id) => {
   const db = await connect();
-  db.collection('sales').deleteOne(id)
+  db.collection('sales').findOneAndDelete({ _id: ObjectId(id) })
+    .then(({ value }) => value)
     .catch((error) => error);
 };
 
