@@ -5,7 +5,7 @@ const service = require('../services/product');
 const productsRouter = Router();
 
 const listProducts = async (_req, res) => {
-  const products = await service.getAll();
+  const products = await service.listProducts();
   res.status(200).json(products);
 };
 
