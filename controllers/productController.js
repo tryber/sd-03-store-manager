@@ -30,8 +30,20 @@ const addProduct = rescue(async (req, res) => {
   res.status(201).json(result);
 });
 
+const updateProduct = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const result = await productService.updateProduct({ id, name, quantity });
+
+  if (result.error) return error422(res, result);
+
+  res.status(200).json(result);
+});
+
 module.exports = {
   addProduct,
   listAllProducts,
   findProduct,
+  updateProduct,
 };

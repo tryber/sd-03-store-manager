@@ -1,13 +1,8 @@
 const productModel = require('../models/productModel');
 
-const validateProduct = async (name, quantity) => {
+const validateAll = (name, quantity) => {
   if (name.length < 5) {
     return ({ error: true, message: '"name" length must be at least 5 characters long' });
-  }
-
-  const exists = await productModel.getProductByName(name);
-  if (exists) {
-    return ({ error: true, message: 'Product already exists' });
   }
 
   if (quantity <= 0) {
@@ -19,6 +14,18 @@ const validateProduct = async (name, quantity) => {
   }
 };
 
+const validateProduct = async (name, quantity) => {
+  const validate = validateAll(name, quantity);
+  if (validate) {
+    return validate;
+  }
+
+  const exists = await productModel.getProductByName(name);
+  if (exists) {
+    return ({ error: true, message: 'Product already exists' });
+  }
+};
+
 const addProduct = async ({ name, quantity }) => {
   const validate = await validateProduct(name, quantity);
 
@@ -27,7 +34,7 @@ const addProduct = async ({ name, quantity }) => {
   }
 
   const result = await productModel.add(name, quantity);
-  return ({ _id: result.insertedId, name, quantity });
+  return result;
 };
 
 const getAll = async () => {
@@ -51,8 +58,26 @@ const getById = async (id) => {
   return result;
 };
 
+const updateProduct = async ({ id, name, quantity }) => {
+  const errorMessage = { error: true, message: 'Wrong id format' };
+
+  if (id.length < 24) {
+    return errorMessage;
+  }
+
+  const validate = await validateAll(name, quantity);
+
+  if (validate) {
+    return validate;
+  }
+
+  const result = await productModel.update(id, name, quantity);
+  return result;
+};
+
 module.exports = {
   addProduct,
   getAll,
   getById,
+  updateProduct,
 };
