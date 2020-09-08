@@ -1,6 +1,6 @@
 const sales = require('../models/sales');
 const products = require('../models/products');
-const { invaliddataError, notFound } = require('../errors');
+const { invaliddataError, notFound, stockProblem } = require('../errors');
 
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);
 const checkNumberTwo = (el) => /^[0-9]+$/.test(el);
@@ -45,7 +45,7 @@ const insertSales = async (saleInsert) => {
   const t = await sales.insertSales(saleInsert);
   if (this.f) {
     await deleteSales(Object.values(t)[0]);
-    return notFound('Such amount is not permitted to sell');
+    return stockProblem('Such amount is not permitted to sell');
   }
   return t;
 };
