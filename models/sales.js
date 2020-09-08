@@ -15,14 +15,18 @@ const getSalesById = async (id) => connect()
   .then((db) => db.collection('sales').findOne(ObjectId(id)))
   .catch((error) => error);
 
-const updateSalesInBank = async (id, products) => connect()
-  .then((db) => db.collection('sales')
-    .updateOne({ _id: ObjectId(id) }, { $set: { itensSold: products } }))
-  .then(({ insertedId }) => ({ insertedId, itensSold: products }));
+const updateSalesInBank = async (id, productId, quantity) => {
+  const itensSold = [{ productId, quantity }];
+  return connect()
+    .then((db) => db.collection('sales')
+      .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }))
+    .then(() => ({ _id: id, itensSold }))
+    .catch((err) => err);
+};
 
 const deleteSaleBank = async (id) => {
   const db = await connect();
-  db.collection('sales').deleteOne({ _id: ObjectId(id) })
+  db.collection('sales').deleteOne(id)
     .catch((error) => error);
 };
 

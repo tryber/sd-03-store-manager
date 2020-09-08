@@ -10,7 +10,7 @@ const {
 
 const sales = Router();
 
-const { validateParams } = require('../services/libValidation');
+const { validateParams, validateId } = require('../services/libValidation');
 
 const validateSales = (id, quantity) => {
   const regex = /^[0-9a-fA-F]{24}$/;
@@ -29,7 +29,7 @@ sales.post('/sales', async (req, res) => {
   let result;
   products
     .map((e) => validateSales(e.productId, e.quantity))
-    .map((e) => {
+    .forEach((e) => {
       if (e !== 'undefined') {
         result = e;
       }
@@ -50,7 +50,7 @@ sales.get('/sales', async (_req, res) => {
 
 sales.get('/sales/:id', async (req, res) => {
   const { id } = req.params;
-  const idIsValid = validateSales(id);
+  const idIsValid = validateId(id);
 
   if (idIsValid) {
     return res.status(422).send(idIsValid);
@@ -60,51 +60,44 @@ sales.get('/sales/:id', async (req, res) => {
 });
 
 sales.put('/sales/:id', async (req, res) => {
-  const products = req.body;
   const { id } = req.params;
-  const update = await updateSales(id, products);
-  if (update.err) {
-    return res.status(422).json(update);
+  const { productId, quantity } = req.body[0];
+
+  const saleExistForUpdate = await listSalesById(id);
+  const productIdToUpdate = saleExistForUpdate.itensSold.filter((e) => e.product === productId);
+
+  if (!productIdToUpdate) {
+    const validate = validateParams(quantity);
+    return res.status(422).json(validate);
   }
+  const validation = validateSales(productId, quantity);
+
+  if (validation) {
+    return res.status(422).json(validation);
+  }
+  const update = await updateSales(id, productId, quantity);
   return res.status(200).json(update);
 });
-
-const validDeleteId = (id) => {
-  // const newId = parseInt(id, 10);
-  const regex = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
-  const result = regex.test(id);
-  if (!result) {
-    return { err: { message: 'Wrong id format', code: 'invalid_data' } };
-  }
-  return null;
-};
 
 sales.delete('/sales/:id', async (req, res) => {
   const errMessage = { err: { message: 'Wrong sale ID format', code: 'invalid_data' } };
   const { params } = req;
   const { id } = params;
-  const idIsvalid = validDeleteId(id);
-  // const { itensSold } = productExits;
+  const idIsvalid = validateId(id);
 
-  // let productTodelete;
-  // let quantityTodelete;
-  // await itensSold.forEach((e) => {
-  //   quantityTodelete = e.quantity;
-  //   productTodelete = e.productId;
-  //   return null;
-  // });
   if (idIsvalid) {
     return res.status(422).json(errMessage);
   }
 
   const saleExits = await listSalesById(id);
-
+  const { itensSold } = saleExits;
   if (!saleExits) {
     return res.status(422).json(errMessage);
   }
+  console.log('boa noite', itensSold);
+
   await deleteSales(id);
-  console.log('sera que foi chamado', deleteSales(id));
-  return res.status(200).json(errMessage);
+  return res.status(200).send(saleExits);
 });
 
 module.exports = { sales };
