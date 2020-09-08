@@ -1,4 +1,23 @@
-// não remova esse endpoint, e para o avaliador funcionar
+const express = require('express');
+const bodyParser = require('body-parser');
+const product = require('./routes/productRouter');
+const sales = require('./routes/salesRouter');
+
+const app = express();
+app.use(bodyParser.json());
+app.use('/products', product);
+app.use('/sales', sales);
+
 app.get('/', (request, response) => {
-    response.send();
+  response.send();
 });
+
+app.use((err, _req, res, _next) => {
+  const { code, message, status } = err;
+  if (status < 500) {
+    return res.status(status).json({ err: { code, message } });
+  }
+  return res.status(500).json({ err: '{ code, message }' });
+});
+
+app.listen(3000, () => console.log('ok'));
