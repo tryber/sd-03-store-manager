@@ -16,6 +16,11 @@ const addSeleIntegration = async (item) => {
   return newproduct;
 };
 
+/**
+ * Para que o map funcionasse tive que chamar a Promise.all como encontrei em:
+ * link: https://flaviocopes.com/javascript-async-await-array-map/
+*/
+
 const middleIntegration = async (itensSold) => (
   Promise.all(itensSold.map((elem) => (
     addSeleIntegration(elem)
