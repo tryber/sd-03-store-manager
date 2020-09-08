@@ -4,7 +4,7 @@ const { invaliddataError, notFound, stockProblem } = require('../errors');
 
 const checkForHexRegExp = (id) => /^[0-9a-fA-F]{24}$/.test(id);
 const checkNumberTwo = (el) => /^[0-9]+$/.test(el);
-const deleteSales = async (id) => {
+const deleteSales = async (id, returnResult = true) => {
   if (!checkForHexRegExp(id)) {
     return invaliddataError('Wrong sale ID format');
   }
@@ -18,7 +18,10 @@ const deleteSales = async (id) => {
     .updateProduct(sale.itensSold[index].productId,
       el.name, el.quantity + sale.itensSold[index].quantity)));
   await sales.deleteSales(id);
-  return sale;
+  if (returnResult) {
+    return sale;
+  }
+  return null;
 };
 
 const insertSales = async (saleInsert) => {
@@ -43,7 +46,7 @@ const insertSales = async (saleInsert) => {
       el.name, el.quantity - saleInsert[index].quantity)));
   const t = await sales.insertSales(saleInsert);
   if (this.f) {
-    await deleteSales(Object.values(t)[0]);
+    await deleteSales(Object.values(t)[0], false);
     return stockProblem('Such amount is not permitted to sell');
   }
   return t;
