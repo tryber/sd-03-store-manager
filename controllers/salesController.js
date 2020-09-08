@@ -89,7 +89,7 @@ sales.delete('/sales/:id', async (req, res) => {
   }
 
   const saleExits = await listSalesById(id);
-  const { itensSold } = saleExits;
+  // const { itensSold } = saleExits;
   if (!saleExits) {
     return res.status(422).json(errMessage);
   }
