@@ -11,9 +11,7 @@ const validateSaleCreate = ({ productId, quantity }) =>
 
 const saleCreate = async (products) => {
   let validation;
-  await products.forEach((product) => {
-    validation = validateSaleCreate(product);
-  });
+  await products.forEach((product) =>  validation = validateSaleCreate(product));
   if (!validation) {
     code = invalid;
     message = 'Wrong product ID or invalid quantity';
@@ -22,7 +20,7 @@ const saleCreate = async (products) => {
   if (validation) {
     products.forEach(async ({ productId, quantity }) => {
       const productCreated = await productsModel.ProductById(productId);
-      let stock = productCreated.quantity;
+      const stock = productCreated.quantity;
       if (!productCreated) {
         code = invalid;
         message = 'Wrong';
