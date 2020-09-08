@@ -7,19 +7,25 @@ const createSale = async (products) => {
 
   if (!isDataValid) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
-  if (isDataValid) {
-    await products.forEach(async ({ productId, quantity }) => {
-      const product = await productsModel.getProductById(productId);
-      const limit = product.quantity;
+  const allProductsById = await Promise.all(
+    products.map(({ productId }) => productsModel.getProductById(productId)),
+  );
 
-      if (!product) return getErrorObject(invalidData, wrongFormatOrQuantity);
+  allProductsById.forEach((product, index) => {
+    console.log(index, product);
+    if (!product) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
-      if (quantity > limit) {
-        return getErrorObject('stock_problem', 'Such amount is not permitted to sell');
-      }
-    });
-  }
+    const limit = product.quantity;
+    const soldQuantity = products[index].quantity;
 
+    if (soldQuantity > limit) {
+      const erro = getErrorObject('stock_problem', 'Such amount is not permitted to sell');
+      console.log(erro);
+      return erro;
+    }
+  });
+
+  console.log('fora do if');
   const sale = salesModel.createSale(products);
 
   await products.forEach(async ({ productId, quantity }) => {
