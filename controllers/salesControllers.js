@@ -21,6 +21,15 @@ sales.post('/', rescue(async (req, res) => {
 
   const sale = await saleService.createSale(itensSold);
 
+  if (sale.message === 'Such amount is not permitted to sell') {
+    return res.status(404).json({
+      [xablau]: {
+        code: 'stock_problem',
+        message: sale.message,
+      },
+    });
+  }
+
   if (sale.error) {
     return res.status(422).json({
       [xablau]: {
