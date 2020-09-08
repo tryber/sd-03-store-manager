@@ -1,4 +1,5 @@
-const { salesModel, productsModel } = require('../models');
+const productsModel = require('../models/Products');
+const  salesModel  = require('../models/Sales');
 const invalid = 'invalid_data';
 let code;
 let message;
@@ -12,7 +13,7 @@ const validateSaleCreate = async ({productId, quantity} ) => {
 
 const saleCreate = async (products) => {
     let validation ;
-    products.forEach((product) => {    
+     products.forEach((product) => {    
     validation = validateSaleCreate(product);
     if(!validation) {
         code = invalid;
@@ -21,19 +22,16 @@ const saleCreate = async (products) => {
         }
     
         if (validation) {
-              products.forEach(async ({productId, quantity }) => {
-               if(productId !== undefined ) {
-                const product = await productsModel.productId(productId);
-              const stock = product.quantity;
-               }
+              products.forEach(async ({productId, quantity }) => {            
+                const productCreated = await productsModel.ProductById(productId);
+                let stock = productCreated.quantity;
 
-        if (!product) 
-            { 
+        if (!productCreated) { 
              code = invalid;
              message = 'Wrong product ID or invalid quantity';
              return { err: { code, message } };
-         }
-        
+        }
+       
         if (quantity > stock) {
             code = stock_error;
             message = 'Wrong product ID or invalid quantity';
@@ -41,7 +39,10 @@ const saleCreate = async (products) => {
             }
         });
      }
-    })    
+    })
+
+    const sale = salesModel.saleCreate(products);
+    return sale;
 }
 
 
