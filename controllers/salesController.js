@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const rescue = require('express-rescue');
+// const rescue = require('express-rescue');
 const {
   registeringSales,
   listSales,
@@ -10,7 +10,7 @@ const {
 
 const sales = Router();
 
-const { validateParams, validateId } = require('../services/libValidation');
+const { validateParams } = require('../services/libValidation');
 
 const validateSales = (id, quantity) => {
   const regex = /^[0-9a-fA-F]{24}$/;
