@@ -9,18 +9,18 @@ const getAllSales = async () => {
 const addSeleIntegration = async (item) => {
   const product = await productsModel.getProductById(item.productId);
   if (item.quantity > product.quantity) {
-    return 'false'
+    return 'false';
   }
   const newAmout = (product.quantity - item.quantity);
   const newproduct = await productsModel.updateProduct(item.productId, product.name, newAmout);
   return newproduct;
-}
+};
 
-const middleIntegration = async(itensSold) => {
-  return Promise.all(itensSold.map((elem) => {
+const middleIntegration = async (itensSold) => (
+  Promise.all(itensSold.map((elem) => {
     return addSeleIntegration(elem);
-  }));
-}
+  }))
+);
 
 const validateSale = async (itensSold) => {
   const testQuantity = itensSold.some((elem) => elem.quantity < 1);
@@ -50,7 +50,7 @@ const createSale = async (itensSold) => {
     return {
       error: true,
       message: 'Such amount is not permitted to sell',
-    }
+    };
   }
 
   return salesModel.createSale(itensSold);
@@ -91,13 +91,13 @@ const subtractSeleIntegration = async (item) => {
   const newAmout = (product.quantity + item.quantity);
   const newproduct = await productsModel.updateProduct(item.productId, product.name, newAmout);
   return newproduct;
-}
+};
 
-const subMiddleIntegration = async(itemId) => {
-  return Promise.all(itemId.itensSold.map((elem) => {
+const subMiddleIntegration = async (itemId) => (
+  Promise.all(itemId.itensSold.map((elem) => {
     return subtractSeleIntegration(elem);
-  }));
-}
+  }))
+);
 
 const deleteSale = async (id) => {
   const testId = await getSaleById(id);
