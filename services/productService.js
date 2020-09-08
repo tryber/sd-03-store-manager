@@ -30,6 +30,29 @@ const addProduct = async ({ name, quantity }) => {
   return ({ _id: result.insertedId, name, quantity });
 };
 
+const getAll = async () => {
+  const result = await productModel.getAll();
+  return ({ products: result });
+};
+
+const getById = async (id) => {
+  const errorMessage = { error: true, message: 'Wrong id format' };
+
+  if (id.length < 24) {
+    return errorMessage;
+  }
+
+  const result = await productModel.getProductById(id);
+
+  if (!result) {
+    return errorMessage;
+  }
+
+  return result;
+};
+
 module.exports = {
   addProduct,
+  getAll,
+  getById,
 };
