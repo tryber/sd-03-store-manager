@@ -17,6 +17,7 @@ app.get('/', (_req, res) => {
 
 app.use((request, _, next) => {
   console.log(`${request.method} ${request.path}`);
+  console.log('body', request.body);
   next();
 });
 

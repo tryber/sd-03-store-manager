@@ -14,14 +14,14 @@ const newProduct = async (req, res) => {
     const { name, quantity } = req.body;
     const result = await service.addProduct(name, quantity);
     if (result.error) return res.status(422).json({ err: result.err });
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (err) {
     console.error(err);
     process.exit(1);
   }
 };
 
-const findProductById = async (res, req) => {
+const findProductById = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await service.findProduct(id);

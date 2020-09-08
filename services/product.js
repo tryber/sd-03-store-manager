@@ -1,22 +1,21 @@
 const Products = require('../models/products');
 
-const validadeProduct = (name, quantity) => {
+const validadeProduct = async (name, quantity) => {
   const err = { code: 'invalid_data' };
   switch (true) {
-    case quantity < 1:
-      err.message = '"name" length must be at least 5 characters long';
-      break;
-    case !Number.isInteger(quantity):
-      err.message = '"name" length must be at least 5 characters long';
-      break;
-    case typeof quantity === 'string':
+    case typeof quantity !== 'number':
       err.message = '"quantity" must be a number';
       break;
-    case !Object.keys(Products.findByName(name)).length || !Products.findByName(name):
+    case name.length < 5:
+      err.message = '"name" length must be at least 5 characters long';
+      break;
+    case quantity < 1:
+      err.message = '"quantity" must be larger than or equal to 1';
+      break;
+    case !!await Products.findByName(name):
       err.message = 'Product already exists';
       break;
     default:
-      return true;
   }
   return err;
 };
@@ -24,7 +23,7 @@ const validadeProduct = (name, quantity) => {
 const listProducts = async () => ({ products: await Products.getAll() });
 
 const addProduct = async (name, quantity) => {
-  const err = validadeProduct(name, quantity);
+  const err = await validadeProduct(name, quantity);
   if (err.message) return { err, error: true };
   const product = await Products.add(name, quantity);
   return { _id: product.insertedId, name, quantity };
@@ -44,7 +43,7 @@ const findProduct = async (id) => {
 };
 
 const updateProduct = async (id, name, quantity) => {
-  const err = validadeProduct(name, quantity);
+  const err = await validadeProduct(name, quantity);
   if (err.message) return { err, error: true };
   const product = await Products.update(id, name, quantity);
   return { _id: product.insertedId, name, quantity };
