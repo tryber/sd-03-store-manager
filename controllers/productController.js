@@ -18,7 +18,7 @@ const findProduct = rescue(async (req, res) => {
 
   if (result.error) return error422(res, result);
 
-  res.status(201).json(result);
+  res.status(200).json(result);
 });
 
 const addProduct = rescue(async (req, res) => {
