@@ -17,9 +17,9 @@ const addSeleIntegration = async (item) => {
 };
 
 const middleIntegration = async (itensSold) => (
-  Promise.all(itensSold.map((elem) => {
-    return addSeleIntegration(elem);
-  }))
+  Promise.all(itensSold.map((elem) => (
+    addSeleIntegration(elem)
+  )))
 );
 
 const validateSale = async (itensSold) => {
@@ -94,9 +94,9 @@ const subtractSeleIntegration = async (item) => {
 };
 
 const subMiddleIntegration = async (itemId) => (
-  Promise.all(itemId.itensSold.map((elem) => {
-    return subtractSeleIntegration(elem);
-  }))
+  Promise.all(itemId.itensSold.map((elem) => (
+    subtractSeleIntegration(elem)
+  )))
 );
 
 const deleteSale = async (id) => {
