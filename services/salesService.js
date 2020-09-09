@@ -22,16 +22,14 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const errorMessage = { error: true, message: 'Wrong id format' };
-
   if (id.length < 24) {
-    return errorMessage;
+    return ({ error: true, message: 'Wrong id format' });
   }
 
   const result = await salesModel.getSaleById(id);
 
   if (!result) {
-    return errorMessage;
+    return ({ error2: true, message: 'Sale not found' });
   }
 
   return result;

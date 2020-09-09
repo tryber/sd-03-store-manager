@@ -23,7 +23,8 @@ const findSale = rescue(async (req, res) => {
 
   const result = await salesService.getById(id);
 
-  if (result.error) return error422(res, result);
+  if (result.error) return res.status(422).json({ err: { code: 'invalid_data', message: result.message } });
+  if (result.error2) return res.status(404).json({ err: { code: 'not_found', message: result.message } });
 
   res.status(200).json(result);
 });
