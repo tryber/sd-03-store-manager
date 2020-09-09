@@ -31,8 +31,17 @@ const createSale = async (req, res) => {
     return res.status(422).send(finalResponse);
   }
 
-  const result = await services.saleService.createSale(products);
-  return res.status(200).send(result);
+  products.forEach(async (e) => {
+    const oldProduct = await services.productService.getProductById(e.productId);
+    if (oldProduct.quantity < e.quantity) {
+      return res.status(404).send({err: {message: 'Such amount is not permitted to sell', code: 'stock_problem'}});
+    }
+    // realiza a venda
+    const result = await services.saleService.createSale(products);
+    // atualiza a quantidade no estoque
+    await services.productService.updateProductById(e.productId, oldProduct.name, (oldProduct.quantity - e.quantity));
+    return res.status(200).send(result);    
+  });
 };
 
 const showAllSales = async (_req, res) => {
@@ -75,6 +84,17 @@ const updateSaleById = async (req, res) => {
     return res.status(422).send(validation);
   }
 
+  saleToUpdate.itensSold.map(async (e) => {
+    const oldProduct = await services.productService.getProductById(e.productId);
+    if ((oldProduct.quantity + (e.quantity - quantity)) < 0) {
+      return res.status(422).send({err: {message: 'Such amount is not permitted to update', code: 'stock_problem'}});
+    };
+
+    // atualiza a quantidade no estoque
+    await services.productService.updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + (e.quantity - quantity)));
+    // return res.status(200).send(result);    
+  });
+
   const result = await services.saleService.updateSaleById(id, productId, quantity);
   return res.status(200).send(result);
 };
@@ -95,6 +115,12 @@ const deleteSaleById = async (req, res) => {
     const response = { err: { message: 'Wrong sale ID format', code: 'invalid_data' } };
     return res.status(422).send(response);
   }
+
+  saleExists.itensSold.map(async (e) => {
+    const oldProduct = await services.productService.getProductById(e.productId);
+    // atualiza a quantidade no estoque
+    await services.productService.updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + e.quantity));
+  });
 
   // const result = await services.saleService.deleteSaleById(id);
   await services.saleService.deleteSaleById(id);
