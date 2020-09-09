@@ -28,4 +28,20 @@ sales.post(
   }),
 );
 
+sales.put(
+  '/:id',
+  resc(async (req, res) => {
+    const products = req.body;
+    const { id } = req.params;
+
+    const SaleUpdate = await salesService.SaleUpdate(id, products);
+
+    if (SaleUpdate.err) {
+      return res.status(422).json(SaleUpdate);
+    }
+
+    return res.status(200).json(SaleUpdate);
+  }),
+);
+
 module.exports = sales;
