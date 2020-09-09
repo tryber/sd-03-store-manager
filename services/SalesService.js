@@ -20,13 +20,13 @@ const saleCreate = async (products) => {
   if (validation) {
     products.forEach(async ({ productId, quantity }) => {
       const productCreated = await productsModel.ProductById(productId);
-      const stock = productCreated.quantity;
+      const limit = productCreated.quantity;
       if (!productCreated) {
         code = invalid;
         message = 'Wrong';
         return { err: { code, message } };
       }
-      if (quantity > stock) {
+      if (quantity > limit) {
         code = stockError;
         message = 'Such amount is not permitted to sell';
         return { err: { code, message } };
@@ -60,7 +60,7 @@ const SaleUpdate = async (id, products) => {
         code = invalid;
         message = 'Wrong';
         return { err: { code, message } };
-      }      
+      }
     });
   }
   const saleUpdate = await salesModel.SaleUpdate(id, products);
