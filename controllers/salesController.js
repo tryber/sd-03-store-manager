@@ -14,7 +14,7 @@ const validateSales = (id, quantity) => {
   return response;
 };
 
-const createSale = async (req, res) => {
+const createSale = async (req, res, next) => {
   const products = req.body;
 
   // validações
@@ -31,16 +31,17 @@ const createSale = async (req, res) => {
     return res.status(422).send(finalResponse);
   }
 
-  products.forEach(async (e) => {
+  products.map(async (e) => {
     const oldProduct = await services.productService.getProductById(e.productId);
     if (oldProduct.quantity < e.quantity) {
-      return res.status(404).send({err: {message: 'Such amount is not permitted to sell', code: 'stock_problem'}});
+      return res.status(404).send({ err: { message: 'Such amount is not permitted to sell', code: 'stock_problem' } });
     }
     // realiza a venda
     const result = await services.saleService.createSale(products);
     // atualiza a quantidade no estoque
-    await services.productService.updateProductById(e.productId, oldProduct.name, (oldProduct.quantity - e.quantity));
-    return res.status(200).send(result);    
+    await services.productService
+      .updateProductById(e.productId, oldProduct.name, (oldProduct.quantity - e.quantity));
+    return res.status(200).send(result);
   });
 };
 
@@ -87,12 +88,13 @@ const updateSaleById = async (req, res) => {
   saleToUpdate.itensSold.map(async (e) => {
     const oldProduct = await services.productService.getProductById(e.productId);
     if ((oldProduct.quantity + (e.quantity - quantity)) < 0) {
-      return res.status(422).send({err: {message: 'Such amount is not permitted to update', code: 'stock_problem'}});
-    };
+      return res.status(422).send({ err: { message: 'Such amount is not permitted to update', code: 'stock_problem' } });
+    }
 
     // atualiza a quantidade no estoque
-    await services.productService.updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + (e.quantity - quantity)));
-    // return res.status(200).send(result);    
+    await services.productService
+      .updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + (e.quantity - quantity)));
+    // return res.status(200).send(result);
   });
 
   const result = await services.saleService.updateSaleById(id, productId, quantity);
@@ -119,7 +121,8 @@ const deleteSaleById = async (req, res) => {
   saleExists.itensSold.map(async (e) => {
     const oldProduct = await services.productService.getProductById(e.productId);
     // atualiza a quantidade no estoque
-    await services.productService.updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + e.quantity));
+    await services.productService
+      .updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + e.quantity));
   });
 
   // const result = await services.saleService.deleteSaleById(id);
