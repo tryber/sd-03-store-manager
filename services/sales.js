@@ -38,7 +38,8 @@ const findSale = async (id) => {
       message: 'Sale not found',
     },
     error: true,
-    status: 404 };
+    status: 404,
+    };
   }
   return product;
 };
@@ -60,7 +61,8 @@ const deleteSale = async (id) => {
       message: 'Wrong sale ID format',
     },
     error: true,
-    status: 404 };
+    status: 404,
+    };
   }
   await Sales.exclude(id);
   return found;
