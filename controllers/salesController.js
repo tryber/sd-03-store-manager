@@ -14,7 +14,7 @@ const validateSales = (id, quantity) => {
   return response;
 };
 
-const createSale = async (req, res, next) => {
+const createSale = async (req, res) => {
   const products = req.body;
 
   // validações
@@ -92,8 +92,9 @@ const updateSaleById = async (req, res) => {
     }
 
     // atualiza a quantidade no estoque
+    const newQuantity = oldProduct.quantity + (e.quantity - quantity);
     await services.productService
-      .updateProductById(e.productId, oldProduct.name, (oldProduct.quantity + (e.quantity - quantity)));
+      .updateProductById(e.productId, oldProduct.name, newQuantity);
     // return res.status(200).send(result);
   });
 
