@@ -11,7 +11,9 @@ const validateSaleCreate = ({ productId, quantity }) =>
 
 const saleCreate = async (products) => {
   let validation;
-  await products.forEach((product) => { validation = validateSaleCreate(product); });
+  await products.forEach((product) => {
+    validation = validateSaleCreate(product);
+  });
   if (!validation) {
     code = invalid;
     message = 'Wrong product ID or invalid quantity';
@@ -37,6 +39,9 @@ const saleCreate = async (products) => {
   return sale;
 };
 
+const SalesList = async () => salesModel.SaleList();
+
 module.exports = {
   saleCreate,
+  SalesList,
 };
