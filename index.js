@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const productsRouter = require('./controllers/products');
 
-// const salesRouter = require('./controllers/sales');
+const salesRouter = require('./controllers/sales');
 
 const app = express();
 
@@ -23,5 +23,6 @@ app.use((request, _, next) => {
 
 app.use('/products', rescue(productsRouter));
 
-// app.use('/sales', rescue(salesRouter));
+app.use('/sales', rescue(salesRouter));
+
 app.listen(3000, console.log('Listening on port 3000'));
