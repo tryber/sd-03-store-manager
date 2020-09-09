@@ -33,12 +33,13 @@ const addSale = async (data) => {
 const findSale = async (id) => {
   const product = await Sales.findById(id);
   if (!product) {
-    return { err: {
-      code: 'not_found',
-      message: 'Sale not found',
-    },
-    error: true,
-    status: 404,
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+      error: true,
+      status: 404,
     };
   }
   return product;
@@ -56,12 +57,13 @@ const deleteSale = async (id) => {
   const found = await Sales.findById(id);
   // console.log('found:', found);
   if (!found) {
-    return { err: {
-      code: 'invalid_data',
-      message: 'Wrong sale ID format',
-    },
-    error: true,
-    status: 404,
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+      error: true,
+      status: 404,
     };
   }
   await Sales.exclude(id);
