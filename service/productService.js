@@ -1,8 +1,8 @@
-const productsModel = require('../model/productModel');
 const productModel = require('../model/productModel');
 
-const getAll = async () => productsModel.listAll();
-const getById = async (id) => productsModel.selectById(id);
+const getAll = async () => productModel.listAll();
+const getById = async (id) => productModel.selectById(id);
+const deleteOne = async (id) => productModel.erase(id);
 
 // Regras de negócio
 const insertOne = async (name, quantity) => {
@@ -54,4 +54,5 @@ module.exports = {
   getById,
   insertOne,
   upsertOne,
+  deleteOne,
 };

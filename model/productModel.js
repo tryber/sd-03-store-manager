@@ -25,7 +25,7 @@ const create = async (name, quantity) => connect()
   .then(result => ({ _id: result.insertedId, name, quantity }));
 
 const update = async (id, name, quantity) => connect()
-.then( db =>
+.then((db) =>
   db
   .collection('products')
   .updateOne(
@@ -33,10 +33,17 @@ const update = async (id, name, quantity) => connect()
     { $set: { name, quantity } }))
   .then(() => ({ _id: id, name, quantity }));
 
+const erase = async (id) => connect()
+.then((db) =>
+  db
+  .collection('products')
+  .findOneAndDelete({ _id: ObjectId(id) }))
+  .then((response) => (response.value));
 
 module.exports = {
   listAll,
   selectById,
   create,
   update,
+  erase,
 };
