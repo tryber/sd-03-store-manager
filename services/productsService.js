@@ -18,6 +18,9 @@ const validateProduct = async (name, quantity) => {
       err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
     };
   }
+
+  if (response) return response;
+
   const checkNameProduct = await productModel.findByNameProduct(name);
   if (checkNameProduct) {
     response = { err: { code: 'invalid_data', message: 'Product already exists' } };
