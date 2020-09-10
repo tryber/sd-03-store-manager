@@ -3,29 +3,48 @@ const { ObjectId } = require('mongodb');
 
 const regexId = /^[0-9a-fA-F]{24}$/;
 
+// const quantityValue = (quan) => {
+//   if (quan <= 0) {
+//     return {
+//       err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
+//     };
+//   }
+//   return null;
+// };
+// const quantityIsNumber = (quant) => {
+//   if (typeof quant === 'string') {
+//     return { err: { code: 'invalid_data', message: '"quantity" must be a number' } };
+//   }
+//   return null;
+// };
+// const nameIsValid = (nam) => {
+//   if (nam.length < 5) {
+//     return {
+//       err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
+//     };
+//   }
+//   return true;
+// };
+
 const validateProduct = async (name, quantity) => {
-  let response = true;
+  const checkNameProduct = await productModel.findByNameProduct(name);
   if (quantity < 1) {
-    response = {
+    return {
       err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
     };
   }
-  if (typeof quantity === 'string') {
-    response = { err: { code: 'invalid_data', message: '"quantity" must be a number' } };
+  else if (typeof quantity === 'string') {
+    return { err: { code: 'invalid_data', message: '"quantity" must be a number' } };
   }
-  if (name.length < 5) {
-    response = {
+  else if (name.length < 5) {
+    return {
       err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
     };
   }
-
-  if (response) return response;
-
-  const checkNameProduct = await productModel.findByNameProduct(name);
-  if (checkNameProduct) {
-    response = { err: { code: 'invalid_data', message: 'Product already exists' } };
+  else if (checkNameProduct) {
+    return { err: { code: 'invalid_data', message: 'Product already exists' } };
   }
-  return response;
+  return true;
 };
 
 const getAllStore = async () => {
