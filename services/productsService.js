@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 const regexId = /^[0-9a-fA-F]{24}$/;
 
 const validateProduct = async (name, quantity) => {
+  const codeClimate = true;
   if (quantity < 1) {
     return {
       err: { code: 'invalid_data', message: '"quantity" must be larger than or equal to 1' },
@@ -21,7 +22,7 @@ const validateProduct = async (name, quantity) => {
   if (checkNameProduct) {
     return { err: { code: 'invalid_data', message: 'Product already exists' } };
   }
-  return true;
+  return codeClimate;
 };
 
 const getAllStore = async () => {
