@@ -1,6 +1,7 @@
 const mongoClient = require('mongodb').MongoClient;
 
-const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
+const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
+const DB_NAME = 'StoreManager';
 
 const connect = () =>
   mongoClient
@@ -8,7 +9,7 @@ const connect = () =>
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then((connection) => connection.db('StoreManager'))
+    .then((connection) => connection.db(DB_NAME))
     .catch((erro) => {
       console.error(erro);
       process.exit(1);
