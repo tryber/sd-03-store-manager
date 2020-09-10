@@ -52,7 +52,7 @@ const deleteSale = app.delete(
   '/sales/:id',
   rescue(async (req, res) => {
     const { id } = req.params;
-    const deleteSale = saleService.deleteSale(id);
+    const deleteSale = await saleService.deleteSale(id);
     if (deleteSale.err) return res.status(422).json(deleteSale);
     return res.status(200).json(deleteSale);
   }),

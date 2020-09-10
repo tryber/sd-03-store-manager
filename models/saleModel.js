@@ -4,12 +4,18 @@ const { ObjectId } = require('mongodb');
 const createSale = async (itensSold) =>
   connect()
     .then((db) => db.collection('sales').insertOne({ itensSold }))
-    .then(({ insertedId }) => ({ _id: insertedId, itensSold }));
+    .then(({ insertedId }) => ({ _id: insertedId, itensSold }))
+    .catch((err) => err);
 
-const findAllSale = async () => connect().then((db) => db.collection('sales').find({}).toArray());
+const findAllSale = async () =>
+  connect()
+    .then((db) => db.collection('sales').find({}).toArray())
+    .catch((err) => err);
 
 const findSaleById = async (id) =>
-  connect().then((db) => db.collection('sales').findOne(ObjectId(id)));
+  connect()
+    .then((db) => db.collection('sales').findOne(ObjectId(id)))
+    .catch((err) => err);
 
 const updateSale = async (id, productId, quantity) => {
   const itensSold = [{ productId, quantity }];

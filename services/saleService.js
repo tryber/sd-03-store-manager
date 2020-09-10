@@ -37,17 +37,17 @@ const validateParams = (quantity) => {
   let response;
   if (quantity < 1) {
     response = {
-      err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
+      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
   }
   if (quantity === 0) {
     response = {
-      err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
+      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
   }
   if (typeof quantity !== 'number') {
     response = {
-      err: { message: 'Wrong product ID or invalid quantity', code: 'invalid_data' },
+      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
   }
   return response;
@@ -84,10 +84,10 @@ const updateSale = async (id, productId, quantity) => {
 };
 
 const deleteSale = async (id) => {
-  if (!regexId.test(id)) return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
   const saleById = await findSaleById(id);
-  if (!saleById) return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
-
+  if (!regexId.test(id)) return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
+  if (!saleById) return saleById;
+  
   await saleModel.deleteSale(id);
   return saleById;
 };
