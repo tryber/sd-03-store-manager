@@ -34,4 +34,27 @@ const createProduct = app.post(
   }),
 );
 
-module.exports = { findAllProducts, createProduct, findProductById };
+const updateProduct = app.put(
+  '/products/:id',
+  rescue(async (req, res) => {
+    const { id } = req.params;
+    const updatingProduct = await productService.updateProduct(id, req.body);
+
+    if (updatingProduct.err) {
+      return res.status(422).json(updatingProduct);
+    }
+    return res.status(200).json(updatingProduct);
+  }),
+);
+
+const deleteProduct = app.delete(
+  '/products/:id',
+  rescue(async (req, res) => {
+    const product = await productService.deleteProduct(req.params.id);
+
+    if (product.err) return res.status(422).json(product);
+    return res.status(200).json(product);
+  }),
+);
+
+module.exports = { findAllProducts, createProduct, findProductById, updateProduct, deleteProduct };

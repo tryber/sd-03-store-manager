@@ -1,4 +1,7 @@
 const productModel = require('../models/productsModel');
+const { ObjectId } = require('mongodb');
+
+const regexId = /^[0-9a-fA-F]{24}$/;
 
 const validateProduct = async (name, quantity) => {
   if (quantity < 1) {
@@ -28,7 +31,7 @@ const getAllStore = async () => {
 };
 
 const findProductById = async (id) => {
-  if (id.length < 24) return { err: { message: 'Wrong id format', code: 'invalid_data' } };
+  if (!regexId.test(id)) return { err: { message: 'Wrong id format', code: 'invalid_data' } };
   const product = await productModel.findProductById(id);
   return product;
 };
@@ -40,4 +43,19 @@ const createProduct = async ({ name, quantity }) => {
   return productModel.createProduct(name, quantity);
 };
 
-module.exports = { getAllStore, createProduct, findProductById };
+const updateProduct = async (id, { name, quantity }) => {
+  const updating = await validateProduct(name, quantity);
+
+  if (updating.err) return updating;
+  return productModel.updateProduct(id, name, quantity);
+};
+
+const deleteProduct = async (id) => {
+  const verifyProduct = await findProductById(id);
+
+  if (!regexId.test(id)) return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  await productModel.deleteProduct(ObjectId(id));
+  return verifyProduct;
+};
+
+module.exports = { getAllStore, createProduct, findProductById, updateProduct, deleteProduct };
