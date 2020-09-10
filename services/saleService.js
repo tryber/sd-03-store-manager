@@ -1,6 +1,5 @@
 const saleModel = require('../models/saleModel');
 const productModel = require('../models/productsModel');
-const productsService = require('./productsService');
 
 const regexId = /^[0-9a-fA-F]{24}$/;
 
@@ -50,7 +49,7 @@ const createSale = async (itensSold) => {
 
 const findAllSales = async () => saleModel.findAllSale();
 
-const findSaleById = async (id) => await saleModel.findSaleById(id);
+const findSaleById = async (id) => saleModel.findSaleById(id);
 
 const updateSale = async (id, productId, quantity) => {
   const validQuantity = validateParams(quantity);
@@ -63,7 +62,6 @@ const updateSale = async (id, productId, quantity) => {
   }
 
   if (validQuantity) return validQuantity;
-  if (!regexId.test(id)) return validSale;
 
   return saleModel.updateSale(id, productId, quantity);
 };
@@ -71,7 +69,7 @@ const updateSale = async (id, productId, quantity) => {
 const deleteSale = async (id) => {
   const saleById = await findSaleById(id);
   if (!regexId.test(id)) return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
-  
+
   await saleModel.deleteSale(id);
   return saleById;
 };
