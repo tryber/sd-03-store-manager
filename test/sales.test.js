@@ -616,6 +616,7 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
       .expect('status', 404)
       .expect((resultGet) => {
         const { body } = resultGet;
+        console.log('ok', resultGet)
         const resultGetBody = JSON.parse(body);
         const error = resultGetBody.err.code;
         const { message } = resultGetBody.err;

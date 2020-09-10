@@ -34,23 +34,12 @@ const validateSale = async (itensSold) => {
 };
 
 const validateParams = (quantity) => {
-  let response;
-  if (quantity < 1) {
-    response = {
+  if (quantity < 1 || typeof quantity !== 'number') {
+    return {
       err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
   }
-  if (quantity === 0) {
-    response = {
-      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-    };
-  }
-  if (typeof quantity !== 'number') {
-    response = {
-      err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
-    };
-  }
-  return response;
+  return null;
 };
 
 const createSale = async (itensSold) => {
@@ -61,11 +50,7 @@ const createSale = async (itensSold) => {
 
 const findAllSales = async () => saleModel.findAllSale();
 
-const findSaleById = async (id) => {
-  const sale = await saleModel.findSaleById(id);
-  if (!regexId.test(id)) return { err: 'invalid_data', message: 'Sale not found' };
-  return sale;
-};
+const findSaleById = async (id) => await saleModel.findSaleById(id);
 
 const updateSale = async (id, productId, quantity) => {
   const validQuantity = validateParams(quantity);
@@ -86,7 +71,6 @@ const updateSale = async (id, productId, quantity) => {
 const deleteSale = async (id) => {
   const saleById = await findSaleById(id);
   if (!regexId.test(id)) return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
-  if (!saleById) return saleById;
   
   await saleModel.deleteSale(id);
   return saleById;
