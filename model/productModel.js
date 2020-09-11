@@ -21,7 +21,7 @@ const selectByName = async (name) => connect()
   .then((db) =>
     db
     .collection('products')
-    .find({ name: name })
+    .find({ name })
     .toArray(),
   );
 
