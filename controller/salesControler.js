@@ -4,15 +4,15 @@ const rescue = require('express-rescue');
 const invalidSaleError = { err: {
   code: 'invalid_data',
   message: 'Wrong sale ID format',
-}};
+} };
 
 const saleService = require('../service/saleService');
 
 const insertSale = rescue(async (req, res) => {
   const insertedSales = await saleService.checkSales(req.body);
-  insertedSales.error ?
-  res.status(422).json({ message: insertedSales.message }) :
-  res.status(201).json(insertedSales);
+  insertedSales.error
+  ? res.status(422).json({ message: insertedSales.message })
+  : res.status(201).json(insertedSales);
 });
 
 const getAllSales = rescue(async (_req, res) => {
@@ -28,9 +28,8 @@ const getSaleById = rescue(async (req, res) => {
 const updateSale = rescue(async (req, res) => {
   const { id } = req.params;
   const { productId, quantity } = req.body;
-  console.log(productId, quantity);
   const result = await saleService.upsertSale(id, { productId, quantity });
-  
+
   result.err ?
   res.status(422).json({ message: result.err }) :
   res.status(200).json(result);
@@ -38,9 +37,9 @@ const updateSale = rescue(async (req, res) => {
 
 const eraseSale = rescue(async (req, res) => {
   const delSale = await saleService.deleteOne(req.params.id);
-  delSale ?
-  res.status(200).json(delSale) :
-  res.status(422).json({ invalidSaleError })
+  delSale
+  ? res.status(200).json(delSale)
+  : res.status(422).json({ invalidSaleError });
 });
 
 module.exports = {
@@ -48,5 +47,5 @@ module.exports = {
   getAllSales,
   getSaleById,
   updateSale,
-  eraseSale
+  eraseSale,
 };

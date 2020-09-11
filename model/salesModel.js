@@ -28,7 +28,7 @@ const updateOne = async (id, saleItem) => connect()
   .updateOne(
     { _id: ObjectId(id) },
     { $set: saleItem })
-  .then(() => ({ _id: id, saleItem})),
+  .then(() => ({ _id: id, saleItem })),
 );
 
 const erase = async (id) => connect()
@@ -43,5 +43,5 @@ module.exports = {
   listAll,
   listOne,
   updateOne,
-  erase
+  erase,
 };
