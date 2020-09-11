@@ -17,12 +17,20 @@ const selectById = async (id) => connect()
     .toArray(),
   );
 
+const selectByName = async (name) => connect()
+  .then((db) =>
+    db
+    .collection('products')
+    .find({ 'name': name })
+    .toArray(),
+  );
+
 const create = async (name, quantity) => connect()
 .then((db) =>
   db
   .collection('products')
   .insertOne({ name, quantity }))
-  .then(result => ({ _id: result.insertedId, name, quantity }));
+  .then((result) => ({ _id: result.insertedId, name, quantity }));
 
 const update = async (id, name, quantity) => connect()
 .then((db) =>
@@ -43,6 +51,7 @@ const erase = async (id) => connect()
 module.exports = {
   listAll,
   selectById,
+  selectByName,
   create,
   update,
   erase,

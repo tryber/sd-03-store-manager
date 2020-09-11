@@ -6,6 +6,7 @@ const deleteOne = async (id) => productModel.erase(id);
 
 // Regras de negócio
 const insertOne = async (name, quantity) => {
+  const isNotUniqueName = await productModel.selectByName(name);
   switch (true) {
     case name.length < 5:
       return {
@@ -21,6 +22,11 @@ const insertOne = async (name, quantity) => {
       return {
         code: 'invalid_data',
         message: '"quantity" must be a number',
+      };
+    case isNotUniqueName.length > 0:
+      return {
+        code: 'invalid_data',
+        message: 'Product already exists',
       };
     default:
       return productModel.create(name, quantity);
