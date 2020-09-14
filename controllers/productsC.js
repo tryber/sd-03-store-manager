@@ -3,7 +3,6 @@ const express = require('express');
 // const path = require('path');
 const productService = require('../services/productsS');
 const productModel = require('../models/productsM');
-const { ObjectId } = require('mongodb');
 
 const router = express.Router();
 
