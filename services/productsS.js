@@ -22,6 +22,10 @@ function validadeProduct(name, quantity, duplicate) {
   }
 }
 
+function validateProductsArr(id) {
+  
+}
+
 module.exports = {
   validadeProduct,
 };
