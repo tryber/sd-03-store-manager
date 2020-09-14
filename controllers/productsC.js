@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
     const product = await productModel.getProductsById(id);
     return res.status(200).json(product);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
   }
 });
