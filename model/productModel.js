@@ -13,8 +13,7 @@ const selectById = async (id) => connect()
   .then((db) =>
     db
     .collection('products')
-    .find(ObjectId(id))
-    .toArray(),
+    .findOne(ObjectId(id))
   );
 
 const selectByName = async (name) => connect()

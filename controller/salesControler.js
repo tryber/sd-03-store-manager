@@ -10,9 +10,10 @@ const saleService = require('../service/saleService');
 
 const insertSale = rescue(async (req, res) => {
   const insertedSales = await saleService.checkSales(req.body);
-  
-  if (insertedSales.error) return res.status(422).json({ message: insertedSales.message });
-  return res.status(201).json(insertedSales);
+
+  return insertedSales.err ?
+  res.status(422).json(insertedSales) :
+  res.status(200).json(insertedSales);
 });
 
 const getAllSales = rescue(async (_req, res) => {
@@ -30,15 +31,16 @@ const updateSale = rescue(async (req, res) => {
   const { productId, quantity } = req.body;
   const result = await saleService.upsertSale(id, { productId, quantity });
 
-  if (result.err) return res.status(422).json({ message: result.err });
+  if (result.err) return res.status(422).json( { err: { result } });
   return res.status(200).json(result);
 });
 
 const eraseSale = rescue(async (req, res) => {
   const delSale = await saleService.deleteOne(req.params.id);
 
-  if (delSale) return res.status(200).json(delSale);
-  return res.status(422).json({ invalidSaleError });
+  return delSale ?
+  res.status(200).json(delSale) :
+  res.status(422).json(invalidSaleError);
 });
 
 module.exports = {

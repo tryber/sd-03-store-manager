@@ -6,20 +6,36 @@ const genericError = { err: {
   message: 'Wrong product ID or invalid quantity',
 } };
 
+// const checkSales = async (itensSold) => {
+//   let hasError = false;
+//   for (item of itensSold) {
+//     const { productId, quantity } = item;
+//     const product = await productModel.selectById(productId);
+//     if (isNaN(quantity) || quantity < 1 || !product.length) { hasError = true; }
+//   }
+//   if (hasError === true) { return genericError; }
+//   return salesModel.insert({ itensSold });
+// };
+
 const checkSales = async (itensSold) => {
   let hasError = false;
-  for (item of itensSold) {
+  const x = await Promise.all(itensSold.map((item) => {
     const { productId, quantity } = item;
-    const product = await productModel.selectById(productId);
+    const product = async (pId) => (await productModel.selectById(pId));
+    product(productId);
+    console.log(product);
     if (isNaN(quantity) || quantity < 1 || !product.length) { hasError = true; }
-  }
-  if (hasError === true) { return genericError; }
-  return salesModel.insert({ itensSold });
+  }));
+
+  return hasError ?
+  genericError :
+  salesModel.insert({ itensSold });
 };
 
 const upsertSale = async (id, saleItem) => {
-  if (saleItem.quantity > 1) { return salesModel.updateOne(id, saleItem); }
-  return genericError;
+  return saleItem.quantity > 1?
+  salesModel.updateOne(id, saleItem) :
+  genericError;
 };
 
 const selectAll = async () => salesModel.listAll();
