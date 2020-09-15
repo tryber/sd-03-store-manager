@@ -42,6 +42,7 @@ sales.post(
     if (createdSale.err) {
       return res.status(422).json(createdSale);
     }
+
     return res.status(200).json(createdSale);
   }),
 );

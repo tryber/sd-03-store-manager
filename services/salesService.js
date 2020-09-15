@@ -4,6 +4,7 @@ const { invalidData, wrongFormatOrQuantity, wrondFormatSaleId } = require('./err
 
 const createSale = async (products) => {
   const isDataValid = validateSaleData(products);
+  let error;
 
   if (!isDataValid) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
@@ -12,19 +13,18 @@ const createSale = async (products) => {
   );
 
   allProductsById.forEach((product, index) => {
-    console.log(index, product);
     if (!product) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
     const limit = product.quantity;
     const soldQuantity = products[index].quantity;
 
     if (soldQuantity > limit) {
-      const erro = getErrorObject('stock_problem', 'Such amount is not permitted to sell');
-      return erro;
+      error = getErrorObject('stock_problem', 'Such amount is not permitted to sell');
     }
   });
 
-  console.log('fora do if');
+  if (error) return error;
+
   const sale = salesModel.createSale(products);
 
   await products.forEach(async ({ productId, quantity }) => {
