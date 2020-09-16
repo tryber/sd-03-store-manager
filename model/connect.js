@@ -1,7 +1,7 @@
 require('dotenv/config');
 const { MongoClient } = require('mongodb');
 
-const { DB_URI, DB_DBNAME } = process.env;
+// const { DB_URI, DB_DBNAME } = process.env;
 
 const connect = async () => MongoClient.connect(
   'mongodb://mongodb:27017/StoreManager', {
