@@ -16,10 +16,10 @@ const createProduct = async (name, quantity) => connect()
     quantity,
   }));
 
-const getProductByName = async (name) => connect()
+const getProductByName = async (productName) => connect()
   .then((db) => db
     .collection('products')
-    .find({ 'name': name })
+    .find({ name: productName })
     .toArray());
 
 module.exports = {
