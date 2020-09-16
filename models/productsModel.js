@@ -6,14 +6,14 @@ const getAllProducts = async () => connect()
     .find({})
     .toArray());
 
-const createProduct = async (name, quatity) => connect()
+const createProduct = async (name, quantity) => connect()
   .then((db) => db
     .collection('products')
-    .insertOne({ name, quatity }))
+    .insertOne({ name, quantity }))
   .then(({ insertedId }) => ({
     _id: insertedId,
     name,
-    quatity,
+    quantity,
   }));
 
 const getProductByName = async (name) => connect()

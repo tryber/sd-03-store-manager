@@ -50,11 +50,9 @@ const productValidation = async (name, quantity) => {
 
   if (productNameValidation.err) return productNameValidation;
   
-  if (productQuantityValidation) return productQuantityValidation;
+  if (productQuantityValidation.err) return productQuantityValidation;
   
   return true;
 };
 
-module.exports = {
-  productValidation,
-};
+module.exports = productValidation;

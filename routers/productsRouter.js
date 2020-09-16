@@ -7,4 +7,6 @@ const products = Router();
 
 products.get('/', rescue(productsController.getAll));
 
+products.post('/', rescue(productsController.createProduct));
+
 module.exports = products;
