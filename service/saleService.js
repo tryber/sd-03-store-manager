@@ -19,20 +19,18 @@ const standarizedId = /^[0-9a-fA-F]{24}$/;
 // Referência: https://flaviocopes.com/javascript-async-await-array-map
 // Após verificar que cada id existe na collection de produtos, verifica a quantidade.
 const validateSaleData = async (toBeInserted) => {
-  let isValidId, isValidQuant = true;
-  
-  if (toBeInserted.some((item) => !standarizedId.test(item.productId))) { return false };
-  const getProducts = async () => {
-    return Promise.all(
-      toBeInserted.map((item) => productModel.selectById(item.productId))
-    )
-  };
+  let isValidId = false;
+  let isValidQuant = false;
 
-  await getProducts().then(products => { isValidId = (products.every((p) => p)) });
+  if (toBeInserted.some((item) => !standarizedId.test(item.productId))) { return false; }
+  const getProducts = async () => 
+    Promise.all(toBeInserted.map((item) => productModel.selectById(item.productId)));
+
+  await getProducts().then((products) => { isValidId = (products.every((p) => p)) });
   isValidQuant = toBeInserted.every((p) => p.quantity > 0);
 
   return isValidId && isValidQuant;
-}
+};
 
 const addSales = async (soldItems) => {
   const isValid = await validateSaleData(soldItems);
@@ -43,14 +41,16 @@ const addSales = async (soldItems) => {
 };
 
 const selectOne = async (id) => {
+  let result = '';
   if (standarizedId.test(id)) { result = await salesModel.listOne(id); }
   return result || genericError;
-}
+};
 
 const deleteOne = async (id) => {
+  let result = '';
   if (standarizedId.test(id)) { result = await salesModel.erase(id); }
   return result || invalidSaleError;
-}
+};
 
 const updateSale = async (id, soldItems) => {
   const isValid = await validateSaleData(soldItems);

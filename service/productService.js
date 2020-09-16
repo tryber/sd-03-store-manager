@@ -13,7 +13,7 @@ const getAll = async () => productModel.listAll();
 const getById = async (id) => {
   let result = '';
   // Se a string passada bate com o regex...
-  if (standarizedId.test(id)) { result = await productModel.selectById(id) }
+  if (standarizedId.test(id)) { result = await productModel.selectById(id); }
   return result || invaliDataError;
 };
 
@@ -40,9 +40,9 @@ const insertOne = async (name, quantity) => {
         code: 'invalid_data',
         message: 'Product already exists',
       };
-      default:
+    default:
       return productModel.create(name, quantity);
-    }
+  }
 };
 
 const upsertOne = async (id, name, quantity) => {

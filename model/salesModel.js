@@ -2,8 +2,8 @@ const connect = require('./connect');
 const { ObjectId } = require('mongodb');
 
 const insert = async (itensSold) => connect()
-  .then((db) => db.collection('sales').insertOne({itensSold}))
-  .then(({insertedId}) => ({ _id: insertedId, itensSold }));
+  .then((db) => db.collection('sales').insertOne({ itensSold }))
+  .then(({ insertedId }) => ({ _id: insertedId, itensSold }));
 
 const listAll = async () => connect()
 .then((db) =>
