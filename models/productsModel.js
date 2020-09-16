@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+
 const connect = require('./connection');
 
 const getAllProducts = async () => connect()
@@ -22,8 +24,15 @@ const getProductByName = async (productName) => connect()
     .find({ name: productName })
     .toArray());
 
+const getProductById = async (productId) => connect()
+  .then((db) => db
+    .collection('products')
+    .find({ _id: ObjectId(productId) })
+    .toArray());
+
 module.exports = {
   getAllProducts,
   createProduct,
   getProductByName,
+  getProductById,
 };

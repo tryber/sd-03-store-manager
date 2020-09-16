@@ -9,4 +9,6 @@ products.get('/', rescue(productsController.getAll));
 
 products.post('/', rescue(productsController.createProduct));
 
+products.get('/:id', rescue(productsController.getProductById));
+
 module.exports = products;
