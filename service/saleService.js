@@ -6,36 +6,40 @@ const genericError = { err: {
   message: 'Wrong product ID or invalid quantity',
 } };
 
-// const checkSales = async (itensSold) => {
+const validateSaleData = async (items) => {
+  const isValid = true;
+  const takeOnThePromise = items.map(async (productId) => {
+    await productModel.selectById(productId);
+  });
+  const products = await Promise.all(takeOnThePromise).then((output) => output);
+  console.log(products);
+  // if (quantity > 1 && product.length) { isValid = true; }
+  return isValid;
+}
+
+// const checkSales = async (saleItems) => {
 //   let hasError = false;
-//   for (item of itensSold) {
+//   for (item of saleItems) {
 //     const { productId, quantity } = item;
 //     const product = await productModel.selectById(productId);
 //     if (isNaN(quantity) || quantity < 1 || !product.length) { hasError = true; }
 //   }
 //   if (hasError === true) { return genericError; }
-//   return salesModel.insert({ itensSold });
+//   return salesModel.insert({ saleItems });
 // };
 
-const checkSales = async (itensSold) => {
-  let hasError = false;
-  const x = await Promise.all(itensSold.map((item) => {
-    const { productId, quantity } = item;
-    const product = async (pId) => (await productModel.selectById(pId));
-    product(productId);
-    console.log(product);
-    if (isNaN(quantity) || quantity < 1 || !product.length) { hasError = true; }
-  }));
-
-  return hasError ?
-  genericError :
-  salesModel.insert({ itensSold });
+const addSales = async (itemsSold) => {
+  const x = await validateSaleData(itemsSold);
+  console.log(x);
+  return x ?
+  salesModel.insert({ itemsSold }) :
+  genericError;
 };
 
-const upsertSale = async (id, saleItem) => {
-  return saleItem.quantity > 1?
-  salesModel.updateOne(id, saleItem) :
-  genericError;
+const updateSale = async (id, itemsSold) => {
+  return itemsSold.some((item) => item.quantity < 1) ?
+  genericError :
+  salesModel.updateOne(id, { itemsSold });
 };
 
 const selectAll = async () => salesModel.listAll();
@@ -43,9 +47,9 @@ const selectOne = async (id) => salesModel.listOne(id);
 const deleteOne = async (id) => salesModel.erase(id);
 
 module.exports = {
-  checkSales,
+  addSales,
   selectAll,
   selectOne,
-  upsertSale,
+  updateSale,
   deleteOne,
 };

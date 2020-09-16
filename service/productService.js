@@ -1,10 +1,25 @@
 const productModel = require('../model/productModel');
 
-const getAll = async () => productModel.listAll();
-const getById = async (id) => productModel.selectById(id);
-const deleteOne = async (id) => productModel.erase(id);
+const invaliDataError = { err: {
+  code: 'invalid_data',
+  message: 'Wrong id format',
+} };
 
-// Regras de negócio
+// Necessário para p/ os testes. Verifica se o parâmetro passado é um hexadecimal de 24 dígitos.
+// Em casos menores  retornava erro 500 mesmo devolvendo a mensagem corretamente no Postman.
+const standarizedId = /^[0-9a-fA-F]{24}$/;
+
+const getAll = async () => productModel.listAll();
+
+const getById = async (id) => {
+  let result = '';
+  // Se a string passada bate com o regex...
+  if (standarizedId.test(id)) { result = await productModel.selectById(id) }
+  return result ?
+  result :
+  invaliDataError;
+};
+
 const insertOne = async (name, quantity) => {
   const isNotUniqueName = await productModel.selectByName(name);
   switch (true) {
@@ -13,24 +28,24 @@ const insertOne = async (name, quantity) => {
         code: 'invalid_data',
         message: '"name" length must be at least 5 characters long',
       };
-    case quantity < 1:
-      return {
-        code: 'invalid_data',
-        message: '"quantity" must be larger than or equal to 1',
-      };
-    case isNaN(quantity):
-      return {
-        code: 'invalid_data',
-        message: '"quantity" must be a number',
-      };
+      case quantity < 1:
+        return {
+          code: 'invalid_data',
+          message: '"quantity" must be larger than or equal to 1',
+        };
+        case isNaN(quantity):
+          return {
+            code: 'invalid_data',
+            message: '"quantity" must be a number',
+          };
     case isNotUniqueName.length > 0:
       return {
         code: 'invalid_data',
         message: 'Product already exists',
       };
-    default:
+      default:
       return productModel.create(name, quantity);
-  }
+    }
 };
 
 const upsertOne = async (id, name, quantity) => {
@@ -54,6 +69,13 @@ const upsertOne = async (id, name, quantity) => {
       return productModel.update(id, name, quantity);
   }
 };
+
+const deleteOne = async (id) => {
+  let result = '';
+  if (standarizedId.test(id)) { result = await productModel.selectById(id); }
+  if (result) return productModel.erase(id);
+  return invaliDataError
+}
 
 module.exports = {
   getAll,

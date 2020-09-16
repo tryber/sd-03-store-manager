@@ -13,7 +13,7 @@ const selectById = async (id) => connect()
   .then((db) =>
     db
     .collection('products')
-    .findOne(ObjectId(id))
+    .findOne(ObjectId(id)),
   );
 
 const selectByName = async (name) => connect()
@@ -45,7 +45,7 @@ const erase = async (id) => connect()
   db
   .collection('products')
   .findOneAndDelete({ _id: ObjectId(id) }))
-  .then((response) => (response.value));
+  .then((response) => (response.value))
 
 module.exports = {
   listAll,

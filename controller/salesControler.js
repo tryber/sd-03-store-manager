@@ -9,7 +9,7 @@ const invalidSaleError = { err: {
 const saleService = require('../service/saleService');
 
 const insertSale = rescue(async (req, res) => {
-  const insertedSales = await saleService.checkSales(req.body);
+  const insertedSales = await saleService.addSales(req.body);
 
   return insertedSales.err ?
   res.status(422).json(insertedSales) :
@@ -28,11 +28,10 @@ const getSaleById = rescue(async (req, res) => {
 
 const updateSale = rescue(async (req, res) => {
   const { id } = req.params;
-  const { productId, quantity } = req.body;
-  const result = await saleService.upsertSale(id, { productId, quantity });
-
-  if (result.err) return res.status(422).json( { err: { result } });
-  return res.status(200).json(result);
+  const result = await saleService.updateSale(id, req.body);
+  return result.err ?
+  res.status(422).json(result) :
+  res.status(200).json(result);
 });
 
 const eraseSale = rescue(async (req, res) => {
