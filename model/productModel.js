@@ -45,7 +45,7 @@ const erase = async (id) => connect()
   db
   .collection('products')
   .findOneAndDelete({ _id: ObjectId(id) }))
-  .then((response) => (response.value))
+  .then((response) => (response.value));
 
 module.exports = {
   listAll,

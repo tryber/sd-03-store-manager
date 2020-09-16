@@ -1,10 +1,9 @@
 const connect = require('./connect');
 const { ObjectId } = require('mongodb');
-const sales = require('../routers/salesRouter');
 
-const insert = async (jsaleson) => connect()
-  .then((db) => db.collection('sales').insertOne(jsaleson))
-  .then((feeDBack) => (feeDBack.ops));
+const insert = async (itensSold) => connect()
+  .then((db) => db.collection('sales').insertOne({itensSold}))
+  .then(({insertedId}) => ({ _id: insertedId, itensSold }));
 
 const listAll = async () => connect()
 .then((db) =>
@@ -18,19 +17,20 @@ const listOne = async (id) => connect()
 .then((db) =>
   db
   .collection('sales')
-  .findOne(ObjectId(id))
+  .findOne(ObjectId(id)),
 );
 
-const updateOne = async (id, saleItems) => {
-  console.log('Model ', saleItems);
+const updateOne = async (id, itensSold) => {
+  console.log('Model ', itensSold);
   return connect()
   .then((db) => db
     .collection('sales').updateOne(
       { _id: ObjectId(id) },
-      { $set: { saleItems } })
-    .then(() => ({ _id: id, saleItems }))
+      { $set: { itensSold } })
+    .then(() => ({ _id: id, itensSold }))
     .catch((err) => err),
-)};
+  );
+};
 
 const erase = async (id) => connect()
 .then((db) =>

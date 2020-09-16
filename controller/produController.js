@@ -40,7 +40,7 @@ const eraseProduct = rescue(async (req, res) => {
 
   return delProd.err ?
   res.status(422).json(delProd) :
-  res.status(200).json(delProd)
+  res.status(200).json(delProd);
 });
 
 module.exports = {
