@@ -12,11 +12,13 @@ const createProduct = async (name, quantity) => {
 };
 
 const getProductById = async (id) => {
-  if (id.length < 24) return {
-    err: {
-      code: 'invalid_data',
-      message: 'Wrong id format',
-    },
+  if (id.length < 24) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    }
   };
 
   const productId = await productsModel.getProductById(id);
