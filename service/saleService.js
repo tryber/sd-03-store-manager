@@ -23,10 +23,10 @@ const validateSaleData = async (toBeInserted) => {
   let isValidQuant = false;
 
   if (toBeInserted.some((item) => !standarizedId.test(item.productId))) { return false; }
-  const getProducts = async () => 
+  const getProducts = async () =>
     Promise.all(toBeInserted.map((item) => productModel.selectById(item.productId)));
 
-  await getProducts().then((products) => { isValidId = (products.every((p) => p)) });
+  await getProducts().then((products) => { isValidId = (products.every((p) => p)); });
   isValidQuant = toBeInserted.every((p) => p.quantity > 0);
 
   return isValidId && isValidQuant;
