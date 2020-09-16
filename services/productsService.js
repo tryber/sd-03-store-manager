@@ -18,17 +18,19 @@ const getProductById = async (id) => {
         code: 'invalid_data',
         message: 'Wrong id format',
       },
-    }
-  };
+    };
+  }
 
   const productId = await productsModel.getProductById(id);
 
-  if (productId.length === 0) return {
-    err: {
-      code: 'invalid_data',
-      message: 'Wrong id format',
-    },
-  };
+  if (productId.length === 0) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
 
   return productId;
 };
