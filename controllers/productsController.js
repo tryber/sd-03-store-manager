@@ -1,5 +1,4 @@
 const { productsService } = require('../services');
-const products = require('../routers/productsRouter');
 
 const getAll = async (_req, res) => {
   const products = await productsService.getAllProducts();
@@ -22,8 +21,8 @@ const getProductById = async (req, res) => {
 
   if (product.err) return res.status(422).json(product);
 
-  return res.status(200).json(...product)
-}
+  return res.status(200).json(...product);
+};
 
 module.exports = {
   getAll,
