@@ -5,7 +5,7 @@ const getAllProducts = async () => productsModel.getAllProducts();
 
 const createProduct = async (name, quantity) => {
   const isValid = await productValidation(name, quantity);
-  
+
   if (isValid.err) return isValid;
 
   return productsModel.createProduct(name, quantity);
