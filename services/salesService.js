@@ -5,7 +5,7 @@ const getAllSales = async () => salesModel.getAllSales();
 
 const createSale = async (sales) => {
   const sale = await saleValidation(sales);
-  
+
   if (sale.err) return sale;
 
   return salesModel.createSale(sales);
