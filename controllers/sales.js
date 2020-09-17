@@ -15,7 +15,7 @@ const newSale = async (req, res) => {
     const data = req.body;
     const result = await service.addSale(data);
     console.log('result:', result);
-    if (result.error) return res.status(result.status).json({ err: result.err });
+    if (result.status) return res.status(result.status).json({ err: result.err });
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
@@ -27,7 +27,7 @@ const newSale = async (req, res) => {
 const findSaleById = async (req, res) => {
   try {
     const result = await service.findSale(req.params.id);
-    if (result.error) return res.status(result.status || 422).json({ err: result.err });
+    if (result.status) return res.status(result.status || 422).json({ err: result.err });
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
@@ -38,7 +38,7 @@ const findSaleById = async (req, res) => {
 const editSale = async (req, res) => {
   try {
     const result = await service.updateSale(req.params.id, req.body);
-    if (result.error) return res.status(422).json({ err: result.err });
+    if (result.status) return res.status(result.status).json({ err: result.err });
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
@@ -49,7 +49,7 @@ const removeProduct = async (req, res) => {
   try {
     // console.log(req.params);
     const result = await service.deleteSale(req.params.id);
-    if (result.error) return res.status(422).json({ err: result.err });
+    if (result.status) return res.status(422).json({ err: result.err });
     res.status(200).json(result);
   } catch (err) {
     console.error(err);

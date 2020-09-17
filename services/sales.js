@@ -1,28 +1,42 @@
 const Sales = require('../models/sales');
 const Products = require('../models/products');
 
+const errorHandler = (status) => {
+  if (status === 422) {
+    return {
+      status: 422,
+      err:
+      { code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity',
+      },
+    };
+  }
+  if (status === 404) {
+    return {
+      status: 404,
+      err:
+      { code: 'stock_problem',
+        message: 'Such amount is not permitted to sell',
+      },
+    };
+  }
+  return false;
+};
+
 const validadeSale = async (data) => {
-  const err = { err: { code: 'invalid_data' } };
   const error = await Promise.all(data.map(async ({ productId, quantity }) => {
     const findProduct = await Products.findById(productId);
     if (quantity < 1 || typeof quantity !== 'number' || !findProduct) {
-      err.err.message = 'Wrong product ID or invalid quantity';
-      err.error = true;
-      err.status = 422;
-      return true;
+      return 422;
     }
     if (quantity >= findProduct.quantity) {
-      err.err.message = 'Such amount is not permitted to sell';
-      err.error = true;
-      err.status = 404;
-      err.err.code = 'stock_problem';
-      return true;
+      return 404;
     }
-
     return false;
   }));
-  if (error.includes(true)) return err;
-  return { error: false };
+  if (error.includes(404)) return errorHandler(404);
+  if (error.includes(422)) return errorHandler(422);
+  return {};
 };
 
 const listSales = async () => ({ sales: await Sales.getAll() });
@@ -30,7 +44,7 @@ const listSales = async () => ({ sales: await Sales.getAll() });
 const addSale = async (data) => {
   try {
     const validation = await validadeSale(data);
-    if (validation.error) return validation;
+    if (validation.status) return validation;
     await Promise.all(data.map(async ({ productId, quantity }) => {
       const stock = await Products.findById(productId);
       const newStock = stock.quantity - quantity;
@@ -61,7 +75,7 @@ const findSale = async (id) => {
 
 const updateSale = async (id, sale) => {
   const validation = await validadeSale(sale);
-  if (validation.error) return validation;
+  if (validation.status) return validation;
   await Sales.update(id, sale);
   return { _id: id, itensSold: sale };
 };
@@ -69,7 +83,7 @@ const updateSale = async (id, sale) => {
 const deleteSale = async (id) => {
   // console.log('id', id);
   const found = await Sales.findById(id);
-  // console.log('found:', found);
+  console.log('found:', found);
   if (!found) {
     return {
       err: {
@@ -80,6 +94,11 @@ const deleteSale = async (id) => {
       status: 404,
     };
   }
+  await Promise.all(found.itensSold.map(async ({ productId, quantity }) => {
+    const stock = await Products.findById(productId);
+    const newStock = stock.quantity + quantity;
+    await Products.update(productId, stock.name, newStock);
+  }));
   await Sales.exclude(id);
   return found;
 };
