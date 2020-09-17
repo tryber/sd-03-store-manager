@@ -8,8 +8,17 @@ const validadeSale = async (data) => {
     if (quantity < 1 || typeof quantity !== 'number' || !findProduct) {
       err.err.message = 'Wrong product ID or invalid quantity';
       err.error = true;
+      err.status = 422;
       return true;
     }
+    if (quantity >= findProduct.quantity) {
+      err.err.message = 'Such amount is not permitted to sell';
+      err.error = true;
+      err.status = 404;
+      err.err.code = 'stock_problem';
+      return true;
+    }
+
     return false;
   }));
   if (error.includes(true)) return err;
@@ -22,6 +31,11 @@ const addSale = async (data) => {
   try {
     const validation = await validadeSale(data);
     if (validation.error) return validation;
+    await Promise.all(data.map(async ({ productId, quantity }) => {
+      const stock = await Products.findById(productId);
+      const newStock = stock.quantity - quantity;
+      await Products.update(productId, stock.name, newStock);
+    }));
     const sales = await Sales.add(data);
     return { _id: sales.insertedId, itensSold: data };
   } catch (e) {

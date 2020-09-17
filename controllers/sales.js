@@ -14,7 +14,8 @@ const newSale = async (req, res) => {
   try {
     const data = req.body;
     const result = await service.addSale(data);
-    if (result.error) return res.status(422).json({ err: result.err });
+    console.log('result:', result);
+    if (result.error) return res.status(result.status).json({ err: result.err });
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
