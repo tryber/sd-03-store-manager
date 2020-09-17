@@ -9,4 +9,8 @@ sales.get('/', rescue(salesController.getAllSales));
 
 sales.post('/', rescue(salesController.createSale));
 
+sales.get('/:id', rescue(salesController.getSaleById));
+
+sales.put('/:id', rescue(salesController.updateSale));
+
 module.exports = sales;
