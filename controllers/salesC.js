@@ -1,8 +1,8 @@
 // CONTROLLER: trata as requisições e envia somente o necessário para o service!
 const express = require('express');
 // const path = require('path');
-const productService = require('../services/productsS');
-const productModel = require('../models/productsM');
+const productService = require('../services/salesS');
+const productModel = require('../models/salesM');
 
 const router = express.Router();
 
