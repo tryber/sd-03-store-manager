@@ -13,4 +13,6 @@ products.get('/:id', rescue(productsController.getProductById));
 
 products.put('/:id', rescue(productsController.updateProduct));
 
+products.delete('/:id', rescue(productsController.deleteProduct));
+
 module.exports = products;

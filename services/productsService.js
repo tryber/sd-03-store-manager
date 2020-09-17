@@ -43,9 +43,24 @@ const getProductById = async (id) => {
   return productId;
 };
 
+const deleteProduct = async (id) => {
+  if (id.length < 24) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+
+  await productsModel.deleteProduct(id);
+};
+
+
 module.exports = {
   getAllProducts,
   createProduct,
   getProductById,
   updateProduct,
+  deleteProduct,
 };
