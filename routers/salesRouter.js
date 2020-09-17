@@ -7,4 +7,6 @@ const sales = Router();
 
 sales.get('/', rescue(salesController.getAllSales));
 
+sales.post('/', rescue(salesController.createSale));
+
 module.exports = sales;

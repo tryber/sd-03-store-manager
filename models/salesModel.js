@@ -8,10 +8,10 @@ const getAllSales = async () => connect()
     .find({})
     .toArray());
 
-const createSale = async (sales) => connect()
+const createSale = async (itensSold) => connect()
   .then((db) => db
     .collection('sales')
-    .insertOne({ itensSold: sales }))
+    .insertOne({ itensSold }))
   .then(({ insertedId }) => ({
     _id: insertedId,
     itensSold,
