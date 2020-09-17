@@ -15,9 +15,14 @@ const createProduct = async (name, quantity) => connection()
   .then((db) => db.collection('products').insertOne({ name, quantity }))
   .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
 
+const updateProduct = async (id, name, quantity) => connection()
+  .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }, { name, quantity }))
+  .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
+
 module.exports = {
+  createProduct,
   getAllProducts,
   getProductsById,
   getProductsByName,
-  createProduct,
+  updateProduct,
 };

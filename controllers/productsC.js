@@ -41,4 +41,17 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.post('/:id', async (req, res, next) => {
+  try {
+    const { params: { id }, body: { name, quantity } } = req;
+    const data = productService.validadeProduct(name, quantity);
+    if (data.status !== 200) return next(data);
+    const product = await productModel.updateProduct(id, name, quantity);
+    return res.status(200).json(product);
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+});
+
 module.exports = router;

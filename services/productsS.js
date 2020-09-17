@@ -18,6 +18,8 @@ function validadeProduct(name, quantity, duplicate) {
     case (duplicate && duplicate.name === name):
       return templates.duplicate;
     default:
+      if (duplicate) return templates.ok;
+      templates.ok.status = 200;
       return templates.ok;
   }
 }
