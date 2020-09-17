@@ -11,4 +11,6 @@ products.post('/', rescue(productsController.createProduct));
 
 products.get('/:id', rescue(productsController.getProductById));
 
+products.put('/:id', rescue(productsController.updateProduct));
+
 module.exports = products;

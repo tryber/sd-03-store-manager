@@ -11,6 +11,14 @@ const createProduct = async (name, quantity) => {
   return productsModel.createProduct(name, quantity);
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const isValid = await productValidation(name, quantity, true);
+
+  if (isValid.err) return isValid;
+
+  return productsModel.updateProduct(id, name, quantity);
+};
+
 const getProductById = async (id) => {
   if (id.length < 24) {
     return {
@@ -39,4 +47,5 @@ module.exports = {
   getAllProducts,
   createProduct,
   getProductById,
+  updateProduct,
 };

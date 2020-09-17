@@ -1,7 +1,7 @@
 const { productsModel } = require('../models');
 
-const nameValidation = async (productName) => {
-  const name = await productsModel.getProductByName(productName);
+const nameValidation = async (update = false, productName) => {
+  const name = update ? [] : await productsModel.getProductByName(productName);
 
   switch (true) {
     case productName.length < 5:
@@ -44,8 +44,8 @@ const quantityValidation = (productQuantity) => {
   }
 };
 
-const productValidation = async (name, quantity) => {
-  const productNameValidation = await nameValidation(name);
+const productValidation = async (name, quantity, update) => {
+  const productNameValidation = await nameValidation(update, name);
   const productQuantityValidation = quantityValidation(quantity);
 
   if (productNameValidation.err) return productNameValidation;
