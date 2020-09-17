@@ -32,9 +32,9 @@ router.post('/', async (req, res, next) => {
     const { name, quantity } = req.body;
     const duplicate = await productModel.getProductsByName(name);
     const data = productService.validadeProduct(name, quantity, duplicate);
-    if (data.status !== 201) return next(data);
+    if (data.status !== 200) return next(data);
     const createdProduct = await productModel.createProduct(name, quantity);
-    return res.status(data.status).json(createdProduct);
+    return res.status(201).json(createdProduct);
   } catch (err) {
     console.error(err);
     return err;
