@@ -7,8 +7,15 @@ const genericError = { err: {
 } };
 
 const invalidSaleError = { err: {
+  id: 422,
   code: 'invalid_data',
   message: 'Wrong sale ID format',
+} };
+
+const notFoundError = { err: {
+  id: 404,
+  code: 'not_found',
+  message: 'Sale not found',
 } };
 
 // Necessário para os testes. Verifica se o parâmetro passado é um hexadecimal de 24 dígitos.
@@ -43,7 +50,8 @@ const addSales = async (soldItems) => {
 const selectOne = async (id) => {
   let result = '';
   if (standarizedId.test(id)) { result = await salesModel.listOne(id); }
-  return result || genericError;
+  if (result === '') return invalidSaleError;
+  return result || notFoundError;
 };
 
 const deleteOne = async (id) => {

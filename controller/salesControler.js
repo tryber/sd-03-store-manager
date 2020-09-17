@@ -18,9 +18,9 @@ const getAllSales = rescue(async (_req, res) => {
 const getSaleById = rescue(async (req, res) => {
   const request = await saleService.selectOne(req.params.id);
 
-  return request.itensSold ?
-  res.status(200).json(request) :
-  res.status(422).json(request);
+  return request.err ?
+  res.status(request.err.id).json(request) :
+  res.status(200).json(request);
 });
 
 const updateSale = rescue(async (req, res) => {
