@@ -23,17 +23,19 @@ const errorHandler = (status) => {
   return false;
 };
 
+const isSaleValid = async (data) => Promise.all(data.map(async ({ productId, quantity }) => {
+  const findProduct = await Products.findById(productId);
+  if (quantity < 1 || typeof quantity !== 'number' || !findProduct) {
+    return 422;
+  }
+  if (quantity >= findProduct.quantity) {
+    return 404;
+  }
+  return false;
+}));
+
 const validadeSale = async (data) => {
-  const error = await Promise.all(data.map(async ({ productId, quantity }) => {
-    const findProduct = await Products.findById(productId);
-    if (quantity < 1 || typeof quantity !== 'number' || !findProduct) {
-      return 422;
-    }
-    if (quantity >= findProduct.quantity) {
-      return 404;
-    }
-    return false;
-  }));
+  const error = await isSaleValid(data);
   if (error.includes(404)) return errorHandler(404);
   if (error.includes(422)) return errorHandler(422);
   return {};
