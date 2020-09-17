@@ -33,7 +33,7 @@ const updateProduct = async (req, res) => {
   if (product.err) return res.status(422).json(product);
 
   return res.status(200).json(product);
-}
+};
 
 module.exports = {
   getAll,
