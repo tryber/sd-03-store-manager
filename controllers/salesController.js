@@ -45,8 +45,8 @@ const deleteSale = async (req, res) => {
         code: 'invalid_data',
         message: 'Wrong sale ID format',
       },
-    })
-  };
+    });
+  }
 
   const sale = await salesService.deleteSale(id);
 
