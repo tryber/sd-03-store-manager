@@ -19,8 +19,7 @@ router.get('/', async (_req, res) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await productModel.getProductsById(id);
-    return res.status(200).json(product);
+    return res.status(200).json(await productService.idHandler(id, productModel.getProductsById));
   } catch (err) {
     console.error(err);
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
@@ -57,7 +56,7 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const { params: { id } } = req;
-    return res.status(200).json(await productModel.deleteProduct(id));
+    return res.status(200).json(await productService.idHandler(id, productModel.deleteProduct));
   } catch (err) {
     console.error(err);
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });

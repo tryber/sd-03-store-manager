@@ -22,6 +22,9 @@ function validadeProduct(name, quantity, duplicate) {
   }
 }
 
+const idHandler = async (id, callback) => callback(id);
+
 module.exports = {
+  idHandler,
   validadeProduct,
 };
