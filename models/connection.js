@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-//MUDA a conexao p o avaliador funcionar
+// change: conexao p o avaliador funcionar
 const connect = () =>
   MongoClient
     .connect('mongodb://mongodb:27017/StoreManager', {
