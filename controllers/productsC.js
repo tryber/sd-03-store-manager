@@ -57,8 +57,7 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const { params: { id } } = req;
-    const deletedProduct = await productModel.deleteProduct(id);
-    return res.status(200).json(deletedProduct);
+    return res.status(200).json(await productModel.deleteProduct(id));
   } catch (err) {
     console.error(err);
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
