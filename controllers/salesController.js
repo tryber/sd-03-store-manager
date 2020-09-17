@@ -13,7 +13,7 @@ const getSaleById = async (req, res) => {
   if (sale.err) return res.status(404).json(sale);
 
   return res.status(200).json(sale);
-}
+};
 
 const createSale = async (req, res) => {
   const sales = req.body;
@@ -34,17 +34,19 @@ const updateSale = async (req, res) => {
   if (newSale.err) return res.status(422).json(newSale);
 
   return res.status(200).json(newSale);
-}
+};
 
 const deleteSale = async (req, res) => {
   const { id } = req.params;
 
-  if (id.length < 24) return res.status(422).json({
-    err: {
-      code: 'invalid_data',
-      message: 'Wrong sale ID format',
-    },
-  });
+  if (id.length < 24) {
+    return res.status(422).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+    })
+  };
 
   const sale = await salesService.deleteSale(id);
 
