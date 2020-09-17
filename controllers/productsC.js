@@ -41,7 +41,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.post('/:id', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   try {
     const { params: { id }, body: { name, quantity } } = req;
     const data = productService.validadeProduct(name, quantity);
