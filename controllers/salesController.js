@@ -23,7 +23,7 @@ const createSale = async (req, res) => {
   if (createdSale.err) {
     if (createdSale.err.code === 'stock_problem') return res.status(404).json(createdSale);
     return res.status(422).json(createdSale);
-  };
+  }
   return res.status(200).json(createdSale);
 };
 
