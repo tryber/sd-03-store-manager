@@ -20,8 +20,10 @@ const createSale = async (req, res) => {
 
   const createdSale = await salesService.createSale(sales);
 
-  if (createdSale.err) return res.status(422).json(createdSale);
-
+  if (createdSale.err) {
+    if (createdSale.err.code === 'stock_problem') return res.status(404).json(createdSale);
+    return res.status(422).json(createdSale);
+  };
   return res.status(200).json(createdSale);
 };
 

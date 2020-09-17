@@ -3,5 +3,5 @@ const saleValidation = require('./saleValidation');
 
 module.exports = {
   productValidation,
-  saleValidation,
+  isValid: saleValidation,
 };
