@@ -10,6 +10,7 @@ const PORT = 3000 || process.env;
 app.use(bodyParser.json());
 
 app.use('/products', routes.productsRouter);
+app.use('/sales', routes.salesRouter);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (request, response) => {
