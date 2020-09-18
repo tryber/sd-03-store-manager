@@ -11,9 +11,7 @@ const standarizedId = /^[0-9a-fA-F]{24}$/;
 const getAll = async () => productModel.listAll();
 
 const getById = async (id) => {
-  let result = '';
-  // Se a string passada bate com o regex...
-  if (standarizedId.test(id)) { result = await productModel.selectById(id); }
+  const result = standarizedId.test(id) ? await productModel.selectById(id) : null;
   return result || invaliDataError;
 };
 
