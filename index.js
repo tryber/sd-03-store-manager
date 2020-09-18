@@ -16,4 +16,3 @@ app.use('/products', productController);
 app.use('/sales', salesController);
 
 app.listen(3000, () => console.log('App listening on port 3000!'));
-
