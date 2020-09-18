@@ -2,20 +2,34 @@ const { salesModel, productsModel } = require('../models');
 const { validateId, validateSaleData, getErrorObject } = require('./helpers');
 const { invalidData, wrongFormatOrQuantity, wrondFormatSaleId } = require('./errorCodes');
 
-const createSale = (products) => {
+const createSale = async (products) => {
   const isDataValid = validateSaleData(products);
-
-  if (isDataValid) {
-    products.forEach(({ productId }) => {
-      const product = productsModel.getProductById(productId);
-
-      if (!product) getErrorObject(invalidData, wrongFormatOrQuantity);
-    });
-  }
+  let error;
 
   if (!isDataValid) return getErrorObject(invalidData, wrongFormatOrQuantity);
 
+  const allProductsById = await Promise.all(
+    products.map(({ productId }) => productsModel.getProductById(productId)),
+  );
+
+  allProductsById.forEach((product, index) => {
+    if (!product) return getErrorObject(invalidData, wrongFormatOrQuantity);
+
+    const limit = product.quantity;
+    const soldQuantity = products[index].quantity;
+
+    if (soldQuantity > limit) {
+      error = getErrorObject('stock_problem', 'Such amount is not permitted to sell');
+    }
+  });
+
+  if (error) return error;
+
   const sale = salesModel.createSale(products);
+
+  await products.forEach(async ({ productId, quantity }) => {
+     await productsModel.updateQuantity(productId, -quantity);
+   });
 
   return sale;
 };
