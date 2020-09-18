@@ -1,44 +1,66 @@
-const { Router } = require('express');
-const rescue = require('express-rescue');
-const { saleValidate, idSaleValidate } = require('../middlewares/productValidate');
-const salesServices = require('../services/salesServices');
+const { salesService } = require('../services');
 
-const sales = Router();
+const getAllSales = async (_req, res) => {
+  const sales = await salesService.getAllSales();
 
-sales
-  .post('/', saleValidate, rescue(async (req, res) => {
-    const products = req.body;
-    const salesCreateds = await salesServices.createSales(products);
-    if (salesCreateds.error) {
-      return res.status(404).json(salesCreateds.message);
-    }
-    return res.status(200).json(salesCreateds);
-  }))
-  .get('/:id', idSaleValidate, rescue(async (req, res) => {
-    const { id } = req.params;
-    const saleById = await salesServices.getSaleById(id);
-    if (saleById.error) {
-      return res.status(404).json(saleById.message);
-    }
-    return res.status(200).json(saleById);
-  }))
-  .get('/', rescue(async (req, res) => {
-    const allSales = await salesServices.getAllSales();
-    return res.status(200).json({ sales: allSales });
-  }))
-  .put('/:id', idSaleValidate, saleValidate, rescue(async (req, res) => {
-    const saleData = req.body;
-    const { id } = req.params;
-    const updatedSale = await salesServices.updateSale(id, saleData[0]);
-    res.status(200).json(updatedSale);
-  }))
-  .delete('/:id', idSaleValidate, rescue(async (req, res) => {
-    const { id } = req.params;
-    const deletedSale = await salesServices.deleteSaleById(id);
-    if (deletedSale.error) {
-      return res.status(422).json(deletedSale.message);
-    }
-    return res.status(200).json(deletedSale);
-  }));
+  return res.status(200).json({ sales });
+};
 
-module.exports = sales;
+const getSaleById = async (req, res) => {
+  const { id } = req.params;
+  const sale = await salesService.getSaleById(id);
+
+  if (sale.err) return res.status(404).json(sale);
+
+  return res.status(200).json(sale);
+};
+
+const createSale = async (req, res) => {
+  const sales = req.body;
+
+  const createdSale = await salesService.createSale(sales);
+
+  if (createdSale.err) {
+    if (createdSale.err.code === 'stock_problem') return res.status(404).json(createdSale);
+    return res.status(422).json(createdSale);
+  }
+  return res.status(200).json(createdSale);
+};
+
+const updateSale = async (req, res) => {
+  const { id } = req.params;
+  const sale = req.body;
+
+  const newSale = await salesService.updateSale(id, sale);
+
+  if (newSale.err) return res.status(422).json(newSale);
+
+  return res.status(200).json(newSale);
+};
+
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+
+  if (id.length < 24) {
+    return res.status(422).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+    });
+  }
+
+  const sale = await salesService.deleteSale(id);
+
+  if (sale && sale.err) return res.status(404).json(sale);
+
+  return res.status(200).end();
+};
+
+module.exports = {
+  getAllSales,
+  createSale,
+  getSaleById,
+  updateSale,
+  deleteSale,
+};
