@@ -12,7 +12,9 @@ const getAllSales = async () =>
     .then((sales) => ({ sales }));
 
 const getSaleById = async (searchId) =>
-  connect().then((db) => db.collection('sales').findOne(ObjectId(searchId)));
+  connect()
+    .then((db) => db.collection('sales').findOne(ObjectId(searchId)))
+    .then((sale) => sale);
 
 const updateSale = async (id, products) =>
   connect()
@@ -22,8 +24,9 @@ const updateSale = async (id, products) =>
     .then(() => ({ _id: id, itensSold: products }));
 
 const deleteSale = async (searchId) =>
-  connect().then((db) => db.collection('sales').deleteOne({ _id: ObjectId(searchId) }));
-
+  connect()
+    .then((db) => db.collection('sales').findOneAndDelete({ _id: ObjectId(searchId) }))
+    .then(({ value }) => value);
 module.exports = {
   createSale,
   getAllSales,

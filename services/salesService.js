@@ -63,11 +63,15 @@ const deleteSale = async (id) => {
 
   if (typeof isIdValid === 'object') return isIdValid;
 
-  const sale = await salesModel.getSaleById(id);
+  const sale = await salesModel.deleteSale(id);
 
   if (!sale) return getErrorObject(invalidData, wrondFormatSaleId);
 
-  await salesModel.deleteSale(id);
+  await sale.itensSold.forEach(async ({ productId, quantity }) => {
+    await productsModel.updateQuantity(productId, quantity);
+  });
+
+  return sale;
 };
 
 module.exports = {
