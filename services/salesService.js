@@ -28,8 +28,8 @@ const createSale = async (products) => {
   const sale = salesModel.createSale(products);
 
   await products.forEach(async ({ productId, quantity }) => {
-     await productsModel.updateQuantity(productId, -quantity);
-   });
+    await productsModel.updateQuantity(productId, -quantity);
+  });
 
   return sale;
 };
