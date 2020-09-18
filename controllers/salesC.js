@@ -1,66 +1,53 @@
 // CONTROLLER: trata as requisições e envia somente o necessário para o service!
 const express = require('express');
 // const path = require('path');
-const productService = require('../services/salesS');
-const productModel = require('../models/salesM');
+// const productService = require('../services/salesS');
+// const productModel = require('../models/salesM');
 
 const router = express.Router();
 
-router.get('/', async (_req, res) => {
-  try {
-    const products = await productModel.getAllProducts();
-    res.status(200).json({ products });
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-});
+// router.get('/', async (req, res) => {
+//   try {
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    return res.status(200).json(await productModel.getProductsById(req.params.id));
-  } catch (err) {
-    console.error(err);
-    next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
-  }
-});
+//   } catch (err) {
+//     console.error(err);
+//     return err;
+//   }
+// });
 
-router.post('/', async (req, res, next) => {
-  try {
-    const { name, quantity } = req.body;
-    const duplicate = await productModel.getProductsByName(name);
-    const data = productService.validadeProduct(name, quantity, duplicate);
-    if (data.status !== 200) return next(data);
-    const createdProduct = await productModel.createProduct(name, quantity);
-    return res.status(201).json(createdProduct);
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-});
+// router.get('/:id', async (req, res, next) => {
+//   try {
+//   } catch (err) {
+//     console.error(err);
+//     next();
+//   }
+// });
 
-router.put('/:id', async (req, res, next) => {
-  try {
-    const { params: { id }, body: { name, quantity } } = req;
-    const data = productService.validadeProduct(name, quantity);
-    if (data.status !== 200) return next(data);
-    const product = await productModel.updateProduct(id, name, quantity);
-    return res.status(200).json(product);
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-});
+// router.post('/', async (req, res, next) => {
+//   try {
+//     const info = req.body;
+//     console.log(info);
+//     return res.json(info);
+//   } catch (err) {
+//     console.error(err);
+//     return err;
+//   }
+// });
 
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const { params: { id } } = req;
-    const deletedProduct = await productModel.deleteProduct(id);
-    return res.status(200).json(deletedProduct);
-  } catch (err) {
-    console.error(err);
-    next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
-  }
-});
+// router.put('/:id', async (req, res, next) => {
+//   try {
+//   } catch (err) {
+//     console.error(err);
+//     return err;
+//   }
+// });
+
+// router.delete('/:id', async (req, res, next) => {
+//   try {
+//   } catch (err) {
+//     console.error(err);
+//     next();
+//   }
+// });
 
 module.exports = router;
