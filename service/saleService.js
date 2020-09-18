@@ -32,12 +32,12 @@ const standarizedId = /^[0-9a-fA-F]{24}$/;
 // para resolver promises (busca se o produto existe pelo ID) em paralelo
 // Referência: https://flaviocopes.com/javascript-async-await-array-map
 // Uma outra sugestão foi dada pelo @roziscoding via code review, mas ela não se aplica ao caso
-// em que uma verificação de cada quantidade é necessária. Envolvia usar 
+// em que uma verificação de cada quantidade é necessária. Envolvia usar
 // Após verificar que cada id existe na collection de produtos, verifica a quantidade.
 const validateSaleData = async (toBeInserted) => {
   let isValidQuant = false;
   let isValidStock = true;
-  // As variáveis acima se referem, respectivamente, à validade da quantidade a ser lançada 
+  // As variáveis acima se referem, respectivamente, à validade da quantidade a ser lançada
   // e a quantidade presente no estoque correspondente a cada produto
 
   const getProducts = async () =>
@@ -45,9 +45,10 @@ const validateSaleData = async (toBeInserted) => {
 
   await getProducts().then((products) =>
     products.forEach((product, i) => {
-      if (product.quantity < toBeInserted[i].quantity) isValidStock = false })
-    );
-  
+      if (product.quantity < toBeInserted[i].quantity) isValidStock = false;
+    }),
+  );
+
   isValidQuant = toBeInserted.every((p) => p.quantity > 0);
 
   if (isValidStock && isValidQuant) return;
@@ -58,9 +59,7 @@ const validateSaleData = async (toBeInserted) => {
 const addSales = async (soldItems) => {
   const hasError = await validateSaleData(soldItems);
 
-  return hasError ?
-  hasError :
-  salesModel.insert(soldItems);
+  return hasError || salesModel.insert(soldItems);
 };
 
 const selectOne = async (id) => {

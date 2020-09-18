@@ -9,9 +9,9 @@ const listAll = async () => connect()
     .toArray(),
   );
 
-  // Sugestão dada em code review pelo professor @roziscoding para validar direto o formato 
+  // Sugestão dada em code review pelo professor @roziscoding para validar direto o formato
   // do id sem necessidade de usar regex
-const selectById = async (id) => !ObjectId.isValid(id) ? null : connect()
+const selectById = async (id) => (!ObjectId.isValid(id)) ? null : connect()
   .then((db) =>
     db
     .collection('products')

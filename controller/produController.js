@@ -18,11 +18,11 @@ const getById = rescue(async (req, res) => {
 
 const createProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
-  const newProd = await productService.insertOne(name, quantity);
+  const newProduct = await productService.insertOne(name, quantity);
 
-  return newProd.code ?
-  res.status(422).json({ err: newProd }) :
-  res.status(201).json(newProd);
+  return newProduct.code ?
+  res.status(422).json({ err: newProduct }) :
+  res.status(201).json(newProduct);
 });
 
 const updateProduct = rescue(async (req, res) => {
@@ -36,11 +36,11 @@ const updateProduct = rescue(async (req, res) => {
 });
 
 const eraseProduct = rescue(async (req, res) => {
-  const delProd = await productService.deleteOne(req.params.id);
+  const deletedProduct = await productService.deleteOne(req.params.id);
 
-  return delProd.err ?
-  res.status(422).json(delProd) :
-  res.status(200).json(delProd);
+  return deletedProduct.err ?
+  res.status(422).json(deletedProduct) :
+  res.status(200).json(deletedProduct);
 });
 
 module.exports = {

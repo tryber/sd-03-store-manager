@@ -33,11 +33,11 @@ const updateSale = rescue(async (req, res) => {
 });
 
 const eraseSale = rescue(async (req, res) => {
-  const delSale = await saleService.deleteOne(req.params.id);
+  const deletedSale = await saleService.deleteOne(req.params.id);
 
-  return delSale.err ?
-  res.status(422).json(delSale) :
-  res.status(200).json(delSale);
+  return deletedSale.err ?
+  res.status(422).json(deletedSale) :
+  res.status(200).json(deletedSale);
 });
 
 module.exports = {
