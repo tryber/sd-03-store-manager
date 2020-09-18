@@ -19,7 +19,6 @@ const getById = rescue(async (req, res) => {
 const createProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
   const newProd = await productService.insertOne(name, quantity);
-  console.log(newProd);
 
   return newProd.code ?
   res.status(422).json({ err: newProd }) :
@@ -29,10 +28,11 @@ const createProduct = rescue(async (req, res) => {
 const updateProduct = rescue(async (req, res) => {
   const { name, quantity } = req.body;
   const { id } = req.params;
-  const updProd = await productService.upsertOne(id, name, quantity);
+  const updatedProduct = await productService.upsertOne(id, name, quantity);
 
-  if (updProd.code) return res.status(422).json({ err: updProd });
-  return res.status(200).json(updProd);
+  return updatedProduct.code ?
+  res.status(422).json({ err: updatedProduct }) :
+  res.status(200).json(updatedProduct);
 });
 
 const eraseProduct = rescue(async (req, res) => {
