@@ -63,8 +63,7 @@ const DeleteSale = async (id) => {
   const isValid = validadeProduct(id, 1);
   if (!isValid) throw new Error();
   const { value } = await deleteSale(id);
-  const validQ = await addProductToStore(value.itensSold[0].productId, value.itensSold[0].quantity);
-  if (!validQ) throw new Error('ERRO DOIDO');
+  await addProductToStore(value.itensSold[0].productId, value.itensSold[0].quantity);
   return value;
 };
 
