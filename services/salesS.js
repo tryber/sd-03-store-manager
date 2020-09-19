@@ -52,8 +52,8 @@ const ReturnSales = async (id) => {
 
 const UpdateSale = async (id, saleArr) => {
   const sale = saleArr[0];
-  const isValidSale = await validadeProduct(id, 1);
-  const isValidProd = await validadeProduct(sale.productId, sale.quantity);
+  const isValidSale = validadeProduct(id, 1);
+  const isValidProd = validadeProduct(sale.productId, sale.quantity);
   if (!isValidSale || !isValidProd) throw new Error();
   const updatedSale = await updateSale(id, sale);
   return updatedSale.value;
