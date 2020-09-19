@@ -7,7 +7,13 @@ const createSale = async (sales) => connection()
   .then((db) => db.collection('sales').insertOne({ itensSold: [...sales] }))
   .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...sales] }));
 
-// const deleteSale = async (id) => connection();
+const deleteSale = async (saleId) => connection()
+  .then((db) => db.collection('sales').findOneAndDelete(
+    {
+      _id: ObjectId(saleId),
+    },
+    { returnOriginal: true },
+  ));
 
 const getAllSales = async () => connection()
   .then((db) => db.collection('sales').find().toArray());
@@ -23,14 +29,6 @@ const updateSale = async (saleId, prod) => connection()
     },
     { $set: { 'itensSold.$[].quantity': prod.quantity } },
     { returnOriginal: false },
-  ));
-
-const deleteSale = async (saleId) => connection()
-  .then((db) => db.collection('sales').findOneAndDelete(
-    {
-      _id: ObjectId(saleId),
-    },
-    { returnOriginal: true },
   ));
 
 module.exports = {

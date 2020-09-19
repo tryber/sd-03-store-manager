@@ -1,25 +1,13 @@
 // CONTROLLER: trata as requisições e envia somente o necessário para o service!
 const express = require('express');
-// const path = require('path');
-const { CreateProduct, ReturnProducts, validadeProduct, UpdateProduct, DeleteProduct } = require('../services/productsS');
-const productModel = require('../models/productsM');
+const {
+  CreateProduct,
+  DeleteProduct,
+  ReturnProducts,
+  UpdateProduct,
+} = require('../services/productsS');
 
 const router = express.Router();
-
-router.post('/', async (req, res, next) => {
-  try {
-    const { name, quantity } = req.body;
-    const { error, message, createdProduct } = await CreateProduct(name, quantity);
-    if (error) {
-      return next({ status: 422,
-        err: { code: 'invalid_data', message },
-      });
-    }
-    return res.status(201).json(createdProduct);
-  } catch (err) {
-    return err;
-  }
-});
 
 router.get('/', async (_req, res) => {
   try {
@@ -40,13 +28,30 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.post('/', async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const { error, message, createdProduct } = await CreateProduct(name, quantity);
+    if (error) {
+      return next({ status: 422, err: { code: 'invalid_data', message } });
+    }
+    return res.status(201).json(createdProduct);
+  } catch (err) {
+    return err;
+  }
+});
+
 router.put('/:id', async (req, res, next) => {
   try {
-    const { params: { id }, body: { name, quantity } } = req;
+    const {
+      params: { id },
+      body: { name, quantity },
+    } = req;
     const { error, message, updatedProduct } = await UpdateProduct(id, name, quantity);
     if (error) {
       return next({
-        status: 422, err: { code: 'invalid_data', message },
+        status: 422,
+        err: { code: 'invalid_data', message },
       });
     }
     return res.status(200).json(updatedProduct);
@@ -57,7 +62,9 @@ router.put('/:id', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    const { params: { id } } = req;
+    const {
+      params: { id },
+    } = req;
     const { error, message, product } = await DeleteProduct(id);
     if (error) return next({ status: 422, err: { code: 'invalid_data', message } });
     return res.status(200).json(product);

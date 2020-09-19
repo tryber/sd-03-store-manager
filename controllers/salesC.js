@@ -17,13 +17,12 @@ router.get('/:id', async (req, res, next) => {
   try {
     const sale = await ReturnSales(req.params.id);
     if (!sale) {
-      return next({ status: 404,
-        err: { code: 'not_found', message: 'Sale not found' },
-      });
+      return next({ status: 404, err: { code: 'not_found', message: 'Sale not found' } });
     }
     return res.status(200).json(sale);
   } catch (err) {
-    return next({ status: 422,
+    return next({
+      status: 422,
       err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     });
   }
@@ -33,7 +32,8 @@ router.post('/', async (req, res, next) => {
   try {
     const sale = await CreateSale(req.body);
     if (!sale) {
-      return next({ status: 422,
+      return next({
+        status: 422,
         err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
       });
     }
@@ -50,7 +50,8 @@ router.put('/:id', async (req, res, next) => {
     const updatedSales = await UpdateSale(id, product);
     return res.status(200).json(updatedSales);
   } catch (err) {
-    return next({ status: 422,
+    return next({
+      status: 422,
       err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     });
   }
@@ -62,8 +63,7 @@ router.delete('/:id', async (req, res, next) => {
     const sale = await DeleteSale(id);
     return res.status(200).json(sale);
   } catch (err) {
-    next({ status: 422,
-      err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
+    next({ status: 422, err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
   }
 });
 
