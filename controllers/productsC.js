@@ -1,52 +1,56 @@
 // CONTROLLER: trata as requisições e envia somente o necessário para o service!
 const express = require('express');
 // const path = require('path');
-const productService = require('../services/productsS');
+const { CreateProduct, ReturnProducts, validadeProduct, UpdateProduct, DeleteProduct } = require('../services/productsS');
 const productModel = require('../models/productsM');
 
 const router = express.Router();
 
+router.post('/', async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const { error, message, createdProduct } = await CreateProduct(name, quantity);
+    if (error) {
+      return next({ status: 422,
+        err: { code: 'invalid_data', message },
+      });
+    }
+    return res.status(201).json(createdProduct);
+  } catch (err) {
+    return err;
+  }
+});
+
 router.get('/', async (_req, res) => {
   try {
-    const products = await productModel.getAllProducts();
+    const products = await ReturnProducts();
     res.status(200).json({ products });
   } catch (err) {
-    console.error(err);
     return err;
   }
 });
 
 router.get('/:id', async (req, res, next) => {
   try {
-    return res.status(200).json(await productModel.getProductsById(req.params.id));
+    const { id } = req.params;
+    const product = await ReturnProducts(id);
+    return res.status(200).json(product);
   } catch (err) {
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
-  }
-});
-
-router.post('/', async (req, res, next) => {
-  try {
-    const { name, quantity } = req.body;
-    const duplicate = await productModel.getProductsByName(name);
-    const data = productService.validadeProduct(name, quantity, duplicate);
-    if (data.status !== 200) return next(data);
-    const createdProduct = await productModel.createProduct(name, quantity);
-    return res.status(201).json(createdProduct);
-  } catch (err) {
-    console.error(err);
-    return err;
   }
 });
 
 router.put('/:id', async (req, res, next) => {
   try {
     const { params: { id }, body: { name, quantity } } = req;
-    const data = productService.validadeProduct(name, quantity);
-    if (data.status !== 200) return next(data);
-    const product = await productModel.updateProduct(id, name, quantity);
-    return res.status(200).json(product);
+    const { error, message, updatedProduct } = await UpdateProduct(id, name, quantity);
+    if (error) {
+      return next({
+        status: 422, err: { code: 'invalid_data', message },
+      });
+    }
+    return res.status(200).json(updatedProduct);
   } catch (err) {
-    console.error(err);
     return err;
   }
 });
@@ -54,8 +58,9 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const { params: { id } } = req;
-    const deletedProduct = await productModel.deleteProduct(id);
-    return res.status(200).json(deletedProduct);
+    const { error, message, product } = await DeleteProduct(id);
+    if (error) return next({ status: 422, err: { code: 'invalid_data', message } });
+    return res.status(200).json(product);
   } catch (err) {
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
   }
