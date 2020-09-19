@@ -1,16 +1,13 @@
 // SERVICE: Valida as regras de negócio enviando apenas os dados necessários para o model!
 const { ObjectId } = require('mongodb');
-const { createSale, getAllSales, getSalesById, updateSale } = require('../models/salesM');
+const { createSale, getAllSales, getSalesById, updateSale, deleteSale } = require('../models/salesM');
 
-// duplicate
 function validadeProduct(id, quantity) {
   switch (true) {
     case (!id || !ObjectId(id)):
       return false;
     case (!quantity || quantity < 1 || typeof quantity !== 'number'):
       return false;
-    // case (duplicate && duplicate.name === name):
-    //   return templates.notOk;
     default:
       return true;
   }
@@ -30,7 +27,7 @@ const ReturnSales = async (id) => {
     return { sales };
   }
   const sales = await getSalesById(id);
-  return { sales };
+  return sales;
 };
 
 const UpdateSale = async (id, saleArr) => {
@@ -39,11 +36,21 @@ const UpdateSale = async (id, saleArr) => {
   const isValidProd = validadeProduct(sale.productId, sale.quantity);
   if (!isValidSale || !isValidProd) throw new Error();
   const updatedSale = await updateSale(id, sale);
-  return updatedSale;
+  return updatedSale.value;
+};
+
+const DeleteSale = async (id) => {
+  const isValid = validadeProduct(id, 1);
+  if (!isValid) throw new Error();
+  const duplicate = await ReturnSales(id);
+  if (!duplicate) throw new Error();
+  const deletedSale = await deleteSale(id);
+  return deletedSale.value;
 };
 
 module.exports = {
   CreateSale,
+  DeleteSale,
   ReturnSales,
   UpdateSale,
 };

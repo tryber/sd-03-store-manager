@@ -1,4 +1,5 @@
 // MODEL: Recebe dados tratados do service e interage com o banco de dados!
+// esse codigo n teria sido feito sem ajuda do hebert, obg amigo!
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
@@ -15,17 +16,26 @@ const getSalesById = async (id) => connection()
   .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
 const updateSale = async (saleId, prod) => connection()
-  .then((db) => db.collection('sales').findOneAndUpdate({
-    _id: ObjectId(saleId),
-    'itensSold.productId': prod.productId,
-  },
-  { $set: { 'itensSold.$[].quantity': prod.quantity } },
-  { returnOriginal: false }))
-  .then((res) => res.value);
+  .then((db) => db.collection('sales').findOneAndUpdate(
+    {
+      _id: ObjectId(saleId),
+      'itensSold.productId': prod.productId,
+    },
+    { $set: { 'itensSold.$[].quantity': prod.quantity } },
+    { returnOriginal: false },
+  ));
+
+const deleteSale = async (saleId) => connection()
+  .then((db) => db.collection('sales').findOneAndDelete(
+    {
+      _id: ObjectId(saleId),
+    },
+    { returnOriginal: true },
+  ));
 
 module.exports = {
   createSale,
-  //   deleteSale,
+  deleteSale,
   getAllSales,
   getSalesById,
   updateSale,
