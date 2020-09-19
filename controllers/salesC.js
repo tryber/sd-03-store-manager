@@ -39,7 +39,10 @@ router.post('/', async (req, res, next) => {
     }
     return res.status(200).json(sale);
   } catch (err) {
-    return err;
+    return next({
+      status: 404,
+      err: { code: 'stock_problem', message: 'Such amount is not permitted to sell' }
+    });
   }
 });
 

@@ -23,6 +23,7 @@ const removeProductFromStore = async (id, quantity) => {
   if (product.quantity === quantity) {
     return deleteProduct(id);
   }
+  throw new Error();
 };
 
 const addProductToStore = async (id, quantity) => {
