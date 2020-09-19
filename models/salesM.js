@@ -1,24 +1,32 @@
 // MODEL: Recebe dados tratados do service e interage com o banco de dados!
-// const { ObjectId } = require('mongodb');
-// const connection = require('./connection');
+const { ObjectId } = require('mongodb');
+const connection = require('./connection');
 
-// const createProduct = async (name, quantity) => connection();
+const createSale = async (sales) => connection()
+  .then((db) => db.collection('sales').insertOne({ itensSold: [...sales] }))
+  .then(({ insertedId }) => ({ _id: insertedId, itensSold: [...sales] }));
 
-// const deleteProduct = async (id) => connection();
+// const deleteSale = async (id) => connection();
 
-// const getAllProducts = async () => connection();
+const getAllSales = async () => connection()
+  .then((db) => db.collection('sales').find().toArray());
 
-// const getProductsById = async (id) => connection();
+const getSalesById = async (id) => connection()
+  .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
-// const getProductsByName = async (name) => connection();
+const updateSale = async (saleId, prod) => connection()
+  .then((db) => db.collection('sales').findOneAndUpdate({
+    _id: ObjectId(saleId),
+    'itensSold.productId': prod.productId,
+  },
+  { $set: { 'itensSold.$[].quantity': prod.quantity } },
+  { returnOriginal: false }))
+  .then((res) => res.value);
 
-// const updateProduct = async (id, name, quantity) => connection();
-
-// module.exports = {
-//   createProduct,
-//   deleteProduct,
-//   getAllProducts,
-//   getProductsById,
-//   getProductsByName,
-//   updateProduct,
-// };
+module.exports = {
+  createSale,
+  //   deleteSale,
+  getAllSales,
+  getSalesById,
+  updateSale,
+};

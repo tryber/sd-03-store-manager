@@ -20,7 +20,6 @@ router.get('/:id', async (req, res, next) => {
   try {
     return res.status(200).json(await productModel.getProductsById(req.params.id));
   } catch (err) {
-    console.error(err);
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
   }
 });
@@ -58,7 +57,6 @@ router.delete('/:id', async (req, res, next) => {
     const deletedProduct = await productModel.deleteProduct(id);
     return res.status(200).json(deletedProduct);
   } catch (err) {
-    console.error(err);
     next({ status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } });
   }
 });
