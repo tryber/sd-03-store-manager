@@ -12,6 +12,4 @@ products.post('/', async (req, res, _next) => {
   return res.status(201).json(product);
 });
 
-module.exports = {
-  products,
-};
+module.exports = products;
