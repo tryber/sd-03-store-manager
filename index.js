@@ -11,4 +11,5 @@ app.get('/', (req, res) => { res.send(); });
 
 app.use('/products', productController);
 
-app.listen(3000, () => console.log('Listening on 3000'));
+const { PORT = 3000 } = process.env;
+app.listen(PORT, () => { console.log(`Listening on ${PORT}`); });
