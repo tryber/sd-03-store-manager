@@ -7,7 +7,15 @@ const createProduct = async (name, quantity) => connect()
 const getProductByName = async (name) => connect()
   .then((db) => db.collection('products').findOne({ name }));
 
+const getAllProducts = async () => connect()
+  .then((db) => db.collection('products').find({}).toArray());
+
+const getProductById = async (id) => connect()
+.then((db) => db.collection('products').findOne(ObjectId(id)));
+
 module.exports = {
   createProduct,
   getProductByName,
+  getAllProducts,
+  getProductById,
 };
