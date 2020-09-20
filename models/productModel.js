@@ -5,7 +5,7 @@ const createProduct = async (name, quantity) => connect()
   .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
 
 const getProductByName = async (name) => connect()
-  .then(db => db.collection('products').findOne({ name }));
+  .then((db) => db.collection('products').findOne({ name }));
 
 module.exports = {
   createProduct,
