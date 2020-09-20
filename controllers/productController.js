@@ -6,7 +6,7 @@ const products = Router();
 products.post('/', async (req, res, _next) => {
   const { name, quantity } = req.body;
   const product = await productService.createProduct(name, quantity);
-  if (product.error) {
+  if (product.err) {
     return res.status(422).json({ code: 'invalid_data', message: product.message });
   }
   return res.status(201).json(product);
