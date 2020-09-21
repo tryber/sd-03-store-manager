@@ -1,4 +1,3 @@
-// SERVICE: Valida as regras de negócio enviando apenas os dados necessários para o model!
 const { createProduct,
   removeProduct,
   getAllProducts,

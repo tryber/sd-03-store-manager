@@ -1,4 +1,3 @@
-// SERVICE: Valida as regras de negócio enviando apenas os dados necessários para o model!
 const { ObjectId } = require('mongodb');
 const { createSale, getAllSales, getSalesById, updateSale, deleteSale } = require('../models/salesModel');
 const { removeProduct, getProductsById, updateProduct } = require('../models/productsModel');

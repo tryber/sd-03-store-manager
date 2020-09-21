@@ -1,5 +1,4 @@
-// MODEL: Recebe dados tratados do service e interage com o banco de dados!
-// esse codigo n teria sido feito sem ajuda do hebert, obg amigo!
+// Esse código não teria sido feito sem ajuda do Hebert e o Lul, obrigado deusos.
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
