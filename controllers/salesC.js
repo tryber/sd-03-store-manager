@@ -41,7 +41,7 @@ router.post('/', async (req, res, next) => {
   } catch (err) {
     return next({
       status: 404,
-      err: { code: 'stock_problem', message: 'Such amount is not permitted to sell' }
+      err: { code: 'stock_problem', message: 'Such amount is not permitted to sell' },
     });
   }
 });
