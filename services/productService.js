@@ -6,25 +6,25 @@ const validateProductData = async (name, quantity) => {
     case (typeof name !== 'string' || name.length < 5):
       return {
         error: true,
-        err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long', }
+        err: { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
       };
     case nameExists:
       return {
         error: true,
-        err: { code: 'invalid_data', message: 'Product already exists', }
+        err: { code: 'invalid_data', message: 'Product already exists' },
       };
     case (quantity < 1):
       return {
         error: true,
-        err: { code: 'invalid_data', message: '"quantity" must be larger than ou equal to 1', }
+        err: { code: 'invalid_data', message: '"quantity" must be larger than ou equal to 1' },
       };
     case (typeof quantity !== 'number'):
       return {
         error: true,
-        err: { code: 'invalid_data', message: '"quantity" must be a number', }
+        err: { code: 'invalid_data', message: '"quantity" must be a number' },
       };
     default:
-      return { error: false, };
+      return { error: false };
   }
 };
 
