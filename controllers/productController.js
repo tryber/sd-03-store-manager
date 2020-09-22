@@ -6,8 +6,8 @@ const products = Router();
 products.post('/', async (req, res, _next) => {
   const { name, quantity } = req.body;
   const product = await productService.createProduct(name, quantity);
-  if (product.err) {
-    return res.status(422).json({ message: product.message });
+  if (product.error) {
+    return res.status(422).json({ code: 'invalid_data', message: product.message });
   }
   return res.status(201).json(product);
 });
@@ -20,8 +20,8 @@ products.get('/', async (_, res) => {
 products.get('/:id', async (req, res) => {
   const { id } = req.params;
   const product = await productService.getProductById(id);
-  if (product.err) {
-    return res.status(422).json({ message: product.message });
+  if (product.error) {
+    return res.status(422).json({ code: 'invalid_data', message: product.message });
   }
   return res.status(200).json(product);
 });

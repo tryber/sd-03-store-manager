@@ -30,7 +30,7 @@ const validateProductData = async (name, quantity) => {
 
 const createProduct = async (name, quantity) => {
   const validation = validateProductData(name, quantity);
-  if (validation.err) return validation;
+  if (validation.error) return validation;
   const product = await productModel.createProduct(name, quantity);
   return product;
 };
