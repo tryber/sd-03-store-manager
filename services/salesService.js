@@ -1,8 +1,8 @@
 const salesModel = require('../models/salesModel');
 // const productModel = require('../models/productModel');
 
-const createSale = async (itensSold) => {
-  const sale = await salesModel.createSale(itensSold);
+const createSale = async (productId, quantity) => {
+  const sale = await salesModel.createSale(productId, quantity);
   return sale;
 };
 
