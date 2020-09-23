@@ -27,4 +27,14 @@ products.get('/:id', async (req, res) => {
   return res.status(200).json(getProduct);
 });
 
+products.put('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const newProduct = await productService.updateProduct(id, { name, quantity });
+  if (newProduct.error) {
+    return res.status(422).json({ err: { code: 'invalid_data', message: newProduct.message } });
+  }
+  return res.status(200).json(newProduct);
+}));
+
 module.exports = products;
