@@ -10,7 +10,7 @@ sales.post('/', rescue(async (req, res, _next) => {
   if (postSale.error) {
     return res.status(422).json({ err: { code: 'invalid_data', message: postSale.message } });
   }
-  return res.status(201).json(postSale);
+  return res.status(200).json(postSale);
 }));
 
 sales.get('/', async (_, res) => {

@@ -5,14 +5,14 @@ const validateProductData = async (name, quantity) => {
   if (typeof name !== 'string' || name.length < 5) {
     return { error: true, message: '"name" length must be at least 5 characters long' };
   }
-  if (nameExists) {
-    return { error: true, message: 'Product already exists' };
-  }
   if (quantity < 1) {
-    return { error: true, message: '"quantity" must be larger than ou equal to 1' };
+    return { error: true, message: '"quantity" must be larger than or equal to 1' };
   }
   if (!Number.isInteger(quantity)) {
     return { error: true, message: '"quantity" must be a number' };
+  }
+  if (nameExists) {
+    return { error: true, message: 'Product already exists' };
   }
   return { error: false };
 };

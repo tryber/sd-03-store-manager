@@ -44,7 +44,7 @@ products.delete('/:id', rescue(async (req, res) => {
     return res.status(422).json({ err: { code: 'invalid_data', message: getProduct.message } });
   }
   await productService.deleteProduct(id);
-  return res.status(204).end();
+  return res.status(200).end();
 }));
 
 products.get('/:id', async (req, res) => {
