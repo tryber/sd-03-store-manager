@@ -1,22 +1,5 @@
 const productModel = require('../models/productModel');
 
-// const validateProductData = async (name, quantity) => {
-//   const nameExists = await productModel.getProductByName(name);
-//   if (typeof name !== 'string' || name.length < 5) {
-//     return { error: true, message: '"name" length must be at least 5 characters long' };
-//   }
-//   if (quantity < 1) {
-//     return { error: true, message: '"quantity" must be larger than or equal to 1' };
-//   }
-//   if (!Number.isInteger(quantity)) {
-//     return { error: true, message: '"quantity" must be a number' };
-//   }
-//   if (nameExists) {
-//     return { error: true, message: 'Product already exists' };
-//   }
-//   return { error: false };
-// };
-
 const validateProductData = async (name, quantity) => {
   const nameExists = await productModel.getProductByName(name);
   switch (true) {
