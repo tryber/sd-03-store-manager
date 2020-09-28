@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const productModel = require('../models/productModel');
 
 const validateProductData = async (name, quantity) => {
@@ -26,6 +27,7 @@ const createProduct = async (name, quantity) => {
 const getAllProducts = async () => ({ products: await productModel.getAllProducts() });
 
 const getProductById = async (id) => {
+  if (!ObjectId.isValid(id)) return { error: true, message: 'Wrong id format' };
   const product = await productModel.getProductById(id);
   if (!product) return { error: true, message: 'Wrong id format' };
   return product;

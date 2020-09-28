@@ -15,9 +15,9 @@ const connect = () => MongoClient.connect(MONGO_DB_URL, {
     process.exit(1);
   });
 
-// OTHER WAY
+// OTHER WAY - as Carolina Gomes tips on slack, sep 4th.
 // require('dotenv/config');
-// change way to connect db as Carolina Gomes tips on slack, sep 4th.
+
 // const { MONGO_DB_URL, DB_NAME } = process.env;
 // const dbURL = MONGO_DB_URL || 'mongodb://mongodb:27017/StoreManager';
 // const dbName = DB_NAME || 'StoreManager';

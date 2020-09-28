@@ -5,8 +5,8 @@ const salesService = require('../services/salesService');
 const sales = Router();
 
 sales.post('/', rescue(async (req, res, _next) => {
-  const [{ productId, quantity }] = req.body;
-  const postSale = await salesService.createSale(productId, quantity);
+  const [...itensSold] = req.body;
+  const postSale = await salesService.createSale(itensSold);
   if (postSale.error) {
     return res.status(422).json({ err: { code: 'invalid_data', message: postSale.message } });
   }
