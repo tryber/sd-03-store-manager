@@ -27,4 +27,14 @@ sales.get('/:id', async (req, res) => {
   return res.status(200).json(getSale);
 });
 
+sales.put('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+  const [...itensSold] = req.body;
+  const upSale = await salesService.updateSale(id, itensSold);
+  if (upSale.error) {
+    return res.status(422).json({ err: { code: 'invalid_data', message: upSale.message } });
+  }
+  return res.status(200).json(upSale);
+}));
+
 module.exports = sales;
