@@ -18,6 +18,11 @@ const validateSaleData = async (itensSold) => {
 const createSale = async (itensSold) => {
   const validation = await validateSaleData(itensSold);
   if (validation.error) return validation;
+
+  await itensSold.every(async ({ productId, quantity }) => {
+    await productModel.incrementQuantity(productId, -quantity);
+  });
+
   const sale = await salesModel.createSale(itensSold);
   return sale;
 };
@@ -32,14 +37,30 @@ const getSaleById = async (id) => {
 };
 
 const updateSale = async (id, itensSold) => {
-  const sale = await getSaleById(id);
-  if (sale.error) return sale;
+  const originalSale = await getSaleById(id);
+  if (originalSale.error) return originalSale;
   const validation = await validateSaleData(itensSold);
   if (validation.error) return validation;
+
+  await originalSale.itensSold.every(async ({ productId, quantity }) => {
+    await productModel.incrementQuantity(productId, quantity);
+  });
+
+  await itensSold.every(async ({ productId, quantity }) => {
+    await productModel.incrementQuantity(productId, -quantity);
+  });
+
   return salesModel.updateSale(id, itensSold);
 };
 
-const deleteSale = async (id) => { await salesModel.deleteSale(id); };
+const deleteSale = async (id) => {
+  const originalSale = await getSaleById(id);
+  await originalSale.itensSold.every(async ({ productId, quantity }) => {
+    await productModel.incrementQuantity(productId, quantity);
+  });
+
+  await salesModel.deleteSale(id);
+};
 
 module.exports = {
   createSale,

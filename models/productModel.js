@@ -23,6 +23,12 @@ const updateProduct = async (id, { name, quantity }) => connect()
 const deleteProduct = async (id) => connect()
   .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
 
+const incrementQuantity = async (id, quantity) => connect()
+  .then((db) => db
+    .collection('products')
+    .updateOne({ _id: ObjectId(id) }, { $inc: { quantity } }));
+// $inc method based on Ilan PR.
+
 module.exports = {
   createProduct,
   getProductByName,
@@ -30,4 +36,5 @@ module.exports = {
   getProductById,
   updateProduct,
   deleteProduct,
+  incrementQuantity,
 };
