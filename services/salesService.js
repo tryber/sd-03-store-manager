@@ -54,8 +54,8 @@ const updateSale = async (id, itensSold) => {
 };
 
 const deleteSale = async (id) => {
-  const originalSale = await getSaleById(id);
-  await originalSale.itensSold.every(async ({ productId, quantity }) => {
+  const sale = await getSaleById(id);
+  await sale.itensSold.every(async ({ productId, quantity }) => {
     await productModel.incrementQuantity(productId, quantity);
   });
 
