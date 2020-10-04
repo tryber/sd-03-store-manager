@@ -47,13 +47,4 @@ products.delete('/:id', rescue(async (req, res) => {
   return res.status(200).end();
 }));
 
-products.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const getProduct = await productService.getProductById(id);
-  if (getProduct.error) {
-    return res.status(422).json({ err: { code: 'invalid_data', message: getProduct.message } });
-  }
-  return res.status(200).json(getProduct);
-});
-
 module.exports = products;

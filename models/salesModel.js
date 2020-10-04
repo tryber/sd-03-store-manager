@@ -9,8 +9,7 @@ const getAllSales = async () => connect()
   .then((db) => db.collection('sales').find({}).toArray());
 
 const getSaleById = async (id) => connect()
-  .then((db) => db.collection('sales').findOne(ObjectId(id)))
-  .then(({ _id, productId, quantity }) => ({ _id, itensSold: [{ productId, quantity }] }));
+  .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
 const updateSale = async (id, itensSold) => connect()
   .then((db) => db
@@ -18,9 +17,13 @@ const updateSale = async (id, itensSold) => connect()
     .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }))
   .then(() => ({ _id: id, itensSold }));
 
+const deleteSale = async (id) => connect()
+  .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };

@@ -25,23 +25,26 @@ const createSale = async (itensSold) => {
 const getAllSales = async () => ({ sales: await salesModel.getAllSales() });
 
 const getSaleById = async (id) => {
+  if (!ObjectId.isValid(id)) return { error: true, message: 'Wrong sale ID format' };
   const sale = await salesModel.getSaleById(id);
-  if (!sale) return { error: true, message: 'Wrong id format' };
+  if (!sale) return { err: true, message: 'Sale not found' };
   return sale;
 };
 
 const updateSale = async (id, itensSold) => {
   const sale = await getSaleById(id);
   if (sale.error) return sale;
-  console.log(itensSold);
   const validation = await validateSaleData(itensSold);
   if (validation.error) return validation;
   return salesModel.updateSale(id, itensSold);
 };
+
+const deleteSale = async (id) => { await salesModel.deleteSale(id); };
 
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };
