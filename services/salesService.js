@@ -19,9 +19,10 @@ const createSale = async (itensSold) => {
   const validation = await validateSaleData(itensSold);
   if (validation.error) return validation;
 
-  await itensSold.every(async ({ productId, quantity }) => {
+  const incrementQuantity = await itensSold.every(async ({ productId, quantity }) => {
     await productModel.incrementQuantity(productId, -quantity);
   });
+  await incrementQuantity;
 
   const sale = await salesModel.createSale(itensSold);
   return sale;
@@ -46,9 +47,10 @@ const updateSale = async (id, itensSold) => {
     await productModel.incrementQuantity(productId, quantity);
   });
 
-  await itensSold.every(async ({ productId, quantity }) => {
+  const updateQuantity = await itensSold.every(async ({ productId, quantity }) => {
     await productModel.incrementQuantity(productId, -quantity);
   });
+  await updateQuantity;
 
   return salesModel.updateSale(id, itensSold);
 };
