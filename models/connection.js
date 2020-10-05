@@ -10,11 +10,11 @@ const connect = async () => {
     const connection = await MongoClient.connect(DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      });
+    });
     return connection.db(DB_NAME);
   } catch (error) {
     throw new Error('connection refused');
-    }
+  }
 };
 
 const connection = async (collection = '') => {

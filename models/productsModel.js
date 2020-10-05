@@ -8,7 +8,7 @@ const registerProducts = async (name, quantity) => {
     const response = { _id, name, quantity };
     return response;
   } catch (error) {
-      throw new Error(error.message || 'product register failed');
+    throw new Error(error.message || 'product register failed');
   }
 };
 
