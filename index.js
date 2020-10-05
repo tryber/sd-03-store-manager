@@ -1,20 +1,28 @@
 const express = require('express');
+const rescue = require('express-rescue');
 const bodyParser = require('body-parser');
 
-require('dotenv/config');
+const productsRouter = require('./controllers/productsController');
+
+const salesRouter = require('./controllers/salesController');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (request, response) => {
-    response.send();
+
+app.get('/', (_req, res) => {
+  res.send();
 });
 
-const {PORT = 3000} = process.env;
+app.use((request, _, next) => {
+  console.log(`${request.method} ${request.path}`);
+  console.log('body', request.body);
+  next();
+});
 
-app.listen(PORT, () => {
-    console.log(`Port ${PORT} successfully connected!`)
-})
+app.use('/products', rescue(productsRouter));
+
+app.use('/sales', rescue(salesRouter));
+
+app.listen(3000, console.log('Listening on port 3000'));
