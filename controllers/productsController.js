@@ -13,5 +13,5 @@ products.route('/')
     } catch (error) {
       return next(error);
     }
-  }
+  },
 ).get('/');
