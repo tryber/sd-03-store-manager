@@ -41,8 +41,7 @@ const addProductToStore = async (id, quantity) => {
 const CreateSale = async (salesArr) => {
   const sales = await Promise.all(
     salesArr.map(async ({ productId, quantity }) =>
-      validadeProduct(productId, quantity) ? removeProductFromStore(productId, quantity) : false,
-    ),
+      (validadeProduct(productId, quantity) ? removeProductFromStore(productId, quantity) : false)),
   );
   const sale = !sales.includes(false) && (await createSale(salesArr));
   return sale;
