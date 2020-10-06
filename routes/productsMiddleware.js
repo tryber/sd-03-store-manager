@@ -17,7 +17,7 @@ const productCreate = async (req, res, next) => {
     return next(err);
   }
 };
-  
+
 const modifyProduct = async (req, res, next) => {
   const { name, quantity } = req.body;
   const { id } = req.params;
@@ -30,7 +30,7 @@ const modifyProduct = async (req, res, next) => {
     return next(err);
   }
 };
-  
+
 const deleteReadProduct = (operation = 'read') => async (req, res, next) => {
   const { id } = req.params;
   try {

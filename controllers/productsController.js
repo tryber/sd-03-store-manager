@@ -1,7 +1,9 @@
 const { Router } = require('express');
 const routes = require('../routes');
+
 const products = Router();
-// Hebert fez uma estrutura tão organizada aqui que tive desfazer o que fiz para fazer no estilo dele
+
+// Hebert fez uma estrutura tão organizada aqui que tive desfazer o que fiz
 products
   .route('/')
   .post(routes.registerProduct)
