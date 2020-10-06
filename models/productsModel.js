@@ -1,4 +1,10 @@
-const { connection } = require('./connection');
+const {
+    connection,
+    connectAndFindAll,
+    connectAndDeleteById,
+    connectAndFindById,
+  } = require('./connection');
+const { ObjectID } = require('mongodb');
 
 const registerProducts = async (name, quantity) => {
   try {
@@ -19,7 +25,7 @@ const updateProductById = async (id, productName, productQuantity) => {
       { _id: ObjectID(id) },
       { $set: { name: productName, quantity: productQuantity } },
       { returnOriginal: false },
-    ); 
+    );
     return updateQuery.value;
   } catch (error) {
     throw new Error(error.message || 'product update failed');
@@ -30,13 +36,12 @@ const deleteProductById = async (id) => {
   try {
     const deleteQuery = await connectAndDeleteById(id, 'products', 'Wrong id format');
     const { _id, name, quantity } = deleteQuery;
-  
     return { _id, name, quantity };
   } catch (error) {
     throw new Error('Wrong id format');
   }
 };
-  
+
 const getAllProducts = async () => {
   try {
     const searchAllProducts = await connectAndFindAll('products');
