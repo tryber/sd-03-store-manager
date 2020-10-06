@@ -15,7 +15,7 @@ const registerSales = async (products) => {
       _id,
       itensSold: [...products],
     };
-    return response; 
+    return response;
   } catch (error) {
     throw new Error(error.message || 'sales register failed');
   }
