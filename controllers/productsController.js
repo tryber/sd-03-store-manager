@@ -1,18 +1,18 @@
 const { Router } = require('express');
-const routes = require('../routes');
+const middleware = require('../middlewares');
 
 const products = Router();
 
 // Hebert fez uma estrutura tão organizada aqui que tive desfazer o que fiz
 products
   .route('/')
-  .post(routes.registerProduct)
-  .get(routes.listProducts);
+  .post(middleware.registerProduct)
+  .get(middleware.listProducts);
 
 products
   .route('/:id')
-  .get(routes.deleteReadProduct())
-  .put(routes.updateProduct)
-  .delete(routes.deleteReadProduct('delete'));
+  .get(middleware.deleteReadProduct())
+  .put(middleware.updateProduct)
+  .delete(middleware.deleteReadProduct('delete'));
 
 module.exports = products;

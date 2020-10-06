@@ -5,7 +5,7 @@ const {
   listProducts,
 } = require('../services/productsServices');
 
-const { generateError } = require('../utils');
+const { generateError } = require('./errorMiddleware');
 
 const productCreate = async (req, res, next) => {
   try {

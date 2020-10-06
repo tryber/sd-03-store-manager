@@ -1,3 +1,5 @@
+// Essa parte eu peguei do Hebert por apanhar muito com validação
+// https://github.com/tryber/sd-03-store-manager/blob/hebert-store-manager/services/validation.js
 const Joi = require('joi');
 
 const { getProductByName, getProductById, updateProductById } = require('../models/productsModel');
@@ -19,7 +21,6 @@ const productSchema = (name, quantity) => {
   });
 
   const validation = validationSchema.validate({ name, quantity });
-
   const { error } = validation;
   // se não houver erro retorna null e posso trabalhar a partir disso
   return error || null;
@@ -33,7 +34,6 @@ const saleSchema = (id, quantity) => {
   });
 
   const validation = validationSchema.validate({ productId: id, quantity });
-
   const { error } = validation;
   return error || null;
 };
@@ -42,7 +42,6 @@ const checkProductsByName = async (name, message = errorResponses.invalid_data) 
   try {
     const nameCheck = await getProductByName(name);
     if (!nameCheck) return false;
-
     return message;
   } catch (error) {
     throw new Error(error.message);
@@ -77,11 +76,9 @@ const checkProductSchemaError = (
   if (key && key === 'name') {
     return message1;
   }
-
   if (key && key === 'quantity') {
     return message2;
   }
-
   return false;
 };
 
