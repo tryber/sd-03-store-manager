@@ -1,17 +1,16 @@
 const { Router } = require('express');
-const { createProduct } = require('../services/productsServices');
-
+const routes = require('../routes');
 const products = Router();
+// Hebert fez uma estrutura tão organizada aqui que tive desfazer o que fiz para fazer no estilo dele
+products
+  .route('/')
+  .post(routes.registerProduct)
+  .get(routes.listProducts);
 
-products.route('/')
-.post(
-  async (req, res, next) => {
-    try {
-      const product = await createProduct(req.body);
-      if (product.message) throw new Error(product.message);
-      return res.status(201).json(product);
-    } catch (error) {
-      return next(error);
-    }
-  },
-).get('/');
+products
+  .route('/:id')
+  .get(routes.deleteReadProduct())
+  .put(routes.updateProduct)
+  .delete(routes.deleteReadProduct('delete'));
+
+module.exports = products;

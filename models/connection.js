@@ -27,4 +27,38 @@ const connection = async (collection = '') => {
   }
 };
 
-module.exports = { connection };
+const connectAndFindAll = async (collection = '') => {
+    try {
+      const dbconnect = await connection(collection);
+      const searchAll = await dbconnect.find().toArray();
+      return searchAll;
+    } catch (error) {
+      throw new Error(`${collection} search failed`);
+    }
+};
+
+const connectAndDeleteById = async (id, collection = '', message = '') => {
+  try {
+    const dbconnect = await connection(collection);
+    const deleteQuery = await dbconnect.findOneAndDelete({ _id: ObjectID(id) });
+  
+    return deleteQuery.value;
+  } catch (error) {
+    throw new Error(message);
+  }
+};
+  
+  const connectAndFindById = async (id, collection = '', message = '') => {
+  try {
+    const dbconnect = await connection(collection);
+    const query = await dbconnect.findOne({ _id: ObjectID(id) });
+    const { _id: returnedId } = query;
+    if (!returnedId) throw new Error();
+  
+    return query;
+  } catch (error) {
+    throw new Error(message);
+  }
+};
+  
+module.exports = { connection, connectAndFindAll, connectAndDeleteById, connectAndFindById };

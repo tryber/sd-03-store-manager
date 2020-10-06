@@ -12,6 +12,17 @@ const registerProducts = async (name, quantity) => {
   }
 };
 
+const listProducts = async () => {
+  try {
+    const connect = await connection('products');
+    const lister = await connect.find();
+    return lister;
+  } catch (error) {
+    throw new Error(error.message || 'product query failed');
+  }
+};
+
 module.exports = {
   registerProducts,
+  listProducts,
 };

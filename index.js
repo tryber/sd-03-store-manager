@@ -13,4 +13,9 @@ app.get('/', (request, response) => {
     response.send();
 });
 
+app.use((err, _, res, _next) =>
+  (err
+    ? res.status(err.status).json(err.payload)
+    : res.status(500).json({ message: 'Internal error' })));
+
 app.listen(PORT, () => console.log(`Listen port ${PORT}`));
