@@ -41,13 +41,13 @@ const deleteReadSale = (operation = 'read', code = 'not_found', status = 404) =>
   res,
   next,
   ) => {
-    const { id } = req.params;
-    try {
-      const saleInfo = await readOrDeleteSaleById(id, operation);
-      return res.status(200).json(saleInfo);
-    } catch (error) {
-      const err = generateError(status, error, code);
-      return next(err);
+  const { id } = req.params;
+  try {
+    const saleInfo = await readOrDeleteSaleById(id, operation);
+    return res.status(200).json(saleInfo);
+  } catch (error) {
+    const err = generateError(status, error, code);
+    return next(err);
   }
 };
 

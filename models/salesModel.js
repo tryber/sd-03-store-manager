@@ -11,11 +11,11 @@ const registerSales = async (products) => {
     const connect = await connection('sales');
     const register = await connect.insertOne({ itensSold: [...products] });
     const { insertedId: _id } = register;
-    const response = { _id };
-    return response = { 
-        _id,
-        itensSold: [...products],
+    const response = {
+      _id,
+      itensSold: [...products],
     };
+    return response; 
   } catch (error) {
     throw new Error(error.message || 'sales register failed');
   }
@@ -26,8 +26,8 @@ const updateSaleById = async (id, sale = []) => {
     const [product] = sale;
     const connect = await connection('sales');
     const updater = await connect.findOneAndUpdate(
-      { _id: ObjectID(id), 'itensSold.productId': product.productId  },
-      { $set: { 'itensSold.$[].quantity':product.quantity } },
+      { _id: ObjectID(id), 'itensSold.productId': product.productId },
+      { $set: { 'itensSold.$[].quantity': product.quantity } },
       { returnOriginal: false },
     );
     return updater.value;
