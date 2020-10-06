@@ -57,7 +57,7 @@ const getAllSales = async () => {
 
 const getSaleById = async (id) => {
   try {
-    const query = connectAndFindById(id, 'sales', 'Wrong id format');
+    const query = connectAndFindById(id, 'sales', 'Sale not found');
     return query;
   } catch (error) {
     throw new Error('Wrong id format');
